@@ -1,11 +1,13 @@
 {
   "$schema": "https://deno.land/x/deno/cli/schemas/config-file.v1.json",
   "name": "@flowcore/sdk",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "license": "MIT",
   "exports": "./src/main.ts",
   "tasks": {},
-  "imports": {},
+  "imports": {
+    "@sinclair/typebox": "npm:@sinclair/typebox@^0.33.17"
+  },
   "fmt": {
     "exclude": ["node_modules", "dist"],
     "lineWidth": 120,
