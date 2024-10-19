@@ -1,6 +1,6 @@
 import { Command } from "../../common/command.ts"
-import { Type } from "npm:@sinclair/typebox"
-import { Value } from "npm:@sinclair/typebox/value"
+import { Type } from "@sinclair/typebox"
+import { Value } from "@sinclair/typebox/value"
 
 export interface DataCoreFindByNameInput {
   organization: string
