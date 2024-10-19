@@ -28,7 +28,7 @@ export class DataCoreFindByNameCommand extends Command<DataCoreFindByNameInput, 
   private schema = Type.Object({
     data: Type.Object({
       organization: Type.Object({
-        datacores: Type.Array(Type.Object({ id: Type.String(), name: Type.String() })),
+        datacores: Type.Array(Type.Object({ id: Type.String() })),
       }),
     }),
   })
