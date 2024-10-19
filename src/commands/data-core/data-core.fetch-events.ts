@@ -9,6 +9,7 @@ export interface DataCoreFetchEventsInput {
   cursor?: string
   fromTimeBucket?: string
   toTimeBucket?: string
+  timeBucket?: string
   pageSize?: number
 }
 
