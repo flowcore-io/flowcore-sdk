@@ -7,8 +7,8 @@ export interface DataCoreFetchEventsInput {
   aggregator: string
   eventTypes: string[]
   cursor?: string
-  fromTimeBucket?: string
-  toTimeBucket?: string
+  afterEventId?: string
+  beforeEventId?: string
   timeBucket?: string
   pageSize?: number
 }
@@ -99,8 +99,9 @@ export class DataCoreFetchEventsCommand extends Command<DataCoreFetchEventsInput
         aggregator: this.input.aggregator,
         eventTypes: this.input.eventTypes,
         cursor: this.input.cursor,
-        fromTimeBucket: this.input.fromTimeBucket,
-        toTimeBucket: this.input.toTimeBucket,
+        afterEventId: this.input.afterEventId,
+        beforeEventId: this.input.beforeEventId,
+        timeBucket: this.input.timeBucket,
         pageSize: this.input.pageSize,
       },
     })
