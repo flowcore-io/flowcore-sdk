@@ -35,6 +35,10 @@ export class DataCoreFindByNameCommand extends Command<DataCoreFindByNameInput, 
 
   public override parseResponse(response: unknown): DataCoreFindByNameOutput {
     if (!Value.Check(this.schema, response)) {
+      const errors = Value.Errors(this.schema, response)
+      for (const error of errors) {
+        console.error(error.path, error.message)
+      }
       throw new Error("Invalid response")
     }
     return response.data.organization.datacores
