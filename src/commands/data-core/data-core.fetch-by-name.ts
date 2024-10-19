@@ -56,6 +56,7 @@ export class DataCoreFetchByNameCommand extends Command<DataCoreFetchByNameInput
       for (const error of errors) {
         console.error(error.path, error.message)
       }
+      console.log("Got", response)
       throw new Error("Invalid response")
     }
     return response.data.organization.datacores[0] ?? null

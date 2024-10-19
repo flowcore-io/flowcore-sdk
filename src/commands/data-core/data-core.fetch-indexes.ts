@@ -62,6 +62,7 @@ export class DataCoreFetchIndexesCommand extends Command<DataCoreFetchIndexesInp
       for (const error of errors) {
         console.error(error.path, error.message)
       }
+      console.log("Got", response)
       throw new Error("Invalid response")
     }
     return response.datacore.fetchIndexes
