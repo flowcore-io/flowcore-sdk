@@ -28,4 +28,6 @@ export abstract class Command<Input, Output> {
       path: this.getPath(),
     }
   }
+
+  public abstract parseResponse(response: unknown): Output
 }

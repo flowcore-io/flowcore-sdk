@@ -20,14 +20,22 @@ export class Client {
   async execute<Input, Output>(command: Command<Input, Output>): Promise<Output> {
     const request = command.getRequest()
     const authToken = await this.getAuthToken?.()
-    const response = await fetch(this.baseUrl + request.path, {
-      method: "POST",
-      headers: {
-        ...request.headers,
-        ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
-      },
-      body: request.body,
-    })
-    return await response.json() as Output
+    try {
+      const response = await fetch(this.baseUrl + request.path, {
+        method: "POST",
+        headers: {
+          ...request.headers,
+          ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+        },
+        body: request.body,
+      })
+      if (!response.ok) {
+        throw new Error(`${response.status} ${response.statusText}`)
+      }
+      const body = await response.json()
+      return command.parseResponse(body)
+    } catch (error) {
+      throw error
+    }
   }
 }
