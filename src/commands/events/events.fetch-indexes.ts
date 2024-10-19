@@ -1,8 +1,7 @@
 import { Type } from "@sinclair/typebox"
 import { Command } from "../../common/command.ts"
-import { Value } from "@sinclair/typebox/value"
 
-export interface DataCoreFetchIndexesInput {
+export interface EventsFetchIndexesInput {
   dataCoreId: string
   aggregator: string
   eventType: string
@@ -12,7 +11,7 @@ export interface DataCoreFetchIndexesInput {
   pageSize?: number
 }
 
-export interface DataCoreFetchIndexesOutput {
+export interface EventsFetchIndexesOutput {
   timeBuckets: string[]
   cursor: string | null
 }
@@ -20,7 +19,7 @@ export interface DataCoreFetchIndexesOutput {
 /**
  * Fetch indexes from a data core
  */
-export class DataCoreFetchIndexesCommand extends Command<DataCoreFetchIndexesInput, DataCoreFetchIndexesOutput> {
+export class EventsFetchIndexesCommand extends Command<EventsFetchIndexesInput, EventsFetchIndexesOutput> {
   private readonly graphQl = `
     query FLOWCORE_SDK_FETCH_DATA_CORE_INDEXES(
       $dataCoreId: ID!,
@@ -47,7 +46,7 @@ export class DataCoreFetchIndexesCommand extends Command<DataCoreFetchIndexesInp
     }
   `
 
-  private schema = Type.Object({
+  protected override schema = Type.Object({
     data: Type.Object({
       datacore: Type.Object({
         fetchIndexes: Type.Object({
@@ -58,15 +57,8 @@ export class DataCoreFetchIndexesCommand extends Command<DataCoreFetchIndexesInp
     }),
   })
 
-  public override parseResponse(response: unknown): DataCoreFetchIndexesOutput {
-    if (!Value.Check(this.schema, response)) {
-      const errors = Value.Errors(this.schema, response)
-      for (const error of errors) {
-        console.error(error.path, error.message)
-      }
-      console.log("Got", response)
-      throw new Error("Invalid response")
-    }
+  public override parseResponse(rawResponse: unknown): EventsFetchIndexesOutput {
+    const response = super.parseResponse<typeof this.schema>(rawResponse)
     return response.data.datacore.fetchIndexes
   }
 

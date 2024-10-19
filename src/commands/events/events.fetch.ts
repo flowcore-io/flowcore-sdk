@@ -1,8 +1,7 @@
 import { Type } from "@sinclair/typebox"
 import { Command } from "../../common/command.ts"
-import { Value } from "@sinclair/typebox/value"
 
-export interface DataCoreFetchEventsInput {
+export interface EventsFetchInput {
   dataCoreId: string
   aggregator: string
   eventTypes: string[]
@@ -13,7 +12,7 @@ export interface DataCoreFetchEventsInput {
   pageSize?: number
 }
 
-export interface DataCoreFetchEventsOutput {
+export interface EventsFetchOutput {
   events: {
     eventId: string
     timeBucket: string
@@ -30,7 +29,7 @@ export interface DataCoreFetchEventsOutput {
 /**
  * Fetch events from a data core
  */
-export class DataCoreFetchEventsCommand extends Command<DataCoreFetchEventsInput, DataCoreFetchEventsOutput> {
+export class EventsFetchCommand extends Command<EventsFetchInput, EventsFetchOutput> {
   private readonly graphQl = `
     query FLOWCORE_CLI_FETCH_EVENTS($dataCoreId: ID!, $aggregator: String!, $eventTypes: [String!]!, $timeBucket: String!, $cursor: String, $afterEventId: String, $beforeEventId: String, $pageSize: Int) {
       datacore(search: {id: $dataCoreId}) {
@@ -59,7 +58,7 @@ export class DataCoreFetchEventsCommand extends Command<DataCoreFetchEventsInput
     }
   `
 
-  private schema = Type.Object({
+  protected override schema = Type.Object({
     data: Type.Object({
       datacore: Type.Object({
         fetchEvents: Type.Object({
@@ -79,15 +78,8 @@ export class DataCoreFetchEventsCommand extends Command<DataCoreFetchEventsInput
     }),
   })
 
-  public override parseResponse(response: unknown): DataCoreFetchEventsOutput {
-    if (!Value.Check(this.schema, response)) {
-      const errors = Value.Errors(this.schema, response)
-      for (const error of errors) {
-        console.error(error.path, error.message)
-      }
-      console.log("Got", response)
-      throw new Error("Invalid response")
-    }
+  public override parseResponse(rawResponse: unknown): EventsFetchOutput {
+    const response = super.parseResponse<typeof this.schema>(rawResponse)
     return response.data.datacore.fetchEvents
   }
 

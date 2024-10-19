@@ -1,5 +1,8 @@
+import type { Static, TSchema } from "@sinclair/typebox"
+import { Value } from "@sinclair/typebox/value"
+
 export abstract class Command<Input, Output> {
-  public readonly input: Input
+  protected readonly input: Input
   private output?: Output
 
   constructor(input: Input) {
@@ -7,12 +10,14 @@ export abstract class Command<Input, Output> {
     this.input = input
   }
 
+  protected abstract schema: TSchema
+
   protected getPath(): string {
     return "/"
   }
 
   protected getBody(): string {
-    return ""
+    return JSON.stringify(this.input)
   }
 
   protected getHeaders(): Record<string, string> {
@@ -21,13 +26,29 @@ export abstract class Command<Input, Output> {
     }
   }
 
-  public getRequest(): { body: string; headers: Record<string, string>; path: string } {
+  protected parseResponse<T extends TSchema>(response: unknown): Static<T> {
+    if (!Value.Check(this.schema, response)) {
+      const errors = Value.Errors(this.schema, response)
+      for (const error of errors) {
+        console.debug("invalid response", error.path, error.message)
+      }
+      throw new Error("Invalid response")
+    }
+    return response as Static<T>
+  }
+
+  public getRequest(): {
+    body: string
+    headers: Record<string, string>
+    path: string
+    // deno-lint-ignore no-explicit-any
+    parseResponse: (response: unknown) => any
+  } {
     return {
       body: this.getBody(),
       headers: this.getHeaders(),
       path: this.getPath(),
+      parseResponse: this.parseResponse,
     }
   }
-
-  public abstract parseResponse(response: unknown): Output
 }

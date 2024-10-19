@@ -1,19 +1,13 @@
 import { Command } from "../../common/command.ts"
-import { Type } from "@sinclair/typebox"
-import { Value } from "@sinclair/typebox/value"
+import { type Static, Type } from "@sinclair/typebox"
+import { type DataCoreSchema, DataCoreV0Schema, dataCoreV0ToDataCore } from "../../contracts/data-core.ts"
 
 export type DataCoreFetchByNameInput = {
   organization: string
   dataCore: string
 }
 
-export type DataCoreFetchByNameOutput = {
-  id: string
-  name: string
-  description: string | null
-  isPublic: boolean
-  configuration: { key: string; value: string }[]
-} | null
+export type DataCoreFetchByNameOutput = Static<typeof DataCoreSchema> | null
 
 /**
  * Fetch a data core by name and organization
@@ -22,6 +16,7 @@ export class DataCoreFetchByNameCommand extends Command<DataCoreFetchByNameInput
   private readonly graphQl = `
     query FLOWCORE_SDK_DATA_CORE_FETCH_BY_NAME($organization: String!, $dataCore: String!) {
       organization(search: {org: $organization}) {
+        id
         datacores(search: { name: $dataCore }) {
           id
           name
@@ -36,30 +31,21 @@ export class DataCoreFetchByNameCommand extends Command<DataCoreFetchByNameInput
     }
   `
 
-  private schema = Type.Object({
+  protected override schema = Type.Object({
     data: Type.Object({
       organization: Type.Object({
-        datacores: Type.Array(Type.Object({
-          id: Type.String(),
-          name: Type.String(),
-          description: Type.Union([Type.String(), Type.Null()]),
-          isPublic: Type.Boolean(),
-          configuration: Type.Array(Type.Object({ key: Type.String(), value: Type.String() })),
-        })),
+        id: Type.String(),
+        datacores: Type.Array(DataCoreV0Schema),
       }),
     }),
   })
 
-  public override parseResponse(response: unknown): DataCoreFetchByNameOutput {
-    if (!Value.Check(this.schema, response)) {
-      const errors = Value.Errors(this.schema, response)
-      for (const error of errors) {
-        console.error(error.path, error.message)
-      }
-      console.log("Got", response)
-      throw new Error("Invalid response")
+  protected override parseResponse(rawResponse: unknown): DataCoreFetchByNameOutput {
+    const response = super.parseResponse<typeof this.schema>(rawResponse)
+    if (response.data.organization.datacores[0]) {
+      return dataCoreV0ToDataCore(response.data.organization.datacores[0], response.data.organization.id)
     }
-    return response.data.organization.datacores[0] ?? null
+    return null
   }
 
   protected override getBody(): string {
