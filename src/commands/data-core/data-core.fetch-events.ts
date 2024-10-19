@@ -78,6 +78,10 @@ export class DataCoreFetchEventsCommand extends Command<DataCoreFetchEventsInput
 
   public override parseResponse(response: unknown): DataCoreFetchEventsOutput {
     if (!Value.Check(this.schema, response)) {
+      const errors = Value.Errors(this.schema, response)
+      for (const error of errors) {
+        console.error(error.path, error.message)
+      }
       throw new Error("Invalid response")
     }
     return response.datacore.fetchEvents
