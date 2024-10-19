@@ -20,8 +20,8 @@ export interface DataCoreFetchEventsOutput {
     eventType: string
     aggregator: string
     dataCore: string
-    metadata: string
-    payload: string
+    metadata: Record<string, unknown>
+    payload: Record<string, unknown>
     validTime: string
   }[]
   cursor: string | null
@@ -69,8 +69,8 @@ export class DataCoreFetchEventsCommand extends Command<DataCoreFetchEventsInput
             eventType: Type.String(),
             aggregator: Type.String(),
             dataCore: Type.String(),
-            metadata: Type.String(),
-            payload: Type.String(),
+            metadata: Type.Record(Type.String(), Type.Any()),
+            payload: Type.Record(Type.String(), Type.Any()),
             validTime: Type.String(),
           })),
           cursor: Type.Union([Type.String(), Type.Null()]),
