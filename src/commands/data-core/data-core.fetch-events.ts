@@ -59,19 +59,21 @@ export class DataCoreFetchEventsCommand extends Command<DataCoreFetchEventsInput
   `
 
   private schema = Type.Object({
-    datacore: Type.Object({
-      fetchEvents: Type.Object({
-        events: Type.Array(Type.Object({
-          eventId: Type.String(),
-          timeBucket: Type.String(),
-          eventType: Type.String(),
-          aggregator: Type.String(),
-          dataCore: Type.String(),
-          metadata: Type.String(),
-          payload: Type.String(),
-          validTime: Type.String(),
-        })),
-        cursor: Type.Union([Type.String(), Type.Null()]),
+    data: Type.Object({
+      datacore: Type.Object({
+        fetchEvents: Type.Object({
+          events: Type.Array(Type.Object({
+            eventId: Type.String(),
+            timeBucket: Type.String(),
+            eventType: Type.String(),
+            aggregator: Type.String(),
+            dataCore: Type.String(),
+            metadata: Type.String(),
+            payload: Type.String(),
+            validTime: Type.String(),
+          })),
+          cursor: Type.Union([Type.String(), Type.Null()]),
+        }),
       }),
     }),
   })
@@ -85,7 +87,7 @@ export class DataCoreFetchEventsCommand extends Command<DataCoreFetchEventsInput
       console.log("Got", response)
       throw new Error("Invalid response")
     }
-    return response.datacore.fetchEvents
+    return response.data.datacore.fetchEvents
   }
 
   protected override getBody(): string {

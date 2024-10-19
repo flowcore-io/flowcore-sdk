@@ -48,10 +48,12 @@ export class DataCoreFetchIndexesCommand extends Command<DataCoreFetchIndexesInp
   `
 
   private schema = Type.Object({
-    datacore: Type.Object({
-      fetchIndexes: Type.Object({
-        timeBuckets: Type.Array(Type.String()),
-        cursor: Type.Union([Type.String(), Type.Null()]),
+    data: Type.Object({
+      datacore: Type.Object({
+        fetchIndexes: Type.Object({
+          timeBuckets: Type.Array(Type.String()),
+          cursor: Type.Union([Type.String(), Type.Null()]),
+        }),
       }),
     }),
   })
@@ -65,7 +67,7 @@ export class DataCoreFetchIndexesCommand extends Command<DataCoreFetchIndexesInp
       console.log("Got", response)
       throw new Error("Invalid response")
     }
-    return response.datacore.fetchIndexes
+    return response.data.datacore.fetchIndexes
   }
 
   protected override getBody(): string {
