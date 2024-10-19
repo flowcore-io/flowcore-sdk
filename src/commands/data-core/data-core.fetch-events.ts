@@ -5,7 +5,7 @@ import { Value } from "@sinclair/typebox/value"
 export interface DataCoreFetchEventsInput {
   dataCoreId: string
   aggregator: string
-  eventType: string
+  eventTypes: string[]
   cursor?: string
   fromTimeBucket?: string
   toTimeBucket?: string
@@ -96,7 +96,7 @@ export class DataCoreFetchEventsCommand extends Command<DataCoreFetchEventsInput
       variables: {
         dataCoreId: this.input.dataCoreId,
         aggregator: this.input.aggregator,
-        eventType: this.input.eventType,
+        eventTypes: this.input.eventTypes,
         cursor: this.input.cursor,
         fromTimeBucket: this.input.fromTimeBucket,
         toTimeBucket: this.input.toTimeBucket,
