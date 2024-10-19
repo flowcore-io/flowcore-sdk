@@ -2,14 +2,10 @@
   "$schema": "https://deno.land/x/deno/cli/schemas/config-file.v1.json",
   "name": "@flowcore/sdk",
   "version": "0.0.1",
-  "publish": {
-    "include": ["src/**/*.ts"]
-  },
-  "tasks": {
-    "dev": "deno run --watch main.ts"
-  },
-  "imports": {
-  },
+  "license": "MIT",
+  "exports": "./src/main.ts",
+  "tasks": {},
+  "imports": {},
   "fmt": {
     "exclude": ["node_modules", "dist"],
     "lineWidth": 120,
