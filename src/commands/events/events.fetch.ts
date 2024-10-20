@@ -1,4 +1,13 @@
-import { Type } from "@sinclair/typebox"
+import {
+  type TArray,
+  type TNull,
+  type TObject,
+  type TRecord,
+  type TString,
+  type TUnion,
+  type TUnknown,
+  Type,
+} from "@sinclair/typebox"
 import { Command } from "../../common/command.ts"
 
 export interface EventsFetchInput {
@@ -58,7 +67,27 @@ export class EventsFetchCommand extends Command<EventsFetchInput, EventsFetchOut
     }
   `
 
-  protected override schema = Type.Object({
+  protected override schema: TObject<{
+    data: TObject<{
+      datacore: TObject<{
+        fetchEvents: TObject<{
+          events: TArray<
+            TObject<{
+              eventId: TString
+              timeBucket: TString
+              eventType: TString
+              aggregator: TString
+              dataCore: TString
+              metadata: TRecord<TString, TUnknown>
+              payload: TRecord<TString, TUnknown>
+              validTime: TString
+            }>
+          >
+          cursor: TUnion<[TString, TNull]>
+        }>
+      }>
+    }>
+  }> = Type.Object({
     data: Type.Object({
       datacore: Type.Object({
         fetchEvents: Type.Object({
@@ -68,8 +97,8 @@ export class EventsFetchCommand extends Command<EventsFetchInput, EventsFetchOut
             eventType: Type.String(),
             aggregator: Type.String(),
             dataCore: Type.String(),
-            metadata: Type.Record(Type.String(), Type.Any()),
-            payload: Type.Record(Type.String(), Type.Any()),
+            metadata: Type.Record(Type.String(), Type.Unknown()),
+            payload: Type.Record(Type.String(), Type.Unknown()),
             validTime: Type.String(),
           })),
           cursor: Type.Union([Type.String(), Type.Null()]),

@@ -1,4 +1,4 @@
-import { Type } from "@sinclair/typebox"
+import { type TArray, type TNull, type TObject, type TString, type TUnion, Type } from "@sinclair/typebox"
 import { Command } from "../../common/command.ts"
 
 export interface EventsFetchIndexesInput {
@@ -46,7 +46,16 @@ export class EventsFetchIndexesCommand extends Command<EventsFetchIndexesInput, 
     }
   `
 
-  protected override schema = Type.Object({
+  protected override schema: TObject<{
+    data: TObject<{
+      datacore: TObject<{
+        fetchIndexes: TObject<{
+          timeBuckets: TArray<TString>
+          cursor: TUnion<[TString, TNull]>
+        }>
+      }>
+    }>
+  }> = Type.Object({
     data: Type.Object({
       datacore: Type.Object({
         fetchIndexes: Type.Object({
