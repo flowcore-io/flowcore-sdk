@@ -1,5 +1,5 @@
 import { Command } from "../../common/command.ts"
-import { Type } from "@sinclair/typebox"
+import { type TArray, type TObject, type TString, Type } from "@sinclair/typebox"
 import { type DataCore, DataCoreV0Schema, dataCoreV0ToDataCore } from "../../contracts/data-core.ts"
 
 export type DataCoreFetchByNameInput = {
@@ -31,7 +31,14 @@ export class DataCoreFetchByNameCommand extends Command<DataCoreFetchByNameInput
     }
   `
 
-  protected override schema = Type.Object({
+  protected override schema: TObject<{
+    data: TObject<{
+      organization: TObject<{
+        id: TString
+        datacores: TArray<typeof DataCoreV0Schema>
+      }>
+    }>
+  }> = Type.Object({
     data: Type.Object({
       organization: Type.Object({
         id: Type.String(),
