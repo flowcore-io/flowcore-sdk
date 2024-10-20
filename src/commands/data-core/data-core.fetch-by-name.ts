@@ -1,13 +1,13 @@
 import { Command } from "../../common/command.ts"
-import { type Static, Type } from "@sinclair/typebox"
-import { type DataCoreSchema, DataCoreV0Schema, dataCoreV0ToDataCore } from "../../contracts/data-core.ts"
+import { Type } from "@sinclair/typebox"
+import { type DataCore, DataCoreV0Schema, dataCoreV0ToDataCore } from "../../contracts/data-core.ts"
 
 export type DataCoreFetchByNameInput = {
   organization: string
   dataCore: string
 }
 
-export type DataCoreFetchByNameOutput = Static<typeof DataCoreSchema> | null
+export type DataCoreFetchByNameOutput = DataCore | null
 
 /**
  * Fetch a data core by name and organization
