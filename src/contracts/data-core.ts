@@ -1,7 +1,23 @@
-import { type Static, Type } from "@sinclair/typebox"
+import {
+  type Static,
+  type TBoolean,
+  type TLiteral,
+  type TNull,
+  type TObject,
+  type TString,
+  type TUnion,
+  Type,
+} from "@sinclair/typebox"
 import { configurationSchema } from "./common.ts"
 
-const _DataCoreSchema = Type.Object({
+const DataCoreSchema: TObject<{
+  id: TString
+  organizationId: TString
+  name: TString
+  description: TString
+  accessControl: TUnion<[TLiteral<"public">, TLiteral<"private">]>
+  deleteProtected: TBoolean
+}> = Type.Object({
   id: Type.String(),
   organizationId: Type.String(),
   name: Type.String(),
@@ -9,17 +25,21 @@ const _DataCoreSchema = Type.Object({
   accessControl: Type.Union([Type.Literal("public"), Type.Literal("private")]),
   deleteProtected: Type.Boolean(),
 })
-export const DataCoreSchema: typeof _DataCoreSchema = _DataCoreSchema
 export type DataCore = Static<typeof DataCoreSchema>
 
-const _DataCoreV0Schema = Type.Object({
+export const DataCoreV0Schema: TObject<{
+  id: TString
+  name: TString
+  description: TUnion<[TString, TNull]>
+  isPublic: TBoolean
+  configuration: typeof configurationSchema
+}> = Type.Object({
   id: Type.String(),
   name: Type.String(),
   description: Type.Union([Type.String(), Type.Null()]),
   isPublic: Type.Boolean(),
   configuration: configurationSchema,
 })
-export const DataCoreV0Schema: typeof _DataCoreV0Schema = _DataCoreV0Schema
 export type DataCoreV0 = Static<typeof DataCoreV0Schema>
 
 export const dataCoreV0ToDataCore = (
