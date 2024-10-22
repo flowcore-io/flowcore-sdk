@@ -1,60 +1,61 @@
-// import { Command } from "../../common/command.ts"
-// import { type Static, Type } from "@sinclair/typebox"
+import { Command } from "../../common/command.ts"
+import { type TArray, type TObject, type TString, Type } from "@sinclair/typebox"
+import { type EventType, EventTypeV0Schema, eventTypeV0ToEventType } from "../../contracts/event-type.ts"
 
-// export type EventTypeListInput = {
-//   dataCoreId: string
-//   aggregator: string
-// }
+export type EventTypeListInput = {
+  flowTypeId: string
+}
 
-// export type EventTypeListOutput = Static<typeof EventTypeListSchema> | null
+export type EventTypeListOutput = EventType[] | null
 
-// /**
-//  * Fetch a data core by name and organization
-//  */
-// export class EventTypeListCommand extends Command<EventTypeListInput, EventTypeListOutput> {
-//   private readonly graphQl = `
-//     query FLOWCORE_SDK_EVENT_TYPE_LIST($dataCoreId: ID!, $aggregator: String!) {
-//       datacore(search: {id: $dataCoreId}) {
-//         flowtypes(search: {aggregator: $aggregator}) {
-//           aggregator
-//           events {
-//             id
-//             name
-//           }
-//         }
-//       }
-//     }
-//   `
+/**
+ * Fetch all event types for a flow type
+ */
+export class EventTypeListCommand extends Command<EventTypeListInput, EventTypeListOutput> {
+  private readonly graphQl = `
+    query FLOWCORE_SDK_EVENT_TYPE_LIST($flowTypeId: ID!) {
+      flowtype(id: $flowtypeId) {
+        events {
+          id
+          name
+          description
+        }
+      }
+    }
+  `
 
-//   protected override schema = Type.Object({
-//     data: Type.Object({
-//       datacore: Type.Object({
-//         flowtypes: Type.Array(Type.Object({
-//           aggregator: Type.String(),
-//           events: Type.Array(Type.Object({
-//             id: Type.String(),
-//             name: Type.String(),
-//           })),
-//         })),
-//       }),
-//     }),
-//   })
+  protected override schema: TObject<{
+    data: TObject<{
+      flowtype: TObject<{
+        id: TString
+        events: TArray<typeof EventTypeV0Schema>
+      }>
+    }>
+  }> = Type.Object({
+    data: Type.Object({
+      flowtype: Type.Object({
+        id: Type.String(),
+        events: Type.Array(EventTypeV0Schema),
+      }),
+    }),
+  })
 
-//   protected override parseResponse(rawResponse: unknown): DataCoreFetchByNameOutput {
-//     const response = super.parseResponse<typeof this.schema>(rawResponse)
-//     if (response.data.organization.datacores[0]) {
-//       return dataCoreV0ToDataCore(response.data.organization.datacores[0], response.data.organization.id)
-//     }
-//     return null
-//   }
+  protected override parseResponse(rawResponse: unknown): EventTypeListOutput {
+    const response = super.parseResponse<typeof this.schema>(rawResponse)
+    if (response.data.flowtype) {
+      return response.data.flowtype.events.map((eventType) =>
+        eventTypeV0ToEventType(eventType, "", "", response.data.flowtype.id)
+      )
+    }
+    return null
+  }
 
-//   protected override getBody(): string {
-//     return JSON.stringify({
-//       query: this.graphQl,
-//       variables: {
-//         organization: this.input.organization,
-//         dataCore: this.input.dataCore,
-//       },
-//     })
-//   }
-// }
+  protected override getBody(): string {
+    return JSON.stringify({
+      query: this.graphQl,
+      variables: {
+        flowTypeId: this.input.flowTypeId,
+      },
+    })
+  }
+}
