@@ -2,6 +2,7 @@
 export * from "./data-core/data-core.fetch-by-name.ts"
 
 // Flow Types
+export * from "./flow-type/flow-type.fetch-by-name.ts"
 export * from "./flow-type/flow-type.list.ts"
 
 // Event Types
