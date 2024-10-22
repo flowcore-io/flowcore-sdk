@@ -33,7 +33,7 @@ export class Client {
         throw new Error(`${response.status} ${response.statusText}`)
       }
       const body = await response.json()
-      return request.parseResponse(body)
+      return request.parseResponse(body) as Output
     } catch (error) {
       throw error
     }
