@@ -9,6 +9,7 @@ import {
   Type,
 } from "@sinclair/typebox"
 import { Command } from "../../common/command.ts"
+import { parseResponse } from "../../utils/parse-response.ts"
 
 export interface EventsFetchInput {
   dataCoreId: string
@@ -108,7 +109,7 @@ export class EventsFetchCommand extends Command<EventsFetchInput, EventsFetchOut
   })
 
   public override parseResponse(rawResponse: unknown): EventsFetchOutput {
-    const response = super.parseResponse<typeof this.schema>(rawResponse)
+    const response = parseResponse(this.schema, rawResponse)
     return response.data.datacore.fetchEvents
   }
 

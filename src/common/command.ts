@@ -26,16 +26,7 @@ export abstract class Command<Input, Output> {
     }
   }
 
-  protected parseResponse<T extends TSchema>(response: unknown): Static<T> {
-    if (!Value.Check(this.schema, response)) {
-      const errors = Value.Errors(this.schema, response)
-      for (const error of errors) {
-        console.debug("invalid response", error.path, error.message)
-      }
-      throw new Error("Invalid response")
-    }
-    return response as Static<T>
-  }
+  protected abstract parseResponse(response: unknown): Output
 
   public getRequest(): {
     body: string

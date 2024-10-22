@@ -1,5 +1,6 @@
 import { type TArray, type TNull, type TObject, type TString, type TUnion, Type } from "@sinclair/typebox"
 import { Command } from "../../common/command.ts"
+import { parseResponse } from "../../utils/parse-response.ts"
 
 export interface EventsFetchIndexesInput {
   dataCoreId: string
@@ -67,7 +68,7 @@ export class EventsFetchIndexesCommand extends Command<EventsFetchIndexesInput, 
   })
 
   public override parseResponse(rawResponse: unknown): EventsFetchIndexesOutput {
-    const response = super.parseResponse<typeof this.schema>(rawResponse)
+    const response = parseResponse(this.schema, rawResponse)
     return response.data.datacore.fetchIndexes
   }
 

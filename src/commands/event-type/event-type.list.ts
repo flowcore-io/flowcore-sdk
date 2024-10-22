@@ -1,6 +1,7 @@
 import { Command } from "../../common/command.ts"
 import { type TArray, type TObject, type TString, Type } from "@sinclair/typebox"
 import { type EventType, EventTypeV0Schema, eventTypeV0ToEventType } from "../../contracts/event-type.ts"
+import { parseResponse } from "../../utils/parse-response.ts"
 
 export type EventTypeListInput = {
   flowTypeId: string
@@ -41,7 +42,7 @@ export class EventTypeListCommand extends Command<EventTypeListInput, EventTypeL
   })
 
   protected override parseResponse(rawResponse: unknown): EventTypeListOutput {
-    const response = super.parseResponse<typeof this.schema>(rawResponse)
+    const response = parseResponse(this.schema, rawResponse)
     if (response.data.flowtype) {
       return response.data.flowtype.events.map((eventType) =>
         eventTypeV0ToEventType(eventType, "", "", response.data.flowtype.id)

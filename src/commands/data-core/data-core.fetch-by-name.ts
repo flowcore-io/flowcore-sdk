@@ -1,6 +1,7 @@
 import { Command } from "../../common/command.ts"
 import { type TArray, type TObject, type TString, Type } from "@sinclair/typebox"
 import { type DataCore, DataCoreV0Schema, dataCoreV0ToDataCore } from "../../contracts/data-core.ts"
+import { parseResponse } from "../../utils/parse-response.ts"
 
 export type DataCoreFetchByNameInput = {
   organization: string
@@ -48,7 +49,7 @@ export class DataCoreFetchByNameCommand extends Command<DataCoreFetchByNameInput
   })
 
   protected override parseResponse(rawResponse: unknown): DataCoreFetchByNameOutput {
-    const response = super.parseResponse<typeof this.schema>(rawResponse)
+    const response = parseResponse(this.schema, rawResponse)
     if (response.data.organization.datacores[0]) {
       return dataCoreV0ToDataCore(response.data.organization.datacores[0], response.data.organization.id)
     }
