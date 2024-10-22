@@ -4,7 +4,7 @@ import { type FlowType, FlowTypeV0Schema, flowTypeV0ToFlowType } from "../../con
 
 export type FlowTypeFetchByNameInput = {
   dataCoreId: string
-  aggregator: string
+  flowType: string
 }
 
 export type FlowTypeFetchByNameOutput = FlowType | null
@@ -14,12 +14,12 @@ export type FlowTypeFetchByNameOutput = FlowType | null
  */
 export class FlowTypeFetchByNameCommand extends Command<FlowTypeFetchByNameInput, FlowTypeFetchByNameOutput> {
   private readonly graphQl = `
-    query FLOWCORE_SDK_FLOW_TYPE_FETCH_BY_NAME($dataCoreId: ID!, $aggregator: String!) {
+    query FLOWCORE_SDK_FLOW_TYPE_FETCH_BY_NAME($dataCoreId: ID!, $flowType: String!) {
       datacore(search: { id: $dataCoreId }) {
         organization {
           id
         }
-        flowtypes(search: { aggregator: $aggregator }) {
+        flowtypes(search: { aggregator: $flowType }) {
           id
           aggregator
           description
@@ -65,7 +65,7 @@ export class FlowTypeFetchByNameCommand extends Command<FlowTypeFetchByNameInput
       query: this.graphQl,
       variables: {
         dataCoreId: this.input.dataCoreId,
-        aggregator: this.input.aggregator,
+        flowType: this.input.flowType,
       },
     })
   }
