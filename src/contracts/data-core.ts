@@ -46,6 +46,7 @@ export const dataCoreV0ToDataCore = (
   dataCoreV0: DataCoreV0,
   organizationId: string,
 ): DataCore => {
+  console.log("dataCoreV0", dataCoreV0)
   return {
     id: dataCoreV0.id,
     organizationId,

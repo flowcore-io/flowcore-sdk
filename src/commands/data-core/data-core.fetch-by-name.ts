@@ -59,6 +59,7 @@ export class DataCoreFetchByNameCommand extends Command<DataCoreFetchByNameInput
     if (!response.data.organization?.datacores?.[0]) {
       throw new Error("No data core found")
     }
+    console.log("response", response.data.organization.datacores[0])
     return dataCoreV0ToDataCore(response.data.organization.datacores[0], response.data.organization.id)
   }
 
