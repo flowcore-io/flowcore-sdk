@@ -1,5 +1,4 @@
-import type { Static, TSchema } from "@sinclair/typebox"
-import { Value } from "@sinclair/typebox/value"
+import type { TSchema } from "@sinclair/typebox"
 
 export abstract class Command<Input, Output> {
   protected readonly input: Input
