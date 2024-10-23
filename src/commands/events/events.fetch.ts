@@ -70,46 +70,55 @@ export class EventsFetchCommand extends Command<EventsFetchInput, EventsFetchOut
 
   protected override schema: TObject<{
     data: TObject<{
-      datacore: TObject<{
-        fetchEvents: TObject<{
-          events: TArray<
-            TObject<{
-              eventId: TString
-              timeBucket: TString
-              eventType: TString
-              aggregator: TString
-              dataCore: TString
-              metadata: TRecord<TString, TUnknown>
-              payload: TRecord<TString, TUnknown>
-              validTime: TString
-            }>
-          >
-          cursor: TUnion<[TString, TNull]>
-        }>
-      }>
+      datacore: TUnion<[
+        TObject<{
+          fetchEvents: TObject<{
+            events: TArray<
+              TObject<{
+                eventId: TString
+                timeBucket: TString
+                eventType: TString
+                aggregator: TString
+                dataCore: TString
+                metadata: TRecord<TString, TUnknown>
+                payload: TRecord<TString, TUnknown>
+                validTime: TString
+              }>
+            >
+            cursor: TUnion<[TString, TNull]>
+          }>
+        }>,
+        TNull,
+      ]>
     }>
   }> = Type.Object({
     data: Type.Object({
-      datacore: Type.Object({
-        fetchEvents: Type.Object({
-          events: Type.Array(Type.Object({
-            eventId: Type.String(),
-            timeBucket: Type.String(),
-            eventType: Type.String(),
-            aggregator: Type.String(),
-            dataCore: Type.String(),
-            metadata: Type.Record(Type.String(), Type.Unknown()),
-            payload: Type.Record(Type.String(), Type.Unknown()),
-            validTime: Type.String(),
-          })),
-          cursor: Type.Union([Type.String(), Type.Null()]),
+      datacore: Type.Union([
+        Type.Object({
+          fetchEvents: Type.Object({
+            events: Type.Array(Type.Object({
+              eventId: Type.String(),
+              timeBucket: Type.String(),
+              eventType: Type.String(),
+              aggregator: Type.String(),
+              dataCore: Type.String(),
+              metadata: Type.Record(Type.String(), Type.Unknown()),
+              payload: Type.Record(Type.String(), Type.Unknown()),
+              validTime: Type.String(),
+            })),
+            cursor: Type.Union([Type.String(), Type.Null()]),
+          }),
         }),
-      }),
+        Type.Null(),
+      ]),
     }),
   })
 
   public override parseResponse(rawResponse: unknown): EventsFetchOutput {
     const response = parseResponse(this.schema, rawResponse)
+    if (!response.data.datacore) {
+      throw new Error("Data core not found")
+    }
     return response.data.datacore.fetchEvents
   }
 

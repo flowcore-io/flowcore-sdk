@@ -49,26 +49,35 @@ export class EventsFetchIndexesCommand extends Command<EventsFetchIndexesInput, 
 
   protected override schema: TObject<{
     data: TObject<{
-      datacore: TObject<{
-        fetchIndexes: TObject<{
-          timeBuckets: TArray<TString>
-          cursor: TUnion<[TString, TNull]>
-        }>
-      }>
+      datacore: TUnion<[
+        TObject<{
+          fetchIndexes: TObject<{
+            timeBuckets: TArray<TString>
+            cursor: TUnion<[TString, TNull]>
+          }>
+        }>,
+        TNull,
+      ]>
     }>
   }> = Type.Object({
     data: Type.Object({
-      datacore: Type.Object({
-        fetchIndexes: Type.Object({
-          timeBuckets: Type.Array(Type.String()),
-          cursor: Type.Union([Type.String(), Type.Null()]),
+      datacore: Type.Union([
+        Type.Object({
+          fetchIndexes: Type.Object({
+            timeBuckets: Type.Array(Type.String()),
+            cursor: Type.Union([Type.String(), Type.Null()]),
+          }),
         }),
-      }),
+        Type.Null(),
+      ]),
     }),
   })
 
   public override parseResponse(rawResponse: unknown): EventsFetchIndexesOutput {
     const response = parseResponse(this.schema, rawResponse)
+    if (!response.data.datacore) {
+      throw new Error("Data core not found")
+    }
     return response.data.datacore.fetchIndexes
   }
 
