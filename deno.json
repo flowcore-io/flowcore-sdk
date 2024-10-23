@@ -7,7 +7,7 @@
   "exports": "./src/main.ts",
   "tasks": {},
   "imports": {
-    "@sinclair/typebox": "npm:@sinclair/typebox@^0.33.17"
+    "@sinclair/typebox": "npm:@sinclair/typebox@0.32.15"
   },
   "fmt": {
     "exclude": ["node_modules", "dist"],

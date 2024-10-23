@@ -1,17 +1,16 @@
 {
   "version": "4",
   "specifiers": {
-    "npm:@sinclair/typebox@*": "0.33.17",
-    "npm:@sinclair/typebox@~0.33.17": "0.33.17"
+    "npm:@sinclair/typebox@0.32.15": "0.32.15"
   },
   "npm": {
-    "@sinclair/typebox@0.33.17": {
-      "integrity": "sha512-75232GRx3wp3P7NP+yc4nRK3XUAnaQShxTAzapgmQrgs0QvSq0/mOJGoZXRpH15cFCKyys+4laCPbBselqJ5Ag=="
+    "@sinclair/typebox@0.32.15": {
+      "integrity": "sha512-5Lrwo7VOiWEBJBhHmqNmf3TPB9ll8gcEshvYJyAIJyCZ2PF48MFOtiDHJNj8+FsNcqImaQYmxVkKBCBlyAa/wg=="
     }
   },
   "workspace": {
     "dependencies": [
-      "npm:@sinclair/typebox@~0.33.17"
+      "npm:@sinclair/typebox@0.32.15"
     ]
   }
 }
