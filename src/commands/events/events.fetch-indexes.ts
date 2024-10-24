@@ -1,5 +1,5 @@
 import { type TArray, type TNull, type TObject, type TString, type TUnion, Type } from "@sinclair/typebox"
-import { Command } from "../../common/command.ts"
+import { GraphQlCommand } from "../../common/command.ts"
 import { parseResponse } from "../../utils/parse-response.ts"
 import { NotFoundException } from "../../exceptions/not-found.ts"
 
@@ -19,9 +19,9 @@ export interface EventsFetchIndexesOutput {
 }
 
 /**
- * Fetch indexes from a data core
+ * Fetch time buckets for an event type
  */
-export class EventsFetchIndexesCommand extends Command<EventsFetchIndexesInput, EventsFetchIndexesOutput> {
+export class EventsFetchIndexesCommand extends GraphQlCommand<EventsFetchIndexesInput, EventsFetchIndexesOutput> {
   private readonly graphQl = `
     query FLOWCORE_SDK_FETCH_DATA_CORE_INDEXES(
       $dataCoreId: ID!,
@@ -85,15 +85,7 @@ export class EventsFetchIndexesCommand extends Command<EventsFetchIndexesInput, 
   protected override getBody(): string {
     return JSON.stringify({
       query: this.graphQl,
-      variables: {
-        dataCoreId: this.input.dataCoreId,
-        aggregator: this.input.aggregator,
-        eventType: this.input.eventType,
-        cursor: this.input.cursor,
-        fromTimeBucket: this.input.fromTimeBucket,
-        toTimeBucket: this.input.toTimeBucket,
-        pageSize: this.input.pageSize,
-      },
+      variables: this.input,
     })
   }
 }

@@ -1,16 +1,8 @@
-import {
-  type TArray,
-  type TNull,
-  type TObject,
-  type TRecord,
-  type TString,
-  type TUnion,
-  type TUnknown,
-  Type,
-} from "@sinclair/typebox"
-import { Command } from "../../common/command.ts"
+import { type TArray, type TNull, type TObject, type TString, type TUnion, Type } from "@sinclair/typebox"
+import { GraphQlCommand } from "../../common/command.ts"
 import { parseResponse } from "../../utils/parse-response.ts"
 import { NotFoundException } from "../../exceptions/not-found.ts"
+import { type Event, EventSchema } from "../../contracts/event.ts"
 
 export interface EventsFetchInput {
   dataCoreId: string
@@ -24,23 +16,14 @@ export interface EventsFetchInput {
 }
 
 export interface EventsFetchOutput {
-  events: {
-    eventId: string
-    timeBucket: string
-    eventType: string
-    aggregator: string
-    dataCore: string
-    metadata: Record<string, unknown>
-    payload: Record<string, unknown>
-    validTime: string
-  }[]
+  events: Event[]
   cursor: string | null
 }
 
 /**
- * Fetch events from a data core
+ * Fetch events for event types
  */
-export class EventsFetchCommand extends Command<EventsFetchInput, EventsFetchOutput> {
+export class EventsFetchCommand extends GraphQlCommand<EventsFetchInput, EventsFetchOutput> {
   private readonly graphQl = `
     query FLOWCORE_CLI_FETCH_EVENTS($dataCoreId: ID!, $aggregator: String!, $eventTypes: [String!]!, $timeBucket: String!, $cursor: String, $afterEventId: String, $beforeEventId: String, $pageSize: Int) {
       datacore(search: {id: $dataCoreId}) {
@@ -74,18 +57,7 @@ export class EventsFetchCommand extends Command<EventsFetchInput, EventsFetchOut
       datacore: TUnion<[
         TObject<{
           fetchEvents: TObject<{
-            events: TArray<
-              TObject<{
-                eventId: TString
-                timeBucket: TString
-                eventType: TString
-                aggregator: TString
-                dataCore: TString
-                metadata: TRecord<TString, TUnknown>
-                payload: TRecord<TString, TUnknown>
-                validTime: TString
-              }>
-            >
+            events: TArray<typeof EventSchema>
             cursor: TUnion<[TString, TNull]>
           }>
         }>,
@@ -97,16 +69,7 @@ export class EventsFetchCommand extends Command<EventsFetchInput, EventsFetchOut
       datacore: Type.Union([
         Type.Object({
           fetchEvents: Type.Object({
-            events: Type.Array(Type.Object({
-              eventId: Type.String(),
-              timeBucket: Type.String(),
-              eventType: Type.String(),
-              aggregator: Type.String(),
-              dataCore: Type.String(),
-              metadata: Type.Record(Type.String(), Type.Unknown()),
-              payload: Type.Record(Type.String(), Type.Unknown()),
-              validTime: Type.String(),
-            })),
+            events: Type.Array(EventSchema),
             cursor: Type.Union([Type.String(), Type.Null()]),
           }),
         }),
@@ -126,16 +89,7 @@ export class EventsFetchCommand extends Command<EventsFetchInput, EventsFetchOut
   protected override getBody(): string {
     return JSON.stringify({
       query: this.graphQl,
-      variables: {
-        dataCoreId: this.input.dataCoreId,
-        aggregator: this.input.aggregator,
-        eventTypes: this.input.eventTypes,
-        cursor: this.input.cursor,
-        afterEventId: this.input.afterEventId,
-        beforeEventId: this.input.beforeEventId,
-        timeBucket: this.input.timeBucket,
-        pageSize: this.input.pageSize,
-      },
+      variables: this.input,
     })
   }
 }

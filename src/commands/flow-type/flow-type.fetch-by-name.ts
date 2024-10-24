@@ -1,4 +1,4 @@
-import { Command } from "../../common/command.ts"
+import { GraphQlCommand } from "../../common/command.ts"
 import { type TArray, type TNull, type TObject, type TString, type TUnion, Type } from "@sinclair/typebox"
 import { type FlowType, FlowTypeV0Schema, flowTypeV0ToFlowType } from "../../contracts/flow-type.ts"
 import { parseResponse } from "../../utils/parse-response.ts"
@@ -9,12 +9,10 @@ export type FlowTypeFetchByNameInput = {
   flowType: string
 }
 
-export type FlowTypeFetchByNameOutput = FlowType
-
 /**
- * Fetch a flow type by name and data core
+ * Fetch a flow type by name and data core id
  */
-export class FlowTypeFetchByNameCommand extends Command<FlowTypeFetchByNameInput, FlowTypeFetchByNameOutput> {
+export class FlowTypeFetchByNameCommand extends GraphQlCommand<FlowTypeFetchByNameInput, FlowType> {
   private readonly graphQl = `
     query FLOWCORE_SDK_FLOW_TYPE_FETCH_BY_NAME($dataCoreId: ID!, $flowType: String!) {
       datacore(search: { id: $dataCoreId }) {
@@ -56,7 +54,7 @@ export class FlowTypeFetchByNameCommand extends Command<FlowTypeFetchByNameInput
     }),
   })
 
-  protected override parseResponse(rawResponse: unknown): FlowTypeFetchByNameOutput {
+  protected override parseResponse(rawResponse: unknown): FlowType {
     const response = parseResponse(this.schema, rawResponse)
     if (!response.data.datacore?.flowtypes?.[0]) {
       throw new NotFoundException("FlowType", this.input.flowType)
@@ -71,10 +69,7 @@ export class FlowTypeFetchByNameCommand extends Command<FlowTypeFetchByNameInput
   protected override getBody(): string {
     return JSON.stringify({
       query: this.graphQl,
-      variables: {
-        dataCoreId: this.input.dataCoreId,
-        flowType: this.input.flowType,
-      },
+      variables: this.input,
     })
   }
 }

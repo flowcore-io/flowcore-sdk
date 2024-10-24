@@ -1,4 +1,4 @@
-import { Command } from "../../common/command.ts"
+import { GraphQlCommand } from "../../common/command.ts"
 import { type TArray, type TNull, type TObject, type TString, type TUnion, Type } from "@sinclair/typebox"
 import { type DataCore, DataCoreV0Schema, dataCoreV0ToDataCore } from "../../contracts/data-core.ts"
 import { parseResponse } from "../../utils/parse-response.ts"
@@ -9,12 +9,10 @@ export type DataCoreFetchByNameInput = {
   dataCore: string
 }
 
-export type DataCoreFetchByNameOutput = DataCore
-
 /**
  * Fetch a data core by name and organization
  */
-export class DataCoreFetchByNameCommand extends Command<DataCoreFetchByNameInput, DataCoreFetchByNameOutput> {
+export class DataCoreFetchByNameCommand extends GraphQlCommand<DataCoreFetchByNameInput, DataCore> {
   private readonly graphQl = `
     query FLOWCORE_SDK_DATA_CORE_FETCH_BY_NAME($organization: String!, $dataCore: String!) {
       organization(search: {org: $organization}) {
@@ -55,7 +53,7 @@ export class DataCoreFetchByNameCommand extends Command<DataCoreFetchByNameInput
     }),
   })
 
-  protected override parseResponse(rawResponse: unknown): DataCoreFetchByNameOutput {
+  protected override parseResponse(rawResponse: unknown): DataCore {
     const response = parseResponse(this.schema, rawResponse)
     if (!response.data.organization) {
       throw new NotFoundException("Organization", this.input.organization)
@@ -69,10 +67,7 @@ export class DataCoreFetchByNameCommand extends Command<DataCoreFetchByNameInput
   protected override getBody(): string {
     return JSON.stringify({
       query: this.graphQl,
-      variables: {
-        organization: this.input.organization,
-        dataCore: this.input.dataCore,
-      },
+      variables: this.input,
     })
   }
 }

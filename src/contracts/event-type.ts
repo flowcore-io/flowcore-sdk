@@ -1,6 +1,9 @@
 import { type Static, type TNull, type TObject, type TString, type TUnion, Type } from "@sinclair/typebox"
 
-const EventTypeSchema: TObject<{
+/**
+ * The schema for an event type
+ */
+export const EventTypeSchema: TObject<{
   id: TString
   organizationId: TString
   dataCoreId: TString
@@ -17,6 +20,9 @@ const EventTypeSchema: TObject<{
 })
 export type EventType = Static<typeof EventTypeSchema>
 
+/**
+ * The schema for an event type v0
+ */
 export const EventTypeV0Schema: TObject<{
   id: TString
   name: TString

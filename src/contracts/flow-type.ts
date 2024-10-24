@@ -1,6 +1,9 @@
 import { type Static, type TNull, type TObject, type TString, type TUnion, Type } from "@sinclair/typebox"
 
-const FlowTypeSchema: TObject<{
+/**
+ * The schema for a flow type
+ */
+export const FlowTypeSchema: TObject<{
   id: TString
   organizationId: TString
   dataCoreId: TString
@@ -15,6 +18,9 @@ const FlowTypeSchema: TObject<{
 })
 export type FlowType = Static<typeof FlowTypeSchema>
 
+/**
+ * The schema for a flow type v0
+ */
 export const FlowTypeV0Schema: TObject<{
   id: TString
   aggregator: TString

@@ -1,15 +1,19 @@
 import {
   type Static,
+  type TArray,
   type TBoolean,
   type TLiteral,
   type TNull,
   type TObject,
+  type TOptional,
   type TString,
   type TUnion,
   Type,
 } from "@sinclair/typebox"
-import { configurationSchema } from "./common.ts"
 
+/**
+ * The schema for a data core
+ */
 const DataCoreSchema: TObject<{
   id: TString
   organizationId: TString
@@ -27,18 +31,36 @@ const DataCoreSchema: TObject<{
 })
 export type DataCore = Static<typeof DataCoreSchema>
 
+/**
+ * The schema for a data core v0
+ */
 export const DataCoreV0Schema: TObject<{
   id: TString
   name: TString
   description: TUnion<[TString, TNull]>
   isPublic: TBoolean
-  configuration: typeof configurationSchema
+  configuration: TOptional<
+    TArray<
+      TObject<{
+        key: TLiteral<"DELETE_PROTECTION_ENABLED">
+        value: TUnion<[TLiteral<"true">, TLiteral<"false">]>
+      }>
+    >
+  >
 }> = Type.Object({
   id: Type.String(),
   name: Type.String(),
   description: Type.Union([Type.String(), Type.Null()]),
   isPublic: Type.Boolean(),
-  configuration: configurationSchema,
+  configuration: Type.Optional(
+    Type.Array(
+      Type.Object({
+        key: Type.Literal("DELETE_PROTECTION_ENABLED"),
+        value: Type.Union([Type.Literal("true"), Type.Literal("false")]),
+      }),
+      { minItems: 0, maxItems: 1 },
+    ),
+  ),
 })
 export type DataCoreV0 = Static<typeof DataCoreV0Schema>
 
