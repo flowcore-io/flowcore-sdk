@@ -2,6 +2,7 @@ import { Command } from "../../common/command.ts"
 import { type TArray, type TNull, type TObject, type TString, type TUnion, Type } from "@sinclair/typebox"
 import { type FlowType, FlowTypeV0Schema, flowTypeV0ToFlowType } from "../../contracts/flow-type.ts"
 import { parseResponse } from "../../utils/parse-response.ts"
+import { NotFoundException } from "../../exceptions/not-found.ts"
 
 export type FlowTypeListInput = {
   dataCoreId: string
@@ -15,13 +16,13 @@ export type FlowTypeListOutput = FlowType[]
 export class FlowTypeListCommand extends Command<FlowTypeListInput, FlowTypeListOutput> {
   private readonly graphQl = `
     query FLOWCORE_SDK_FLOW_TYPE_LIST($dataCoreId: ID!) {
-      datacore(id: $dataCoreId) {
+      datacore(search: {id: $dataCoreId}) {
         organization {
           id
         }
         flowtypes {
           id
-          name
+          aggregator
           description
         }
       }
@@ -56,8 +57,8 @@ export class FlowTypeListCommand extends Command<FlowTypeListInput, FlowTypeList
 
   protected override parseResponse(rawResponse: unknown): FlowTypeListOutput {
     const response = parseResponse(this.schema, rawResponse)
-    if (!response.data.datacore?.flowtypes?.[0]) {
-      throw new Error("No flow types found")
+    if (!response.data.datacore) {
+      throw new NotFoundException("DataCore", this.input.dataCoreId)
     }
     const organizationId = response.data.datacore.organization.id
     const dataCoreId = this.input.dataCoreId

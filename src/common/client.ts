@@ -1,3 +1,4 @@
+import { ClientError } from "../exceptions/client-error.ts"
 import type { Command } from "./command.ts"
 
 export interface ClientOptions {
@@ -20,22 +21,18 @@ export class Client {
   async execute<Input, Output>(command: Command<Input, Output>): Promise<Output> {
     const request = command.getRequest()
     const authToken = await this.getAuthToken?.()
-    try {
-      const response = await fetch(this.baseUrl + request.path, {
-        method: "POST",
-        headers: {
-          ...request.headers,
-          ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
-        },
-        body: request.body,
-      })
-      if (!response.ok) {
-        throw new Error(`${response.status} ${response.statusText}`)
-      }
-      const body = await response.json()
-      return request.parseResponse(body) as Output
-    } catch (error) {
-      throw error
+    const response = await fetch(this.baseUrl + request.path, {
+      method: "POST",
+      headers: {
+        ...request.headers,
+        ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+      },
+      body: request.body,
+    })
+    if (!response.ok) {
+      throw new ClientError(response.statusText, response.status)
     }
+    const body = await response.json()
+    return request.parseResponse(body) as Output
   }
 }

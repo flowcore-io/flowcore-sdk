@@ -38,7 +38,7 @@ export abstract class Command<Input, Output> {
       body: this.getBody(),
       headers: this.getHeaders(),
       path: this.getPath(),
-      parseResponse: this.parseResponse,
+      parseResponse: this.parseResponse.bind(this),
     }
   }
 }

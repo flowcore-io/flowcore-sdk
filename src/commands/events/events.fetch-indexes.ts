@@ -1,6 +1,7 @@
 import { type TArray, type TNull, type TObject, type TString, type TUnion, Type } from "@sinclair/typebox"
 import { Command } from "../../common/command.ts"
 import { parseResponse } from "../../utils/parse-response.ts"
+import { NotFoundException } from "../../exceptions/not-found.ts"
 
 export interface EventsFetchIndexesInput {
   dataCoreId: string
@@ -76,7 +77,7 @@ export class EventsFetchIndexesCommand extends Command<EventsFetchIndexesInput, 
   public override parseResponse(rawResponse: unknown): EventsFetchIndexesOutput {
     const response = parseResponse(this.schema, rawResponse)
     if (!response.data.datacore) {
-      throw new Error("Data core not found")
+      throw new NotFoundException("DataCore", this.input.dataCoreId)
     }
     return response.data.datacore.fetchIndexes
   }

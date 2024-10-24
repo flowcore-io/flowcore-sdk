@@ -2,6 +2,7 @@ import { Command } from "../../common/command.ts"
 import { type TArray, type TNull, type TObject, type TString, type TUnion, Type } from "@sinclair/typebox"
 import { type FlowType, FlowTypeV0Schema, flowTypeV0ToFlowType } from "../../contracts/flow-type.ts"
 import { parseResponse } from "../../utils/parse-response.ts"
+import { NotFoundException } from "../../exceptions/not-found.ts"
 
 export type FlowTypeFetchByNameInput = {
   dataCoreId: string
@@ -58,7 +59,7 @@ export class FlowTypeFetchByNameCommand extends Command<FlowTypeFetchByNameInput
   protected override parseResponse(rawResponse: unknown): FlowTypeFetchByNameOutput {
     const response = parseResponse(this.schema, rawResponse)
     if (!response.data.datacore?.flowtypes?.[0]) {
-      throw new Error("Flow type not found")
+      throw new NotFoundException("FlowType", this.input.flowType)
     }
     return flowTypeV0ToFlowType(
       response.data.datacore.flowtypes[0],
