@@ -2,6 +2,9 @@ import { Value } from "@sinclair/typebox/value"
 import type { Static, TSchema } from "@sinclair/typebox"
 import { InvalidResponseException } from "../exceptions/invalid-response.ts"
 
+/**
+ * Helper method for parsing the response
+ */
 export const parseResponseHelper = <T extends TSchema>(schema: T, response: unknown): Static<T> => {
   if (!Value.Check(schema, response)) {
     const parseErrors = Value.Errors(schema, response)

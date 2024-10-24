@@ -4,7 +4,11 @@ import { type FlowType, FlowTypeV0Schema, flowTypeV0ToFlowType } from "../../con
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 import { NotFoundException } from "../../exceptions/not-found.ts"
 
+/**
+ * The input for the flow type list command
+ */
 export type FlowTypeListInput = {
+  /** the data core id */
   dataCoreId: string
 }
 
@@ -41,6 +45,9 @@ const responseSchema = Type.Object({
  * Fetch all flow types for a data core
  */
 export class FlowTypeListCommand extends GraphQlCommand<FlowTypeListInput, FlowType[]> {
+  /**
+   * Parse the response
+   */
   protected override parseResponse(rawResponse: unknown): FlowType[] {
     const response = parseResponseHelper(responseSchema, rawResponse)
     if (!response.data.datacore) {
@@ -53,6 +60,9 @@ export class FlowTypeListCommand extends GraphQlCommand<FlowTypeListInput, FlowT
     )
   }
 
+  /**
+   * Get the body for the request
+   */
   protected override getBody(): string {
     return JSON.stringify({
       query: graphQlQuery,

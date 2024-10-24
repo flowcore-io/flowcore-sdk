@@ -39,7 +39,8 @@ export class Client {
       body: request.body,
     })
     if (!response.ok) {
-      throw new ClientError(response.statusText, response.status)
+      const body = await response.json().catch(() => undefined)
+      throw new ClientError(response.statusText, response.status, body)
     }
     const body = await response.json()
     return request.parseResponse(body) as Output

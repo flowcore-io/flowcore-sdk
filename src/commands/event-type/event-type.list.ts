@@ -4,7 +4,13 @@ import { type EventType, EventTypeV0Schema, eventTypeV0ToEventType } from "../..
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 import { NotFoundException } from "../../exceptions/not-found.ts"
 
+/**
+ * The input for the event type list command
+ */
 export type EventTypeListInput = {
+  /**
+   * The flow type id
+   */
   flowTypeId: string
 }
 
@@ -35,6 +41,9 @@ const responseSchema = Type.Object({
  * Fetch all event types for a flow type
  */
 export class EventTypeListCommand extends GraphQlCommand<EventTypeListInput, EventType[]> {
+  /**
+   * Parse the response
+   */
   protected override parseResponse(rawResponse: unknown): EventType[] {
     const response = parseResponseHelper(responseSchema, rawResponse)
     if (!response.data.flowtype) {
@@ -44,6 +53,9 @@ export class EventTypeListCommand extends GraphQlCommand<EventTypeListInput, Eve
     return response.data.flowtype.events.map((eventType) => eventTypeV0ToEventType(eventType, "", "", flowTypeId))
   }
 
+  /**
+   * Get the body for the request
+   */
   protected override getBody(): string {
     return JSON.stringify({
       query: graphQlQuery,

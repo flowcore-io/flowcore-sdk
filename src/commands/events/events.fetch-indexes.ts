@@ -3,25 +3,40 @@ import { GraphQlCommand } from "../../common/command.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 import { NotFoundException } from "../../exceptions/not-found.ts"
 
+/**
+ * The input for the events fetch indexes command
+ */
 export interface EventsFetchIndexesInput {
+  /** the data core id */
   dataCoreId: string
-  aggregator: string
+  /** the flow type name */
+  flowType: string
+  /** the event type name */
   eventType: string
+  /** the paging cursor */
   cursor?: string
+  /** fetch from this time bucket */
   fromTimeBucket?: string
+  /** fetch to this time bucket */
   toTimeBucket?: string
+  /** the page size */
   pageSize?: number
 }
 
+/**
+ * The output for the events fetch indexes command
+ */
 export interface EventsFetchIndexesOutput {
+  /** the time buckets */
   timeBuckets: string[]
+  /** the paging cursor */
   cursor: string | null
 }
 
 const graphQlQuery = `
   query FLOWCORE_SDK_FETCH_DATA_CORE_INDEXES(
     $dataCoreId: ID!,
-    $aggregator: String!,
+    $flowType: String!,
     $eventType: String!,
     $cursor: String,
     $fromTimeBucket: String,
@@ -30,7 +45,7 @@ const graphQlQuery = `
   ) {
     datacore(search: {id: $dataCoreId}) {
       fetchIndexes(input: {
-        aggregator: $aggregator,
+        aggregator: $flowType,
         eventType: $eventType,
         cursor: $cursor
         fromTimeBucket: $fromTimeBucket
@@ -62,6 +77,9 @@ const responseSchema = Type.Object({
  * Fetch time buckets for an event type
  */
 export class EventsFetchIndexesCommand extends GraphQlCommand<EventsFetchIndexesInput, EventsFetchIndexesOutput> {
+  /**
+   * Parse the response
+   */
   protected override parseResponse(rawResponse: unknown): EventsFetchIndexesOutput {
     const response = parseResponseHelper(responseSchema, rawResponse)
     if (!response.data.datacore) {
@@ -70,6 +88,9 @@ export class EventsFetchIndexesCommand extends GraphQlCommand<EventsFetchIndexes
     return response.data.datacore.fetchIndexes
   }
 
+  /**
+   * Get the body for the request
+   */
   protected override getBody(): string {
     return JSON.stringify({
       query: graphQlQuery,

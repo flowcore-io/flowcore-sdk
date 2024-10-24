@@ -4,8 +4,17 @@ import { type DataCore, DataCoreV0Schema, dataCoreV0ToDataCore } from "../../con
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 import { NotFoundException } from "../../exceptions/not-found.ts"
 
+/**
+ * The input for the data core fetch by name command
+ */
 export type DataCoreFetchByNameInput = {
+  /**
+   * The organization slug
+   */
   organization: string
+  /**
+   * The data core slug
+   */
   dataCore: string
 }
 
@@ -43,6 +52,9 @@ const responseSchema = Type.Object({
  * Fetch a data core by name and organization
  */
 export class DataCoreFetchByNameCommand extends GraphQlCommand<DataCoreFetchByNameInput, DataCore> {
+  /**
+   * Parse the response
+   */
   protected override parseResponse(rawResponse: unknown): DataCore {
     const response = parseResponseHelper(responseSchema, rawResponse)
     if (!response.data.organization) {
@@ -54,6 +66,9 @@ export class DataCoreFetchByNameCommand extends GraphQlCommand<DataCoreFetchByNa
     return dataCoreV0ToDataCore(response.data.organization.datacores[0], response.data.organization.id)
   }
 
+  /**
+   * Get the body for the request
+   */
   protected override getBody(): string {
     return JSON.stringify({
       query: graphQlQuery,
