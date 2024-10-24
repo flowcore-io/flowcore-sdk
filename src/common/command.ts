@@ -1,19 +1,18 @@
-import type { TSchema } from "@sinclair/typebox"
-
 /**
  * Abstract command for executing requests
  */
 export abstract class Command<Input, Output> {
+  /**
+   * The input for the command
+   */
   protected readonly input: Input
 
   constructor(input: Input) {
+    /**
+     * The input for the command
+     */
     this.input = input
   }
-
-  /**
-   * The schema for the response
-   */
-  protected abstract schema: TSchema
 
   /**
    * Get the base URL for the request
@@ -56,8 +55,7 @@ export abstract class Command<Input, Output> {
     headers: Record<string, string>
     baseUrl: string
     path: string
-    // deno-lint-ignore no-explicit-any
-    parseResponse: (response: unknown) => any
+    parseResponse: (response: unknown) => Output
   } {
     return {
       body: this.getBody(),

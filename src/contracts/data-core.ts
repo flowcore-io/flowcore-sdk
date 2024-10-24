@@ -29,6 +29,9 @@ const DataCoreSchema: TObject<{
   accessControl: Type.Union([Type.Literal("public"), Type.Literal("private")]),
   deleteProtected: Type.Boolean(),
 })
+/**
+ * The type for a data core
+ */
 export type DataCore = Static<typeof DataCoreSchema>
 
 /**
@@ -62,8 +65,14 @@ export const DataCoreV0Schema: TObject<{
     ),
   ),
 })
+/**
+ * The type for a data core v0
+ */
 export type DataCoreV0 = Static<typeof DataCoreV0Schema>
 
+/**
+ * Convert a data core v0 to a data core
+ */
 export const dataCoreV0ToDataCore = (
   dataCoreV0: DataCoreV0,
   organizationId: string,

@@ -18,6 +18,10 @@ export const EventTypeSchema: TObject<{
   name: Type.String(),
   description: Type.String(),
 })
+
+/**
+ * The type for an event type
+ */
 export type EventType = Static<typeof EventTypeSchema>
 
 /**
@@ -32,8 +36,15 @@ export const EventTypeV0Schema: TObject<{
   name: Type.String(),
   description: Type.Union([Type.String(), Type.Null()]),
 })
+
+/**
+ * The type for an event type v0
+ */
 export type EventTypeV0 = Static<typeof EventTypeV0Schema>
 
+/**
+ * Convert an event type v0 to an event type
+ */
 export const eventTypeV0ToEventType = (
   eventTypeV0: EventTypeV0,
   organizationId: string,

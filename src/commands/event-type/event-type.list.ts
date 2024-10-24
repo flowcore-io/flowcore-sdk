@@ -1,51 +1,42 @@
 import { GraphQlCommand } from "../../common/command.ts"
-import { type TArray, type TNull, type TObject, type TUnion, Type } from "@sinclair/typebox"
+import { Type } from "@sinclair/typebox"
 import { type EventType, EventTypeV0Schema, eventTypeV0ToEventType } from "../../contracts/event-type.ts"
-import { parseResponse } from "../../utils/parse-response.ts"
+import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 import { NotFoundException } from "../../exceptions/not-found.ts"
 
 export type EventTypeListInput = {
   flowTypeId: string
 }
 
+const graphQlQuery = `
+  query FLOWCORE_SDK_EVENT_TYPE_LIST($flowTypeId: ID!) {
+    flowtype(id: $flowTypeId) {
+      events {
+        id
+        name
+        description
+      }
+    }
+  }
+`
+
+const responseSchema = Type.Object({
+  data: Type.Object({
+    flowtype: Type.Union([
+      Type.Object({
+        events: Type.Array(EventTypeV0Schema),
+      }),
+      Type.Null(),
+    ]),
+  }),
+})
+
 /**
  * Fetch all event types for a flow type
  */
 export class EventTypeListCommand extends GraphQlCommand<EventTypeListInput, EventType[]> {
-  private readonly graphQl = `
-    query FLOWCORE_SDK_EVENT_TYPE_LIST($flowTypeId: ID!) {
-      flowtype(id: $flowTypeId) {
-        events {
-          id
-          name
-          description
-        }
-      }
-    }
-  `
-
-  protected override schema: TObject<{
-    data: TObject<{
-      flowtype: TUnion<[
-        TObject<{
-          events: TArray<typeof EventTypeV0Schema>
-        }>,
-        TNull,
-      ]>
-    }>
-  }> = Type.Object({
-    data: Type.Object({
-      flowtype: Type.Union([
-        Type.Object({
-          events: Type.Array(EventTypeV0Schema),
-        }),
-        Type.Null(),
-      ]),
-    }),
-  })
-
   protected override parseResponse(rawResponse: unknown): EventType[] {
-    const response = parseResponse(this.schema, rawResponse)
+    const response = parseResponseHelper(responseSchema, rawResponse)
     if (!response.data.flowtype) {
       throw new NotFoundException("FlowType", this.input.flowTypeId)
     }
@@ -55,7 +46,7 @@ export class EventTypeListCommand extends GraphQlCommand<EventTypeListInput, Eve
 
   protected override getBody(): string {
     return JSON.stringify({
-      query: this.graphQl,
+      query: graphQlQuery,
       variables: this.input,
     })
   }

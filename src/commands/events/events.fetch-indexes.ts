@@ -1,6 +1,6 @@
-import { type TArray, type TNull, type TObject, type TString, type TUnion, Type } from "@sinclair/typebox"
+import { Type } from "@sinclair/typebox"
 import { GraphQlCommand } from "../../common/command.ts"
-import { parseResponse } from "../../utils/parse-response.ts"
+import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 import { NotFoundException } from "../../exceptions/not-found.ts"
 
 export interface EventsFetchIndexesInput {
@@ -18,64 +18,52 @@ export interface EventsFetchIndexesOutput {
   cursor: string | null
 }
 
+const graphQlQuery = `
+  query FLOWCORE_SDK_FETCH_DATA_CORE_INDEXES(
+    $dataCoreId: ID!,
+    $aggregator: String!,
+    $eventType: String!,
+    $cursor: String,
+    $fromTimeBucket: String,
+    $toTimeBucket: String,
+    $pageSize: Int
+  ) {
+    datacore(search: {id: $dataCoreId}) {
+      fetchIndexes(input: {
+        aggregator: $aggregator,
+        eventType: $eventType,
+        cursor: $cursor
+        fromTimeBucket: $fromTimeBucket
+        toTimeBucket: $toTimeBucket
+        pageSize: $pageSize
+      }) {
+        timeBuckets
+        cursor
+      }
+    }
+  }
+`
+
+const responseSchema = Type.Object({
+  data: Type.Object({
+    datacore: Type.Union([
+      Type.Object({
+        fetchIndexes: Type.Object({
+          timeBuckets: Type.Array(Type.String()),
+          cursor: Type.Union([Type.String(), Type.Null()]),
+        }),
+      }),
+      Type.Null(),
+    ]),
+  }),
+})
+
 /**
  * Fetch time buckets for an event type
  */
 export class EventsFetchIndexesCommand extends GraphQlCommand<EventsFetchIndexesInput, EventsFetchIndexesOutput> {
-  private readonly graphQl = `
-    query FLOWCORE_SDK_FETCH_DATA_CORE_INDEXES(
-      $dataCoreId: ID!,
-      $aggregator: String!,
-      $eventType: String!,
-      $cursor: String,
-      $fromTimeBucket: String,
-      $toTimeBucket: String,
-      $pageSize: Int
-    ) {
-      datacore(search: {id: $dataCoreId}) {
-        fetchIndexes(input: {
-          aggregator: $aggregator,
-          eventType: $eventType,
-          cursor: $cursor
-          fromTimeBucket: $fromTimeBucket
-          toTimeBucket: $toTimeBucket
-          pageSize: $pageSize
-        }) {
-          timeBuckets
-          cursor
-        }
-      }
-    }
-  `
-
-  protected override schema: TObject<{
-    data: TObject<{
-      datacore: TUnion<[
-        TObject<{
-          fetchIndexes: TObject<{
-            timeBuckets: TArray<TString>
-            cursor: TUnion<[TString, TNull]>
-          }>
-        }>,
-        TNull,
-      ]>
-    }>
-  }> = Type.Object({
-    data: Type.Object({
-      datacore: Type.Union([
-        Type.Object({
-          fetchIndexes: Type.Object({
-            timeBuckets: Type.Array(Type.String()),
-            cursor: Type.Union([Type.String(), Type.Null()]),
-          }),
-        }),
-        Type.Null(),
-      ]),
-    }),
-  })
-
-  public override parseResponse(rawResponse: unknown): EventsFetchIndexesOutput {
-    const response = parseResponse(this.schema, rawResponse)
+  protected override parseResponse(rawResponse: unknown): EventsFetchIndexesOutput {
+    const response = parseResponseHelper(responseSchema, rawResponse)
     if (!response.data.datacore) {
       throw new NotFoundException("DataCore", this.input.dataCoreId)
     }
@@ -84,7 +72,7 @@ export class EventsFetchIndexesCommand extends GraphQlCommand<EventsFetchIndexes
 
   protected override getBody(): string {
     return JSON.stringify({
-      query: this.graphQl,
+      query: graphQlQuery,
       variables: this.input,
     })
   }

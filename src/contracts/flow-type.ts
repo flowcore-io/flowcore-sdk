@@ -16,6 +16,10 @@ export const FlowTypeSchema: TObject<{
   name: Type.String(),
   description: Type.String(),
 })
+
+/**
+ * The type for a flow type
+ */
 export type FlowType = Static<typeof FlowTypeSchema>
 
 /**
@@ -30,8 +34,15 @@ export const FlowTypeV0Schema: TObject<{
   aggregator: Type.String(),
   description: Type.Union([Type.String(), Type.Null()]),
 })
+
+/**
+ * The type for a flow type v0
+ */
 export type FlowTypeV0 = Static<typeof FlowTypeV0Schema>
 
+/**
+ * Convert a flow type v0 to a flow type
+ */
 export const flowTypeV0ToFlowType = (
   flowTypeV0: FlowTypeV0,
   organizationId: string,

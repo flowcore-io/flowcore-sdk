@@ -23,4 +23,7 @@ export const EventSchema: TObject<{
   validTime: Type.String(),
 })
 
+/**
+ * The type for an event
+ */
 export type Event = Static<typeof EventSchema>
