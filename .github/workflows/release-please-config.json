@@ -1,6 +1,16 @@
 {
   "packages": {
-    ".": {
+    "@flowcore/sdk-core": {
+      "release-type": "simple",
+      "extra-files": [
+        {
+          "type": "json",
+          "path": "deno.json",
+          "jsonpath": "$.version"
+        }
+      ]
+    },
+    "@flowcore/sdk-data-core": {
       "release-type": "simple",
       "extra-files": [
         {

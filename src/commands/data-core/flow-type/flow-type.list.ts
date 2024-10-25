@@ -1,8 +1,6 @@
-import { GraphQlCommand } from "../../common/command.ts"
+import { GraphQlCommand, NotFoundException, parseResponseHelper } from "@flowcore/sdk-core"
 import { Type } from "@sinclair/typebox"
-import { type FlowType, FlowTypeV0Schema, flowTypeV0ToFlowType } from "../../contracts/flow-type.ts"
-import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
-import { NotFoundException } from "../../exceptions/not-found.ts"
+import { type FlowType, FlowTypeV0Schema, flowTypeV0ToFlowType } from "./flow-type.contract.ts"
 
 /**
  * The input for the flow type list command
