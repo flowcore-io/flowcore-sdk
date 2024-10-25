@@ -33,7 +33,5 @@ jobs:
         run: deno install --frozen-lockfile
       - name: Lint
         run: deno lint
-      - name: Format
-        run: deno fmt
       - name: Publish
         run: deno publish
