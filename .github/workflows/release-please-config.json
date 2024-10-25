@@ -1,6 +1,6 @@
 {
   "packages": {
-    "@flowcore/sdk-core": {
+    "./core": {
       "release-type": "simple",
       "extra-files": [
         {
@@ -10,7 +10,7 @@
         }
       ]
     },
-    "@flowcore/sdk-data-core": {
+    "./commands/data-core": {
       "release-type": "simple",
       "extra-files": [
         {
