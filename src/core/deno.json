@@ -1,0 +1,9 @@
+{
+  "$schema": "https://deno.land/x/deno/cli/schemas/config-file.v1.json",
+  "name": "@flowcore/sdk-core",
+  "description": "Flowcore SDK Data Core",
+  "version": "0.0.1",
+  "license": "MIT",
+  "exports": "./mod.ts",
+  "tasks": {}
+}

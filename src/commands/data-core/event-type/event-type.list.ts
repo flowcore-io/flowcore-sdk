@@ -1,8 +1,6 @@
-import { GraphQlCommand } from "../../common/command.ts"
+import { GraphQlCommand, NotFoundException, parseResponseHelper } from "@flowcore/sdk-core"
 import { Type } from "@sinclair/typebox"
-import { type EventType, EventTypeV0Schema, eventTypeV0ToEventType } from "../../contracts/event-type.ts"
-import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
-import { NotFoundException } from "../../exceptions/not-found.ts"
+import { type EventType, EventTypeV0Schema, eventTypeV0ToEventType } from "./event-type.contract.ts"
 
 /**
  * The input for the event type list command

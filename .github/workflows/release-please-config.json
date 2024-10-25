@@ -1,6 +1,16 @@
 {
   "packages": {
-    ".": {
+    "./core": {
+      "release-type": "simple",
+      "extra-files": [
+        {
+          "type": "json",
+          "path": "deno.json",
+          "jsonpath": "$.version"
+        }
+      ]
+    },
+    "./commands/data-core": {
       "release-type": "simple",
       "extra-files": [
         {
