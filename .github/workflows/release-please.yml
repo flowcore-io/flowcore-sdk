@@ -28,4 +28,4 @@ jobs:
       - uses: googleapis/release-please-action@v4
         with:
           token: ${{ secrets.FLOWCORE_MACHINE_GITHUB_TOKEN }}
-          config-file: .github/workflows/release-please.json
+
