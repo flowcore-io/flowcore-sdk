@@ -9,5 +9,5 @@ export * from "./flow-type/flow-type.list.ts"
 export * from "./event-type/event-type.list.ts"
 
 // Events
-export * from "./event/event.fetch.ts"
-export * from "./event/event.fetch-indexes.ts"
+export * from "./events/events.fetch.ts"
+export * from "./events/events.fetch-indexes.ts"

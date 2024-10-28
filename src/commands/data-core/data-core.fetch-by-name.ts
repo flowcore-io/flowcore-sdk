@@ -1,6 +1,8 @@
-import { GraphQlCommand, NotFoundException, parseResponseHelper } from "@flowcore/sdk-core"
+import { GraphQlCommand } from "../../common/command.ts"
 import { Type } from "@sinclair/typebox"
-import { type DataCore, DataCoreV0Schema, dataCoreV0ToDataCore } from "./data-core.contract.ts"
+import { type DataCore, DataCoreV0Schema, dataCoreV0ToDataCore } from "../../contracts/data-core.ts"
+import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
+import { NotFoundException } from "../../exceptions/not-found.ts"
 
 /**
  * The input for the data core fetch by name command

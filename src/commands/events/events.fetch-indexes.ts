@@ -1,5 +1,7 @@
-import { GraphQlCommand, NotFoundException, parseResponseHelper } from "@flowcore/sdk-core"
 import { Type } from "@sinclair/typebox"
+import { GraphQlCommand } from "../../common/command.ts"
+import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
+import { NotFoundException } from "../../exceptions/not-found.ts"
 
 /**
  * The input for the events fetch indexes command
