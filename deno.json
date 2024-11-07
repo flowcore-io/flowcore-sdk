@@ -4,7 +4,7 @@
   "description": "Flowcore SDK",
   "version": "1.0.0",
   "license": "MIT",
-  "exports": "./src/main.ts",
+  "exports": "./src/mod.ts",
   "tasks": {},
   "imports": {
     "@sinclair/typebox": "npm:@sinclair/typebox@0.32.15",
