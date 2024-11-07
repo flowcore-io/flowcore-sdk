@@ -20,6 +20,13 @@ export abstract class Command<Input, Output> {
   protected abstract getBaseUrl(): string
 
   /**
+   * Get the method for the request
+   */
+  protected getMethod(): string {
+    return "POST"
+  }
+
+  /**
    * Get the path for the request
    */
   protected getPath(): string {
@@ -29,17 +36,19 @@ export abstract class Command<Input, Output> {
   /**
    * Get the body for the request
    */
-  protected getBody(): string {
-    return JSON.stringify(this.input)
+  protected getBody(): string | undefined {
+    return this.input ? JSON.stringify(this.input) : undefined
   }
 
   /**
    * Get the headers for the request
    */
   protected getHeaders(): Record<string, string> {
-    return {
-      "Content-Type": "application/json",
-    }
+    return this.getBody()
+      ? {
+        "Content-Type": "application/json",
+      }
+      : {}
   }
 
   /**
@@ -51,10 +60,11 @@ export abstract class Command<Input, Output> {
    * Get the request object
    */
   public getRequest(): {
-    body: string
+    body: string | undefined
     headers: Record<string, string>
     baseUrl: string
     path: string
+    method: string
     parseResponse: (response: unknown) => Output
   } {
     return {
@@ -62,6 +72,7 @@ export abstract class Command<Input, Output> {
       headers: this.getHeaders(),
       baseUrl: this.getBaseUrl(),
       path: this.getPath(),
+      method: this.getMethod(),
       parseResponse: this.parseResponse.bind(this),
     }
   }

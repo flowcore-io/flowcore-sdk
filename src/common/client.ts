@@ -31,7 +31,7 @@ export class Client {
     const request = command.getRequest()
     const authToken = await this.getAuthToken?.()
     const response = await fetch(request.baseUrl + request.path, {
-      method: "POST",
+      method: request.method,
       headers: {
         ...request.headers,
         ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
