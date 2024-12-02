@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.1.0...v1.2.0) (2024-12-02)
+
+
+### Features
+
+* use v2 rest ([7ae42fa](https://github.com/flowcore-io/flowcore-sdk/commit/7ae42fae697385885986e1190385d571839473aa))
+
+
+### Bug Fixes
+
+* use event from contracts ([9d6e861](https://github.com/flowcore-io/flowcore-sdk/commit/9d6e8619d0bd53e954572cce80810f9699bc68df))
+
 ## [1.1.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.0.2...v1.1.0) (2024-11-08)
 
 
