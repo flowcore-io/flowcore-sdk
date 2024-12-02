@@ -45,11 +45,6 @@ export class FlowcoreClient {
    */
   async execute<Input, Output>(command: Command<Input, Output>): Promise<Output> {
     const request = command.getRequest()
-    // console.log("request", request)
-    // console.log("headers", {
-    //   ...request.headers,
-    //   Authorization: await this.getAuthHeader(),
-    // })
     const response = await fetch(request.baseUrl + request.path, {
       method: request.method,
       headers: {
@@ -60,7 +55,12 @@ export class FlowcoreClient {
     })
     if (!response.ok) {
       const body = await response.json().catch(() => undefined)
-      throw new ClientError(response.statusText, response.status, body)
+      const commandName = command.constructor.name
+      throw new ClientError(
+        `${commandName} failed with ${response.status}: ${response.statusText}`,
+        response.status,
+        body,
+      )
     }
     const body = await response.json()
     return request.parseResponse(body) as Output

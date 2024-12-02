@@ -7,8 +7,8 @@ export const FlowcoreEventSchema: TObject<{
   eventId: TString
   timeBucket: TString
   eventType: TString
-  aggregator: TString
-  dataCore: TString
+  flowType: TString
+  dataCoreId: TString
   metadata: TRecord<TString, TUnknown>
   payload: TRecord<TString, TUnknown>
   validTime: TString
@@ -16,8 +16,8 @@ export const FlowcoreEventSchema: TObject<{
   eventId: Type.String(),
   timeBucket: Type.String(),
   eventType: Type.String(),
-  aggregator: Type.String(),
-  dataCore: Type.String(),
+  flowType: Type.String(),
+  dataCoreId: Type.String(),
   metadata: Type.Record(Type.String(), Type.Unknown()),
   payload: Type.Record(Type.String(), Type.Unknown()),
   validTime: Type.String(),
