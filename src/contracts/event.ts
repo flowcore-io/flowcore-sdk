@@ -6,18 +6,20 @@ import { type Static, type TObject, type TRecord, type TString, type TUnknown, T
 export const FlowcoreEventSchema: TObject<{
   eventId: TString
   timeBucket: TString
-  eventType: TString
-  flowType: TString
+  tenant: TString
   dataCoreId: TString
+  flowType: TString
+  eventType: TString
   metadata: TRecord<TString, TUnknown>
   payload: TRecord<TString, TUnknown>
   validTime: TString
 }> = Type.Object({
   eventId: Type.String(),
   timeBucket: Type.String(),
-  eventType: Type.String(),
-  flowType: Type.String(),
+  tenant: Type.String(),
   dataCoreId: Type.String(),
+  flowType: Type.String(),
+  eventType: Type.String(),
   metadata: Type.Record(Type.String(), Type.Unknown()),
   payload: Type.Record(Type.String(), Type.Unknown()),
   validTime: Type.String(),
