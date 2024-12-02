@@ -5,14 +5,14 @@ import { type Static, type TNull, type TObject, type TString, type TUnion, Type 
  */
 export const EventTypeSchema: TObject<{
   id: TString
-  organizationId: TString
+  tenantId: TString
   dataCoreId: TString
   flowTypeId: TString
   name: TString
   description: TString
 }> = Type.Object({
   id: Type.String(),
-  organizationId: Type.String(),
+  tenantId: Type.String(),
   dataCoreId: Type.String(),
   flowTypeId: Type.String(),
   name: Type.String(),
@@ -53,7 +53,7 @@ export const eventTypeV0ToEventType = (
 ): EventType => {
   return {
     id: eventTypeV0.id,
-    organizationId,
+    tenantId: organizationId,
     dataCoreId,
     flowTypeId,
     name: eventTypeV0.name,

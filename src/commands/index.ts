@@ -1,4 +1,5 @@
 // Data Core
+export * from "./data-core/data-core.list.ts"
 export * from "./data-core/data-core.fetch-by-name.ts"
 
 // Flow Types
@@ -10,9 +11,4 @@ export * from "./event-type/event-type.list.ts"
 
 // Events
 export * from "./events/events.fetch.ts"
-export * from "./events/events.fetch-indexes.ts"
-
-// V2
-export * from "./v2/events/events.fetch-time-buckets-by-name.ts"
-export * from "./v2/events/events.fetch-time-buckets.ts"
-export * from "./v2/events/events.fetch.ts"
+export * from "./events/events.fetch-time-buckets-by-names.ts"

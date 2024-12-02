@@ -24,7 +24,7 @@ export type ClientOptions = ClientOptionsBearer | ClientOptionsApiKey
 /**
  * A base client for executing commands
  */
-export class Client {
+export class FlowcoreClient {
   constructor(private readonly options: ClientOptions) {}
 
   /**
@@ -45,6 +45,11 @@ export class Client {
    */
   async execute<Input, Output>(command: Command<Input, Output>): Promise<Output> {
     const request = command.getRequest()
+    // console.log("request", request)
+    // console.log("headers", {
+    //   ...request.headers,
+    //   Authorization: await this.getAuthHeader(),
+    // })
     const response = await fetch(request.baseUrl + request.path, {
       method: request.method,
       headers: {

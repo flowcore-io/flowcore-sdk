@@ -1,0 +1,11 @@
+apiVersion: iam.flowcore.io/v1
+kind: Policy
+metadata:
+  name: data-core-read-access
+  tenant: rene
+spec:
+  version: "1.0.0"
+  description: "Allows read access to all data cores"
+  policyDocuments:
+    - resource: "frn::rene:data-core/*"
+      action: "read"

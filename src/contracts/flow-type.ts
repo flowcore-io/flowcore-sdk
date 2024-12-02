@@ -5,13 +5,13 @@ import { type Static, type TNull, type TObject, type TString, type TUnion, Type 
  */
 export const FlowTypeSchema: TObject<{
   id: TString
-  organizationId: TString
+  tenantId: TString
   dataCoreId: TString
   name: TString
   description: TString
 }> = Type.Object({
   id: Type.String(),
-  organizationId: Type.String(),
+  tenantId: Type.String(),
   dataCoreId: Type.String(),
   name: Type.String(),
   description: Type.String(),
@@ -50,7 +50,7 @@ export const flowTypeV0ToFlowType = (
 ): FlowType => {
   return {
     id: flowTypeV0.id,
-    organizationId,
+    tenantId: organizationId,
     dataCoreId,
     name: flowTypeV0.aggregator,
     description: flowTypeV0.description ?? "",

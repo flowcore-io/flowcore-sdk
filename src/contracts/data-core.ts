@@ -14,16 +14,16 @@ import {
 /**
  * The schema for a data core
  */
-const DataCoreSchema: TObject<{
+export const DataCoreSchema: TObject<{
   id: TString
-  organizationId: TString
+  tenantId: TString
   name: TString
   description: TString
   accessControl: TUnion<[TLiteral<"public">, TLiteral<"private">]>
   deleteProtected: TBoolean
 }> = Type.Object({
   id: Type.String(),
-  organizationId: Type.String(),
+  tenantId: Type.String(),
   name: Type.String(),
   description: Type.String(),
   accessControl: Type.Union([Type.Literal("public"), Type.Literal("private")]),
@@ -79,7 +79,7 @@ export const dataCoreV0ToDataCore = (
 ): DataCore => {
   return {
     id: dataCoreV0.id,
-    organizationId,
+    tenantId: organizationId,
     name: dataCoreV0.name,
     description: dataCoreV0.description ?? "",
     accessControl: dataCoreV0.isPublic ? "public" : "private",

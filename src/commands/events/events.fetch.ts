@@ -1,96 +1,94 @@
-import { Type } from "@sinclair/typebox"
-import { GraphQlCommand } from "../../common/command.ts"
+import { type Static, Type } from "@sinclair/typebox"
+import { Command } from "../../common/command.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
-import { NotFoundException } from "../../exceptions/not-found.ts"
-import { type Event, EventSchema } from "../../contracts/event.ts"
+
+export const FlowcoreEventSchema = Type.Object({
+  eventId: Type.String(),
+  tenant: Type.String(),
+  dataCoreId: Type.String(),
+  flowType: Type.String(),
+  eventType: Type.String(),
+  payload: Type.Record(Type.String(), Type.Unknown()),
+  metadata: Type.Record(Type.String(), Type.String()),
+  timeBucket: Type.String(),
+  validTime: Type.String(),
+})
+
+export type FlowcoreEvent = Static<typeof FlowcoreEventSchema>
 
 /**
- * The input for the events fetch command
+ * The input for the events fetch indexes command
  */
-export interface EventsFetchInput {
+export interface EventsFetchEventsInput {
+  /** the tenant */
+  tenant: string
   /** the data core id */
   dataCoreId: string
   /** the flow type name */
   flowType: string
   /** the event type names */
   eventTypes: string[]
+  /** the time bucket */
+  timeBucket: string
   /** the paging cursor */
-  cursor?: string
-  /** fetch after this event id */
-  afterEventId?: string
-  /** fetch before this event id */
-  beforeEventId?: string
-  /** fetch from this time bucket */
-  timeBucket?: string
-  /** the page size */
+  cursor?: number
+  /** the page size (default is 10.000) */
   pageSize?: number
+  /** start from this event id */
+  fromEventId?: string
+  /** after this event id */
+  afterEventId?: string
+  /** end at this event id */
+  toEventId?: string
 }
 
 /**
- * The output for the events fetch command
+ * The output for the events fetch indexes command
  */
-export interface EventsFetchOutput {
+export interface EventsFetchEventsOutput {
   /** the events */
-  events: Event[]
-  /** the paging cursor */
-  cursor: string | null
+  events: FlowcoreEvent[]
+  /** the next page cursor */
+  nextCursor?: string
 }
 
-const graphQlQuery = `
-  query FLOWCORE_CLI_FETCH_EVENTS($dataCoreId: ID!, $flowType: String!, $eventTypes: [String!]!, $timeBucket: String!, $cursor: String, $afterEventId: String, $beforeEventId: String, $pageSize: Int) {
-    datacore(search: {id: $dataCoreId}) {
-      fetchEvents(input: {
-        aggregator: $flowType,
-        eventTypes: $eventTypes,
-        timeBucket: $timeBucket
-        cursor: $cursor
-        afterEventId: $afterEventId
-        beforeEventId: $beforeEventId
-        pageSize: $pageSize
-      }) {
-        events {
-          eventId
-          timeBucket
-          eventType
-          aggregator
-          dataCore
-          metadata
-          payload
-          validTime
-        }
-        cursor
-      }
-    }
-  }
-`
-
+/**
+ * The response schema for the events fetch command
+ */
 const responseSchema = Type.Object({
-  data: Type.Object({
-    datacore: Type.Union([
-      Type.Object({
-        fetchEvents: Type.Object({
-          events: Type.Array(EventSchema),
-          cursor: Type.Union([Type.String(), Type.Null()]),
-        }),
-      }),
-      Type.Null(),
-    ]),
-  }),
+  events: Type.Array(FlowcoreEventSchema),
+  nextCursor: Type.Optional(Type.String()),
 })
 
 /**
- * Fetch events for event types
+ * Fetch time buckets for an event type
  */
-export class EventsFetchCommand extends GraphQlCommand<EventsFetchInput, EventsFetchOutput> {
+export class EventsFetchCommand extends Command<EventsFetchEventsInput, EventsFetchEventsOutput> {
+  /**
+   * Get the base url for the request
+   */
+  protected override getBaseUrl(): string {
+    return "https://event-source.api.flowcore.io"
+  }
+  /**
+   * Get the path for the request
+   */
+  protected override getPath(): string {
+    const query: Record<string, string> = {
+      ...(this.input.cursor ? { cursor: this.input.cursor.toString() } : {}),
+      ...(this.input.pageSize ? { pageSize: this.input.pageSize.toString() } : {}),
+      ...(this.input.fromEventId ? { fromEventId: this.input.fromEventId } : {}),
+      ...(this.input.afterEventId ? { afterEventId: this.input.afterEventId } : {}),
+      ...(this.input.toEventId ? { toEventId: this.input.toEventId } : {}),
+    }
+    return `/api/v1/events?${new URLSearchParams(query).toString()}`
+  }
   /**
    * Parse the response
    */
-  protected override parseResponse(rawResponse: unknown): EventsFetchOutput {
+  protected override parseResponse(rawResponse: unknown): EventsFetchEventsOutput {
     const response = parseResponseHelper(responseSchema, rawResponse)
-    if (!response.data.datacore) {
-      throw new NotFoundException("DataCore", this.input.dataCoreId)
-    }
-    return response.data.datacore.fetchEvents
+    return response
   }
 
   /**
@@ -98,8 +96,11 @@ export class EventsFetchCommand extends GraphQlCommand<EventsFetchInput, EventsF
    */
   protected override getBody(): string {
     return JSON.stringify({
-      query: graphQlQuery,
-      variables: this.input,
+      tenant: this.input.tenant,
+      dataCoreId: this.input.dataCoreId,
+      flowType: this.input.flowType,
+      eventTypes: this.input.eventTypes,
+      timeBucket: this.input.timeBucket,
     })
   }
 }

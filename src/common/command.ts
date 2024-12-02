@@ -37,6 +37,9 @@ export abstract class Command<Input, Output> {
    * Get the body for the request
    */
   protected getBody(): string | undefined {
+    if (this.getMethod() === "GET") {
+      return undefined
+    }
     return this.input ? JSON.stringify(this.input) : undefined
   }
 

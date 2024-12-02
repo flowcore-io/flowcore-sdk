@@ -1,6 +1,6 @@
-import { GraphQlCommand } from "../../common/command.ts"
+import { Command } from "../../common/command.ts"
 import { Type } from "@sinclair/typebox"
-import { type FlowType, FlowTypeV0Schema, flowTypeV0ToFlowType } from "../../contracts/flow-type.ts"
+import { type FlowType, FlowTypeSchema } from "../../contracts/flow-type.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 import { NotFoundException } from "../../exceptions/not-found.ts"
 
@@ -14,61 +14,42 @@ export type FlowTypeFetchByNameInput = {
   flowType: string
 }
 
-const graphQlQuery = `
-  query FLOWCORE_SDK_FLOW_TYPE_FETCH_BY_NAME($dataCoreId: ID!, $flowType: String!) {
-    datacore(search: { id: $dataCoreId }) {
-      organization {
-        id
-      }
-      flowtypes(search: { aggregator: $flowType }) {
-        id
-        aggregator
-        description
-      }
-    }
-  }
-`
-
-const responseSchema = Type.Object({
-  data: Type.Object({
-    datacore: Type.Union([
-      Type.Object({
-        organization: Type.Object({
-          id: Type.String(),
-        }),
-        flowtypes: Type.Array(FlowTypeV0Schema),
-      }),
-      Type.Null(),
-    ]),
-  }),
-})
-
 /**
  * Fetch a flow type by name and data core id
  */
-export class FlowTypeFetchByNameCommand extends GraphQlCommand<FlowTypeFetchByNameInput, FlowType> {
+export class FlowTypeFetchByNameCommand extends Command<FlowTypeFetchByNameInput, FlowType> {
+  /**
+   * Get the method
+   */
+  protected override getMethod(): string {
+    return "GET"
+  }
+
+  /**
+   * Get the base url
+   */
+  protected override getBaseUrl(): string {
+    return "https://flow-type-2.api.flowcore.io"
+  }
+
+  /**
+   * Get the path
+   */
+  protected override getPath(): string {
+    const queryParams = new URLSearchParams()
+    queryParams.set("dataCoreId", this.input.dataCoreId)
+    queryParams.set("name", this.input.flowType)
+    return `/api/v1/flow-types?${queryParams.toString()}`
+  }
+
   /**
    * Parse the response
    */
   protected override parseResponse(rawResponse: unknown): FlowType {
-    const response = parseResponseHelper(responseSchema, rawResponse)
-    if (!response.data.datacore?.flowtypes?.[0]) {
+    const response = parseResponseHelper(Type.Array(FlowTypeSchema), rawResponse)
+    if (response.length === 0) {
       throw new NotFoundException("FlowType", this.input.flowType)
     }
-    return flowTypeV0ToFlowType(
-      response.data.datacore.flowtypes[0],
-      response.data.datacore.organization.id,
-      this.input.dataCoreId,
-    )
-  }
-
-  /**
-   * Get the body for the request
-   */
-  protected override getBody(): string {
-    return JSON.stringify({
-      query: graphQlQuery,
-      variables: this.input,
-    })
+    return response[0]
   }
 }
