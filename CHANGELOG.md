@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.2.0...v1.2.1) (2024-12-02)
+
+
+### Bug Fixes
+
+* cursor is string ([b837899](https://github.com/flowcore-io/flowcore-sdk/commit/b8378992329a700d1673c4b2111ea4a2ac72e4ff))
+
 ## [1.2.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.1.0...v1.2.0) (2024-12-02)
 
 
