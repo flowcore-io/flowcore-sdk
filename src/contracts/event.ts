@@ -3,7 +3,7 @@ import { type Static, type TObject, type TRecord, type TString, type TUnknown, T
 /**
  * The schema for an event
  */
-export const EventSchema: TObject<{
+export const FlowcoreEventSchema: TObject<{
   eventId: TString
   timeBucket: TString
   eventType: TString
@@ -26,4 +26,4 @@ export const EventSchema: TObject<{
 /**
  * The type for an event
  */
-export type Event = Static<typeof EventSchema>
+export type FlowcoreEvent = Static<typeof FlowcoreEventSchema>

@@ -1,20 +1,7 @@
-import { type Static, Type } from "@sinclair/typebox"
+import { Type } from "@sinclair/typebox"
 import { Command } from "../../common/command.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
-
-export const FlowcoreEventSchema = Type.Object({
-  eventId: Type.String(),
-  tenant: Type.String(),
-  dataCoreId: Type.String(),
-  flowType: Type.String(),
-  eventType: Type.String(),
-  payload: Type.Record(Type.String(), Type.Unknown()),
-  metadata: Type.Record(Type.String(), Type.String()),
-  timeBucket: Type.String(),
-  validTime: Type.String(),
-})
-
-export type FlowcoreEvent = Static<typeof FlowcoreEventSchema>
+import { type FlowcoreEvent, FlowcoreEventSchema } from "../../contracts/event.ts"
 
 /**
  * The input for the events fetch indexes command
