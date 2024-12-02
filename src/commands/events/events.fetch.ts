@@ -18,7 +18,7 @@ export interface EventsFetchEventsInput {
   /** the time bucket */
   timeBucket: string
   /** the paging cursor */
-  cursor?: number
+  cursor?: string
   /** the page size (default is 10.000) */
   pageSize?: number
   /** start from this event id */

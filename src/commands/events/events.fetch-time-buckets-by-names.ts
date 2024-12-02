@@ -15,7 +15,7 @@ export interface EventsFetchTimeBucketsByNamesInput {
   /** the event type names */
   eventTypes: string[]
   /** the paging cursor */
-  cursor?: number
+  cursor?: string
   /** the page size (default is 10.000) */
   pageSize?: number
   /** start from this time bucket */
@@ -31,7 +31,7 @@ export interface EventsFetchTimeBucketsByNamesOutput {
   /** the time buckets */
   timeBuckets: string[]
   /** the next page cursor */
-  nextCursor?: number
+  nextCursor?: string
 }
 
 /**
@@ -39,7 +39,7 @@ export interface EventsFetchTimeBucketsByNamesOutput {
  */
 const responseSchema = Type.Object({
   timeBuckets: Type.Array(Type.String()),
-  nextCursor: Type.Optional(Type.Number()),
+  nextCursor: Type.Optional(Type.String()),
 })
 
 /**
