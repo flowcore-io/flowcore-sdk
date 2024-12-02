@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.3](https://github.com/flowcore-io/flowcore-sdk/compare/v1.2.2...v1.2.3) (2024-12-02)
+
+
+### Bug Fixes
+
+* add tenant to event ([62d2cda](https://github.com/flowcore-io/flowcore-sdk/commit/62d2cda90ba8cfcbdefb69a8dff0050bc31802ab))
+
 ## [1.2.2](https://github.com/flowcore-io/flowcore-sdk/compare/v1.2.1...v1.2.2) (2024-12-02)
 
 
