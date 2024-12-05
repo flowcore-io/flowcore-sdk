@@ -1,7 +1,14 @@
+import type { FlowcoreClient } from "./flowcore-client.ts"
+
 /**
  * Abstract command for executing requests
  */
 export abstract class Command<Input, Output> {
+  /**
+   * The allowed modes for the command
+   */
+  protected readonly allowedModes: ("apiKey" | "bearer")[] = ["apiKey", "bearer"]
+
   /**
    * The input for the command
    */
@@ -62,22 +69,35 @@ export abstract class Command<Input, Output> {
   /**
    * Get the request object
    */
-  public getRequest(): {
+  // deno-lint-ignore require-await
+  public async getRequest(_client: FlowcoreClient): Promise<{
+    allowedModes: ("apiKey" | "bearer")[]
     body: string | undefined
     headers: Record<string, string>
     baseUrl: string
     path: string
     method: string
     parseResponse: (response: unknown) => Output
-  } {
+    waitForResponse: (client: FlowcoreClient, response: Output) => Promise<Output>
+  }> {
     return {
+      allowedModes: this.allowedModes,
       body: this.getBody(),
       headers: this.getHeaders(),
       baseUrl: this.getBaseUrl(),
       path: this.getPath(),
       method: this.getMethod(),
       parseResponse: this.parseResponse.bind(this),
+      waitForResponse: this.waitForResponse.bind(this),
     }
+  }
+
+  /**
+   * Wait for the response
+   */
+  // deno-lint-ignore require-await
+  protected async waitForResponse(_client: FlowcoreClient, response: Output): Promise<Output> {
+    return response
   }
 }
 
