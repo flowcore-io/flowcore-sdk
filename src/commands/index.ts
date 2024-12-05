@@ -5,6 +5,12 @@ export * from "./tenant/tenant.list.ts"
 // Api Key
 export * from "./api-key/api-key.list.ts"
 
+// Secret
+export * from "./secret/secret.list.ts"
+
+// Variable
+export * from "./variable/variable.list.ts"
+
 // Data Core
 export * from "./data-core/data-core.exists.ts"
 export * from "./data-core/data-core.fetch.ts"
