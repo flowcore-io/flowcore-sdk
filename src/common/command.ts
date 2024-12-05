@@ -1,4 +1,4 @@
-import typd { FlowcoreClient } from "./flowcore-client.ts"
+import type { FlowcoreClient } from "./flowcore-client.ts"
 
 /**
  * Abstract command for executing requests
