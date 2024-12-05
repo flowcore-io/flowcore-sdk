@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.3.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.2.3...v1.3.0) (2024-12-05)
+
+
+### Features
+
+* refactor and new commands ([b3cb108](https://github.com/flowcore-io/flowcore-sdk/commit/b3cb1087f47d48c34571515aa690b6a995597f94))
+
+
+### Bug Fixes
+
+* fix typo ([9485cf7](https://github.com/flowcore-io/flowcore-sdk/commit/9485cf72072c74e31c2c08fcf1fa14d052299b84))
+* lint fix ([e9da973](https://github.com/flowcore-io/flowcore-sdk/commit/e9da97398696d9f8294501dc7a5fadd5a20f92ff))
+
 ## [1.2.3](https://github.com/flowcore-io/flowcore-sdk/compare/v1.2.2...v1.2.3) (2024-12-02)
 
 
