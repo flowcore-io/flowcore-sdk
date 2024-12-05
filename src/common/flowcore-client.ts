@@ -1,4 +1,5 @@
 import { ClientError } from "../exceptions/client-error.ts"
+import { CommandError } from "../exceptions/command-error.ts"
 import type { Command } from "./command.ts"
 
 /**
@@ -25,7 +26,16 @@ export type ClientOptions = ClientOptionsBearer | ClientOptionsApiKey
  * A base client for executing commands
  */
 export class FlowcoreClient {
-  constructor(private readonly options: ClientOptions) {}
+  private mode: "apiKey" | "bearer"
+  constructor(private readonly options: ClientOptions) {
+    if ((this.options as ClientOptionsBearer).getBearerToken) {
+      this.mode = "bearer"
+    } else if ((this.options as ClientOptionsApiKey).apiKeyId && (this.options as ClientOptionsApiKey).apiKey) {
+      this.mode = "apiKey"
+    } else {
+      throw new Error("Invalid client options")
+    }
+  }
 
   /**
    * Get the auth header
@@ -44,7 +54,12 @@ export class FlowcoreClient {
    * Execute a command
    */
   async execute<Input, Output>(command: Command<Input, Output>): Promise<Output> {
-    const request = command.getRequest()
+    const request = await command.getRequest(this)
+
+    if (!request.allowedModes.includes(this.mode)) {
+      throw new CommandError(command.constructor.name, `Not allowed in "${this.mode}" mode`)
+    }
+
     const response = await fetch(request.baseUrl + request.path, {
       method: request.method,
       headers: {
@@ -53,6 +68,7 @@ export class FlowcoreClient {
       },
       body: request.body,
     })
+
     if (!response.ok) {
       const body = await response.json().catch(() => undefined)
       const commandName = command.constructor.name
@@ -63,6 +79,7 @@ export class FlowcoreClient {
       )
     }
     const body = await response.json()
-    return request.parseResponse(body) as Output
+    const parsedBody = request.parseResponse(body)
+    return request.waitForResponse(this, parsedBody)
   }
 }
