@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.3.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.3.0...v1.3.1) (2024-12-06)
+
+
+### Bug Fixes
+
+* add secret list and variable list ([75bf201](https://github.com/flowcore-io/flowcore-sdk/commit/75bf2013e8539aeb1f92ebcd5fdb96c197f6731e))
+* add tenant list and api key list ([18cfb18](https://github.com/flowcore-io/flowcore-sdk/commit/18cfb18286342a3e51595d648b369cd7195def33))
+* added more commands ([feef2ad](https://github.com/flowcore-io/flowcore-sdk/commit/feef2adc7be749f126c9d10a454dbc195e2198d6))
+* change client options ([d4d7553](https://github.com/flowcore-io/flowcore-sdk/commit/d4d75532135c91c862cf46d407a3afea990a5cea))
+* interface fix ([32cde1f](https://github.com/flowcore-io/flowcore-sdk/commit/32cde1f129cc0a94b3497ece0ac9da6431a56c96))
+
 ## [1.3.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.2.3...v1.3.0) (2024-12-05)
 
 
