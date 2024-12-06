@@ -91,7 +91,7 @@ export class FlowTypeDeleteRequestCommand extends GraphQlCommand<FlowTypeDeleteR
       baseUrl: string
       path: string
       method: string
-      parseResponse: (response: unknown) => boolean
+      parseResponse: (response: unknown, flowcoreClient: FlowcoreClient) => boolean | Promise<boolean>
       waitForResponse: (client: FlowcoreClient, response: boolean) => Promise<boolean>
     }
   > {
