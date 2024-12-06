@@ -1,6 +1,7 @@
 import { Type } from "@sinclair/typebox"
 import { GraphQlCommand } from "../../common/command.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
+import { CommandError } from "../../exceptions/command-error.ts"
 
 /**
  * The input for the secret list command
@@ -19,9 +20,19 @@ const graphQlQueryById = `
 `
 
 const responseSchema = Type.Object({
+  errors: Type.Optional(
+    Type.Array(
+      Type.Object({
+        message: Type.String(),
+      }),
+    ),
+  ),
   data: Type.Object({
     organization: Type.Object({
-      secrets: Type.Array(Type.String()),
+      secrets: Type.Union([
+        Type.Array(Type.String()),
+        Type.Null(),
+      ]),
     }),
   }),
 })
@@ -40,6 +51,12 @@ export class SecretListCommand extends GraphQlCommand<SecretListInput, string[]>
    */
   protected override parseResponse(rawResponse: unknown): string[] {
     const response = parseResponseHelper(responseSchema, rawResponse)
+    if (response.errors) {
+      throw new CommandError(this.constructor.name, response.errors[0].message)
+    }
+    if (response.data.organization.secrets === null) {
+      throw new CommandError(this.constructor.name, "Failed to list secrets")
+    }
     return response.data.organization.secrets
   }
 

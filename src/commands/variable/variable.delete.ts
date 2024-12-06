@@ -1,24 +1,22 @@
 import { Type } from "@sinclair/typebox"
 import { GraphQlCommand } from "../../common/command.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
-import type { Variable } from "../../contracts/variable.ts"
 import { CommandError } from "../../exceptions/command-error.ts"
 
 /**
- * The input for the variable list command
+ * The input for the variable delete command
  */
-export interface VariableListInput {
+export interface VariableDeleteInput {
   /** The tenant id */
   tenantId: string
+  /** The key of the variable */
+  key: string
 }
 
 const graphQlQueryById = `
-  query FLOWCORE_SDK_VARIABLE_LIST($tenantId: ID!) {
-    organization(search: {id: $tenantId}) {
-      variables {
-        key
-        value
-      }
+  mutation FLOWCORE_SDK_VARIABLE_DELETE($tenantId: ID!, $key: String!) {
+    organization(id: $tenantId) {
+      removeVariable(key: $key)
     }
   }
 `
@@ -34,10 +32,7 @@ const responseSchema = Type.Object({
   data: Type.Union([
     Type.Object({
       organization: Type.Object({
-        variables: Type.Array(Type.Object({
-          key: Type.String(),
-          value: Type.String(),
-        })),
+        removeVariable: Type.Union([Type.Boolean(), Type.Null()]),
       }),
     }),
     Type.Null(),
@@ -45,9 +40,9 @@ const responseSchema = Type.Object({
 })
 
 /**
- * List variables
+ * Create a variable
  */
-export class VariableListCommand extends GraphQlCommand<VariableListInput, Variable[]> {
+export class VariableDeleteCommand extends GraphQlCommand<VariableDeleteInput, boolean> {
   /**
    * The allowed modes for the command
    */
@@ -56,15 +51,15 @@ export class VariableListCommand extends GraphQlCommand<VariableListInput, Varia
   /**
    * Parse the response
    */
-  protected override parseResponse(rawResponse: unknown): Variable[] {
+  protected override parseResponse(rawResponse: unknown): boolean {
     const response = parseResponseHelper(responseSchema, rawResponse)
     if (response.errors) {
       throw new CommandError(this.constructor.name, response.errors[0].message)
     }
-    if (!response.data) {
-      throw new CommandError(this.constructor.name, "Failed to list variables")
+    if (!response.data || response.data.organization.removeVariable !== true) {
+      throw new CommandError(this.constructor.name, "Failed to delete variable")
     }
-    return response.data.organization.variables
+    return response.data.organization.removeVariable
   }
 
   /**

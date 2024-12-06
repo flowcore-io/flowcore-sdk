@@ -1,24 +1,22 @@
 import { Type } from "@sinclair/typebox"
 import { GraphQlCommand } from "../../common/command.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
-import type { Variable } from "../../contracts/variable.ts"
 import { CommandError } from "../../exceptions/command-error.ts"
 
 /**
- * The input for the variable list command
+ * The input for the secret delete command
  */
-export interface VariableListInput {
+export interface SecretDeleteInput {
   /** The tenant id */
   tenantId: string
+  /** The key of the secret */
+  key: string
 }
 
 const graphQlQueryById = `
-  query FLOWCORE_SDK_VARIABLE_LIST($tenantId: ID!) {
-    organization(search: {id: $tenantId}) {
-      variables {
-        key
-        value
-      }
+  mutation FLOWCORE_SDK_SECRET_DELETE($tenantId: ID!, $key: String!) {
+    organization(id: $tenantId) {
+      removeSecret(key: $key)
     }
   }
 `
@@ -31,23 +29,17 @@ const responseSchema = Type.Object({
       }),
     ),
   ),
-  data: Type.Union([
-    Type.Object({
-      organization: Type.Object({
-        variables: Type.Array(Type.Object({
-          key: Type.String(),
-          value: Type.String(),
-        })),
-      }),
+  data: Type.Object({
+    organization: Type.Object({
+      removeSecret: Type.Union([Type.Boolean(), Type.Null()]),
     }),
-    Type.Null(),
-  ]),
+  }),
 })
 
 /**
- * List variables
+ * List secrets
  */
-export class VariableListCommand extends GraphQlCommand<VariableListInput, Variable[]> {
+export class SecretDeleteCommand extends GraphQlCommand<SecretDeleteInput, boolean> {
   /**
    * The allowed modes for the command
    */
@@ -56,15 +48,16 @@ export class VariableListCommand extends GraphQlCommand<VariableListInput, Varia
   /**
    * Parse the response
    */
-  protected override parseResponse(rawResponse: unknown): Variable[] {
+  protected override parseResponse(rawResponse: unknown): boolean {
+    console.log("rawResponse", rawResponse)
     const response = parseResponseHelper(responseSchema, rawResponse)
     if (response.errors) {
       throw new CommandError(this.constructor.name, response.errors[0].message)
     }
-    if (!response.data) {
-      throw new CommandError(this.constructor.name, "Failed to list variables")
+    if (response.data.organization.removeSecret !== true) {
+      throw new CommandError(this.constructor.name, "Failed to delete secret")
     }
-    return response.data.organization.variables
+    return response.data.organization.removeSecret
   }
 
   /**
