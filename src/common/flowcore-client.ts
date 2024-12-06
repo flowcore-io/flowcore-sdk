@@ -7,6 +7,8 @@ import type { Command } from "./command.ts"
  */
 interface ClientOptionsBearer {
   getBearerToken: () => Promise<string> | string
+  apiKeyId?: never
+  apiKey?: never
 }
 
 /**
@@ -15,6 +17,7 @@ interface ClientOptionsBearer {
 interface ClientOptionsApiKey {
   apiKeyId: string
   apiKey: string
+  getBearerToken?: never
 }
 
 /**
