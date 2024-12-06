@@ -79,7 +79,7 @@ export class FlowcoreClient {
       )
     }
     const body = await response.json()
-    const parsedBody = request.parseResponse(body)
+    const parsedBody = await request.parseResponse(body, this)
     return request.waitForResponse(this, parsedBody)
   }
 }

@@ -34,6 +34,13 @@ export const TenantSchema: TObject<{
 export type Tenant = Static<typeof TenantSchema>
 
 /**
+ * The type for a tenant with a link type
+ */
+export type TenantWithLinkType = Tenant & {
+  linkType: "OWNER" | "COLLABORATOR"
+}
+
+/**
  * The schema for a tenant v0
  */
 export const TenantV0Schema: TObject<{

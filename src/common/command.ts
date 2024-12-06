@@ -64,7 +64,7 @@ export abstract class Command<Input, Output> {
   /**
    * Parse the response
    */
-  protected abstract parseResponse(response: unknown): Output
+  protected abstract parseResponse(response: unknown, flowcoreClient: FlowcoreClient): Output | Promise<Output>
 
   /**
    * Get the request object
@@ -77,7 +77,7 @@ export abstract class Command<Input, Output> {
     baseUrl: string
     path: string
     method: string
-    parseResponse: (response: unknown) => Output
+    parseResponse: (response: unknown, client: FlowcoreClient) => Output | Promise<Output>
     waitForResponse: (client: FlowcoreClient, response: Output) => Promise<Output>
   }> {
     return {
