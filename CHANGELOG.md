@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.4](https://github.com/flowcore-io/flowcore-sdk/compare/v1.4.3...v1.4.4) (2024-12-09)
+
+
+### Bug Fixes
+
+* choose files to include in publish ([9cc35a9](https://github.com/flowcore-io/flowcore-sdk/commit/9cc35a937f2a2342ece9319a1dc25407bfcab8df))
+
 ## [1.4.3](https://github.com/flowcore-io/flowcore-sdk/compare/v1.4.2...v1.4.3) (2024-12-09)
 
 
