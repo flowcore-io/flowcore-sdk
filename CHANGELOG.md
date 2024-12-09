@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.2](https://github.com/flowcore-io/flowcore-sdk/compare/v1.4.1...v1.4.2) (2024-12-09)
+
+
+### Bug Fixes
+
+* release npm ([e87287f](https://github.com/flowcore-io/flowcore-sdk/commit/e87287f5b7b47145733e7b1c8835a185e1f84f10))
+
 ## [1.4.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.4.0...v1.4.1) (2024-12-09)
 
 
