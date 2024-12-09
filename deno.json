@@ -5,6 +5,13 @@
   "version": "1.4.2",
   "license": "MIT",
   "exports": "./src/mod.ts",
+  "publish": {
+    "include": [
+      "src/**/*.ts",
+      "README.md",
+      "CHANGELOG.md"
+    ]
+  },
   "tasks": {},
   "imports": {
     "@deno/dnt": "jsr:@deno/dnt@^0.41.3",
@@ -14,7 +21,8 @@
   },
   "fmt": {
     "exclude": [
-      "node_modules"
+      "node_modules",
+      "npm"
     ],
     "lineWidth": 120,
     "indentWidth": 2,

@@ -17,6 +17,7 @@ await build({
     description: denoJson.description,
     version: denoJson.version,
     license: denoJson.license,
+    homepage: "https://github.com/flowcore-io/flowcore-sdk#readme",
     repository: {
       type: "git",
       url: "git+https://github.com/flowcore-io/flowcore-sdk.git",
