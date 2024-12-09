@@ -19,15 +19,16 @@ await build({
     license: denoJson.license,
     repository: {
       type: "git",
-      url: "git+https://github.com/flowcore/flowcore-sdk.git",
+      url: "git+https://github.com/flowcore-io/flowcore-sdk.git",
     },
     bugs: {
-      url: "https://github.com/flowcore/flowcore-sdk/issues",
+      url: "https://github.com/flowcore-io/flowcore-sdk/issues",
     },
   },
   postBuild() {
     // steps to run after building and before running the tests
     // Deno.copyFileSync("LICENSE", "npm/LICENSE")
     Deno.copyFileSync("README.md", "npm/README.md")
+    Deno.copyFileSync("CHANGELOG.md", "npm/CHANGELOG.md")
   },
 })
