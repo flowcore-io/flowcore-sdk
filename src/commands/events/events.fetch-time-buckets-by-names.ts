@@ -1,6 +1,6 @@
-import { Command } from "@flowcore/sdk"
 import { Type } from "@sinclair/typebox"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
+import { Command } from "../../common/command.ts"
 
 /**
  * The input for the events fetch indexes command

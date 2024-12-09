@@ -6,7 +6,7 @@ import type { Command } from "./command.ts"
  * The options for the bearer token
  */
 interface ClientOptionsBearer {
-  getBearerToken: () => Promise<string> | string
+  getBearerToken: () => Promise<string | null> | string | null
   apiKeyId?: never
   apiKey?: never
 }
@@ -43,14 +43,18 @@ export class FlowcoreClient {
   /**
    * Get the auth header
    */
-  private async getAuthHeader(): Promise<string> {
+  private async getAuthHeader(): Promise<string | null> {
     if ((this.options as ClientOptionsBearer).getBearerToken) {
-      return `Bearer ${await (this.options as ClientOptionsBearer).getBearerToken()}`
+      const bearerToken = await (this.options as ClientOptionsBearer).getBearerToken()
+      if (!bearerToken) {
+        return null
+      }
+      return `Bearer ${bearerToken}`
     }
     if ((this.options as ClientOptionsApiKey).apiKeyId && (this.options as ClientOptionsApiKey).apiKey) {
       return `ApiKey ${(this.options as ClientOptionsApiKey).apiKeyId}:${(this.options as ClientOptionsApiKey).apiKey}`
     }
-    return ""
+    return null
   }
 
   /**
@@ -63,11 +67,13 @@ export class FlowcoreClient {
       throw new CommandError(command.constructor.name, `Not allowed in "${this.mode}" mode`)
     }
 
+    const authHeader = await this.getAuthHeader()
+
     const response = await fetch(request.baseUrl + request.path, {
       method: request.method,
       headers: {
         ...request.headers,
-        Authorization: await this.getAuthHeader(),
+        ...(authHeader ? { Authorization: authHeader } : {}),
       },
       body: request.body,
     })

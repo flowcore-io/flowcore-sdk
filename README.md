@@ -17,18 +17,24 @@ deno add jsr:@flowcore/sdk
 ### Execute a command
 
 ```typescript
-import { Client, DataCoreFetchByNameCommand } from "@flowcore/sdk"
-
-const client = new Client({
-  getAuthToken: async (): Promise<string> => {
+import { DataCoreFetchByNameCommand, FlowcoreClient } from "@flowcore/sdk"
+// With a bearer token
+const client = new FlowcoreClient({
+  getBearerToken: async (): Promise<string> => {
     const token = await someMethodToGetToken()
     return token
   },
 })
 
-const command = new DataCoreFetchByNameCommand({
-  organization: "my-org",
-  dataCore: "my-data-core",
+// With an api key
+const client = new FlowcoreClient({
+  apiKeyId: "my-api-key-id",
+  apiKey: "my-api-key",
+})
+
+// Execute a command
+const command = new DataCoreFetchCommand({
+  dataCoreId: "my-data-core-id",
 })
 
 const result = await client.execute(command)

@@ -33,5 +33,11 @@ jobs:
         run: deno install --frozen-lockfile
       - name: Lint
         run: deno lint
-      - name: Publish
+      - name: Publish to JSR
         run: deno publish
+      - name: Build for NPM
+        run: deno run -A bin/build-npm.ts
+      - name: Publish to NPM
+        run: ( cd npm && npm publish )
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
