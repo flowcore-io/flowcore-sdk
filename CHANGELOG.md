@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.4.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.3.1...v1.4.0) (2024-12-09)
+
+
+### Features
+
+* release on npm also ([a53921d](https://github.com/flowcore-io/flowcore-sdk/commit/a53921d0e384ca6897f089af614692b841ff7087))
+
+
+### Bug Fixes
+
+* update deno.lock file ([b2e90bc](https://github.com/flowcore-io/flowcore-sdk/commit/b2e90bc0b0ee917764d0628277f0aa0e793b3da5))
+
 ## [1.3.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.3.0...v1.3.1) (2024-12-06)
 
 
