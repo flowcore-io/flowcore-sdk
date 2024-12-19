@@ -113,7 +113,10 @@ export class FlowcoreClient {
     }
 
     if (!response.ok) {
-      if (this.options.retry && retryCount < this.options.retry.maxRetries) {
+      if (
+        this.options.retry && RETRYABLE_ERROR_CODES.includes(response.status) &&
+        retryCount < this.options.retry.maxRetries
+      ) {
         const delay = this.options.retry.delay
         await new Promise((resolve) => setTimeout(resolve, delay))
         return this.innerExecute(command, retryCount + 1)
