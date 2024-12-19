@@ -32,6 +32,18 @@ const client = new FlowcoreClient({
   apiKey: "my-api-key",
 })
 
+// With retry
+// NOTE! When retry is not set it will default to 250ms delay and 5 max retries.
+//       To disable retry set retry to null.
+const client = new FlowcoreClient({
+  apiKeyId: "my-api-key-id",
+  apiKey: "my-api-key",
+  retry: {
+    delay: 100,
+    maxRetries: 5,
+  },
+})
+
 // Execute a command
 const command = new DataCoreFetchCommand({
   dataCoreId: "my-data-core-id",
