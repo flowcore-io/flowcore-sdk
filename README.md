@@ -33,7 +33,7 @@ const client = new FlowcoreClient({
 })
 
 // With retry
-// NOTE! When retry is not set it will default to 250ms delay and 5 max retries.
+// NOTE! When retry is not set it will default to 250ms delay and 3 max retries.
 //       To disable retry set retry to null.
 const client = new FlowcoreClient({
   apiKeyId: "my-api-key-id",
