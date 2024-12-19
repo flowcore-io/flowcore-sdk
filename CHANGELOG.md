@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.5.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.4.5...v1.5.0) (2024-12-19)
+
+
+### Features
+
+* add retry to client ([b202c56](https://github.com/flowcore-io/flowcore-sdk/commit/b202c5660f42a02bbd45db043d48713effe658a6))
+
+
+### Bug Fixes
+
+* update readme ([bf233bc](https://github.com/flowcore-io/flowcore-sdk/commit/bf233bc27b15892b5813c2121b7221d08c7b7d63))
+* update readme ([3ffbe49](https://github.com/flowcore-io/flowcore-sdk/commit/3ffbe499e6014e64a8c420eead2763539cb5412c))
+* use retryable status codes ([89a8919](https://github.com/flowcore-io/flowcore-sdk/commit/89a8919492c55614851779ff77ddc3f7fcde51e0))
+
 ## [1.4.5](https://github.com/flowcore-io/flowcore-sdk/compare/v1.4.4...v1.4.5) (2024-12-19)
 
 
