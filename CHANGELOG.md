@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.5.0...v1.6.0) (2024-12-31)
+
+
+### Features
+
+* **exports:** :technologist: export parsed helper method ([4f781bc](https://github.com/flowcore-io/flowcore-sdk/commit/4f781bcf1ca0169f8b8b4361b201e2f38ea61d7c))
+
 ## [1.5.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.4.5...v1.5.0) (2024-12-19)
 
 
