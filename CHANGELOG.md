@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.6.0...v1.7.0) (2025-01-12)
+
+
+### Features
+
+* added method to override and exported command error ([e78a053](https://github.com/flowcore-io/flowcore-sdk/commit/e78a0534283d483ecac1c6bcd35637d452240380))
+
 ## [1.6.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.5.0...v1.6.0) (2024-12-31)
 
 
