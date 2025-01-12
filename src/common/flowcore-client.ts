@@ -40,6 +40,8 @@ export type ClientOptions = ClientOptionsBearer | ClientOptionsApiKey
  */
 export class FlowcoreClient {
   private mode: "apiKey" | "bearer"
+  private baseUrl: string | undefined
+
   constructor(private readonly options: ClientOptions) {
     if ((this.options as ClientOptionsBearer).getBearerToken) {
       this.mode = "bearer"
@@ -90,8 +92,9 @@ export class FlowcoreClient {
     const authHeader = await this.getAuthHeader()
 
     let response: Response
+    const url = this.baseUrl ? this.baseUrl + request.path : request.baseUrl + request.path
     try {
-      response = await fetch(request.baseUrl + request.path, {
+      response = await fetch(url, {
         method: request.method,
         headers: {
           ...request.headers,
@@ -132,6 +135,13 @@ export class FlowcoreClient {
     const body = await response.json()
     const parsedBody = await request.parseResponse(body, this)
     return request.waitForResponse(this, parsedBody)
+  }
+
+  /**
+   * Override the base URL for all commands
+   */
+  setBaseUrl(baseUrl: string): void {
+    this.baseUrl = baseUrl
   }
 
   /**
