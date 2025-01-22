@@ -21,6 +21,8 @@ export const DataCoreSchema: TObject<{
   description: TString
   accessControl: TUnion<[TLiteral<"public">, TLiteral<"private">]>
   deleteProtected: TBoolean
+  isDeleting: TBoolean
+  isTruncating: TBoolean
 }> = Type.Object({
   id: Type.String(),
   tenantId: Type.String(),
@@ -28,6 +30,8 @@ export const DataCoreSchema: TObject<{
   description: Type.String(),
   accessControl: Type.Union([Type.Literal("public"), Type.Literal("private")]),
   deleteProtected: Type.Boolean(),
+  isDeleting: Type.Boolean(),
+  isTruncating: Type.Boolean(),
 })
 /**
  * The type for a data core
@@ -50,6 +54,8 @@ export const DataCoreV0Schema: TObject<{
       }>
     >
   >
+  truncating: TBoolean
+  deleting: TBoolean
 }> = Type.Object({
   id: Type.String(),
   name: Type.String(),
@@ -64,6 +70,8 @@ export const DataCoreV0Schema: TObject<{
       { minItems: 0, maxItems: 1 },
     ),
   ),
+  truncating: Type.Boolean(),
+  deleting: Type.Boolean(),
 })
 /**
  * The type for a data core v0
@@ -84,5 +92,7 @@ export const dataCoreV0ToDataCore = (
     description: dataCoreV0.description ?? "",
     accessControl: dataCoreV0.isPublic ? "public" : "private",
     deleteProtected: dataCoreV0.configuration?.[0]?.value === "true",
+    isDeleting: dataCoreV0.deleting,
+    isTruncating: dataCoreV0.truncating,
   }
 }
