@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.7.0...v1.8.0) (2025-01-22)
+
+
+### Features
+
+* **data-core:** :sparkles: add isDeleting and isTruncating fields to DataCoreSchema and DataCoreV0Schema ([b9dd8b2](https://github.com/flowcore-io/flowcore-sdk/commit/b9dd8b2dfa8291cc420c7659b1b60a169297dc4b))
+
 ## [1.7.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.6.0...v1.7.0) (2025-01-12)
 
 
