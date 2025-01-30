@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.9.0...v1.9.1) (2025-01-30)
+
+
+### Bug Fixes
+
+* add deleting and truncating ([d0333a2](https://github.com/flowcore-io/flowcore-sdk/commit/d0333a2ffe2a136b981a9e41b440df0c8bcd0be2))
+
 ## [1.9.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.8.0...v1.9.0) (2025-01-30)
 
 
