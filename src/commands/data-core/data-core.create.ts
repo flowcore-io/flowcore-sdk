@@ -15,7 +15,7 @@ export type DataCoreCreateInput = {
   /** The access control of the data core */
   accessControl: "public" | "private"
   /** Whether the data core is delete protected */
-  deleteProtected: boolean
+  deleteProtection: boolean
 }
 
 /**

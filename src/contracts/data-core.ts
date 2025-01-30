@@ -20,7 +20,7 @@ export const DataCoreSchema: TObject<{
   name: TString
   description: TString
   accessControl: TUnion<[TLiteral<"public">, TLiteral<"private">]>
-  deleteProtected: TBoolean
+  deleteProtection: TBoolean
   isDeleting: TBoolean
   isTruncating: TBoolean
 }> = Type.Object({
@@ -29,7 +29,7 @@ export const DataCoreSchema: TObject<{
   name: Type.String(),
   description: Type.String(),
   accessControl: Type.Union([Type.Literal("public"), Type.Literal("private")]),
-  deleteProtected: Type.Boolean(),
+  deleteProtection: Type.Boolean(),
   isDeleting: Type.Boolean(),
   isTruncating: Type.Boolean(),
 })
@@ -91,7 +91,7 @@ export const dataCoreV0ToDataCore = (
     name: dataCoreV0.name,
     description: dataCoreV0.description ?? "",
     accessControl: dataCoreV0.isPublic ? "public" : "private",
-    deleteProtected: dataCoreV0.configuration?.[0]?.value === "true",
+    deleteProtection: dataCoreV0.configuration?.[0]?.value === "true",
     isDeleting: dataCoreV0.deleting,
     isTruncating: dataCoreV0.truncating,
   }
