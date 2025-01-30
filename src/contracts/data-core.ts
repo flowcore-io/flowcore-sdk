@@ -22,7 +22,6 @@ export const DataCoreSchema: TObject<{
   accessControl: TUnion<[TLiteral<"public">, TLiteral<"private">]>
   deleteProtection: TBoolean
   isDeleting: TBoolean
-  isTruncating: TBoolean
 }> = Type.Object({
   id: Type.String(),
   tenantId: Type.String(),
@@ -31,7 +30,6 @@ export const DataCoreSchema: TObject<{
   accessControl: Type.Union([Type.Literal("public"), Type.Literal("private")]),
   deleteProtection: Type.Boolean(),
   isDeleting: Type.Boolean(),
-  isTruncating: Type.Boolean(),
 })
 /**
  * The type for a data core
@@ -93,6 +91,5 @@ export const dataCoreV0ToDataCore = (
     accessControl: dataCoreV0.isPublic ? "public" : "private",
     deleteProtection: dataCoreV0.configuration?.[0]?.value === "true",
     isDeleting: dataCoreV0.deleting,
-    isTruncating: dataCoreV0.truncating,
   }
 }

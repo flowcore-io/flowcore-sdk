@@ -1,4 +1,12 @@
-import { type Static, type TNull, type TObject, type TString, type TUnion, Type } from "@sinclair/typebox"
+import {
+  type Static,
+  type TBoolean,
+  type TNull,
+  type TObject,
+  type TString,
+  type TUnion,
+  Type,
+} from "@sinclair/typebox"
 
 /**
  * The schema for an event type
@@ -10,6 +18,8 @@ export const EventTypeSchema: TObject<{
   flowTypeId: TString
   name: TString
   description: TString
+  isTruncated: TBoolean
+  isDeleting: TBoolean
 }> = Type.Object({
   id: Type.String(),
   tenantId: Type.String(),
@@ -17,6 +27,8 @@ export const EventTypeSchema: TObject<{
   flowTypeId: Type.String(),
   name: Type.String(),
   description: Type.String(),
+  isTruncated: Type.Boolean(),
+  isDeleting: Type.Boolean(),
 })
 
 /**
@@ -31,10 +43,14 @@ export const EventTypeV0Schema: TObject<{
   id: TString
   name: TString
   description: TUnion<[TString, TNull]>
+  truncating: TBoolean
+  deleting: TBoolean
 }> = Type.Object({
   id: Type.String(),
   name: Type.String(),
   description: Type.Union([Type.String(), Type.Null()]),
+  truncating: Type.Boolean(),
+  deleting: Type.Boolean(),
 })
 
 /**
@@ -58,5 +74,7 @@ export const eventTypeV0ToEventType = (
     flowTypeId,
     name: eventTypeV0.name,
     description: eventTypeV0.description ?? "",
+    isTruncated: eventTypeV0.truncating,
+    isDeleting: eventTypeV0.deleting,
   }
 }

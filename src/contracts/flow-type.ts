@@ -1,4 +1,12 @@
-import { type Static, type TNull, type TObject, type TString, type TUnion, Type } from "@sinclair/typebox"
+import {
+  type Static,
+  type TBoolean,
+  type TNull,
+  type TObject,
+  type TString,
+  type TUnion,
+  Type,
+} from "@sinclair/typebox"
 
 /**
  * The schema for a flow type
@@ -9,12 +17,14 @@ export const FlowTypeSchema: TObject<{
   dataCoreId: TString
   name: TString
   description: TString
+  isDeleting: TBoolean
 }> = Type.Object({
   id: Type.String(),
   tenantId: Type.String(),
   dataCoreId: Type.String(),
   name: Type.String(),
   description: Type.String(),
+  isDeleting: Type.Boolean(),
 })
 
 /**
@@ -29,10 +39,12 @@ export const FlowTypeV0Schema: TObject<{
   id: TString
   aggregator: TString
   description: TUnion<[TString, TNull]>
+  deleting: TBoolean
 }> = Type.Object({
   id: Type.String(),
   aggregator: Type.String(),
   description: Type.Union([Type.String(), Type.Null()]),
+  deleting: Type.Boolean(),
 })
 
 /**
@@ -54,5 +66,6 @@ export const flowTypeV0ToFlowType = (
     dataCoreId,
     name: flowTypeV0.aggregator,
     description: flowTypeV0.description ?? "",
+    isDeleting: flowTypeV0.deleting,
   }
 }
