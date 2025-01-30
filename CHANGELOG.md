@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.8.0...v1.9.0) (2025-01-30)
+
+
+### Features
+
+* delete protected renamed to delete protection ([181a7ae](https://github.com/flowcore-io/flowcore-sdk/commit/181a7ae857b1ede5ada394ccd8ffd1385b733aa1))
+
 ## [1.8.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.7.0...v1.8.0) (2025-01-22)
 
 
