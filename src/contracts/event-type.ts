@@ -18,7 +18,7 @@ export const EventTypeSchema: TObject<{
   flowTypeId: TString
   name: TString
   description: TString
-  isTruncated: TBoolean
+  isTruncating: TBoolean
   isDeleting: TBoolean
 }> = Type.Object({
   id: Type.String(),
@@ -27,7 +27,7 @@ export const EventTypeSchema: TObject<{
   flowTypeId: Type.String(),
   name: Type.String(),
   description: Type.String(),
-  isTruncated: Type.Boolean(),
+  isTruncating: Type.Boolean(),
   isDeleting: Type.Boolean(),
 })
 
@@ -74,7 +74,7 @@ export const eventTypeV0ToEventType = (
     flowTypeId,
     name: eventTypeV0.name,
     description: eventTypeV0.description ?? "",
-    isTruncated: eventTypeV0.truncating,
+    isTruncating: eventTypeV0.truncating,
     isDeleting: eventTypeV0.deleting,
   }
 }
