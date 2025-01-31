@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.2](https://github.com/flowcore-io/flowcore-sdk/compare/v1.9.1...v1.9.2) (2025-01-31)
+
+
+### Bug Fixes
+
+* fix event type model ([c5a2168](https://github.com/flowcore-io/flowcore-sdk/commit/c5a216896c1ab1d69fca9b2ef7a86de46a24f1cc))
+
 ## [1.9.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.9.0...v1.9.1) (2025-01-30)
 
 
