@@ -3,6 +3,7 @@ import { Command } from "../../common/command.ts"
 import { type DataCore, DataCoreSchema } from "../../contracts/data-core.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 import { NotFoundException } from "../../exceptions/not-found.ts"
+import type { ClientError } from "../../exceptions/client-error.ts"
 
 /**
  * The input for the data core fetch by id command
@@ -74,8 +75,20 @@ export class DataCoreFetchCommand extends Command<DataCoreFetchInput, DataCore> 
     }
     const response = parseResponseHelper(Type.Array(DataCoreSchema), rawResponse)
     if (response.length === 0) {
-      throw new NotFoundException("DataCore", this.input.dataCore)
+      throw new NotFoundException("DataCore", { name: this.input.dataCore })
     }
     return response[0]
+  }
+
+  /**
+   * Handle the client error
+   */
+  protected override handleClientError(error: ClientError): void {
+    if (error.status === 404) {
+      throw new NotFoundException("DataCore", {
+        [this.input.dataCoreId ? "id" : "name"]: this.input.dataCoreId ?? this.input.dataCore,
+      })
+    }
+    throw error
   }
 }

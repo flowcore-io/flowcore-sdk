@@ -39,9 +39,9 @@ export class FlowTypeUpdateCommand extends Command<FlowTypeUpdateInput, FlowType
   /**
    * Get the body for the request
    */
-  protected override getBody(): string | undefined {
+  protected override getBody(): Record<string, unknown> {
     const { flowTypeId: _flowTypeId, ...payload } = this.input
-    return JSON.stringify(payload)
+    return payload
   }
 
   /**

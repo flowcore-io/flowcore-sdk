@@ -70,10 +70,10 @@ export class VariableListCommand extends GraphQlCommand<VariableListInput, Varia
   /**
    * Get the body for the request
    */
-  protected override getBody(): string {
-    return JSON.stringify({
+  protected override getBody(): Record<string, unknown> {
+    return {
       query: graphQlQueryById,
       variables: this.input,
-    })
+    }
   }
 }

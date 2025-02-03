@@ -3,6 +3,7 @@ import { Command } from "../../common/command.ts"
 import { type EventType, EventTypeSchema } from "../../contracts/event-type.ts"
 import { NotFoundException } from "../../exceptions/not-found.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
+import type { ClientError } from "../../exceptions/client-error.ts"
 
 interface EventTypeFetchByIdInput {
   /** The id of the event type */
@@ -68,8 +69,20 @@ export class EventTypeFetchCommand extends Command<EventTypeFetchInput, EventTyp
     }
     const response = parseResponseHelper(Type.Array(EventTypeSchema), rawResponse)
     if (response.length === 0) {
-      throw new NotFoundException("EventType", this.input.eventType)
+      throw new NotFoundException("EventType", { name: this.input.eventType })
     }
     return response[0]
+  }
+
+  /**
+   * Handle the client error
+   */
+  protected override handleClientError(error: ClientError): void {
+    if (error.status === 404) {
+      throw new NotFoundException("EventType", {
+        [this.input.eventTypeId ? "id" : "name"]: this.input.eventTypeId ?? this.input.eventType,
+      })
+    }
+    throw error
   }
 }

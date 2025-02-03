@@ -47,11 +47,6 @@ const responseSchema = Type.Object({
  */
 export class DataCoreDeleteRequestCommand extends GraphQlCommand<DataCoreDeleteRequestInput, boolean> {
   /**
-   * The allowed modes for the command
-   */
-  protected override allowedModes: ("apiKey" | "bearer")[] = ["bearer"]
-
-  /**
    * Create a new data core delete request command
    */
   constructor(input: DataCoreDeleteRequestInput) {
@@ -70,7 +65,7 @@ export class DataCoreDeleteRequestCommand extends GraphQlCommand<DataCoreDeleteR
       throw new CommandError(this.constructor.name, parsedResponse.errors[0].message)
     }
     if (!parsedResponse.data.datacore?.requestDelete) {
-      throw new NotFoundException("DataCore", this.input.dataCoreId)
+      throw new NotFoundException("DataCore", { id: this.input.dataCoreId })
     }
     return parsedResponse.data.datacore.requestDelete.deleting
   }
@@ -78,17 +73,17 @@ export class DataCoreDeleteRequestCommand extends GraphQlCommand<DataCoreDeleteR
   /**
    * Get the body for the request
    */
-  protected override getBody(): string {
-    return JSON.stringify({
+  protected override getBody(): Record<string, unknown> {
+    return {
       query: graphQlQuery,
       variables: this.input,
-    })
+    }
   }
 
   /**
    * Wait for the response (timeout: 25 seconds)
    */
-  protected override async waitForResponse(client: FlowcoreClient, response: boolean): Promise<boolean> {
+  protected override async processResponse(client: FlowcoreClient, response: boolean): Promise<boolean> {
     if (!this.input.waitForDelete) {
       return response
     }

@@ -39,9 +39,9 @@ export class EventTypeUpdateCommand extends Command<EventTypeUpdateInput, EventT
   /**
    * Get the body for the request
    */
-  protected override getBody(): string | undefined {
-    const { eventTypeId: _eventTypeId, ...payload } = this.input
-    return JSON.stringify(payload)
+  protected override getBody(): Record<string, unknown> {
+    const { eventTypeId: _, ...payload } = this.input
+    return payload
   }
 
   /**

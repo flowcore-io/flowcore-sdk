@@ -72,7 +72,8 @@ export class EventsFetchTimeBucketsByNamesCommand extends Command<
   /**
    * Get the body for the request
    */
-  protected override getBody(): string {
-    return JSON.stringify(this.input)
+  protected override getBody(): Record<string, unknown> {
+    const { ...rest } = this.input
+    return rest
   }
 }

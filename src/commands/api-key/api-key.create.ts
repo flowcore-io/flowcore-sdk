@@ -54,10 +54,9 @@ export class ApiKeyCreateCommand extends GraphQlCommand<ApiKeyCreateInput, ApiKe
   /**
    * Parse the response
    */
-  protected override async parseResponse(
+  protected override parseResponse(
     rawResponse: unknown,
-    flowcoreClient: FlowcoreClient,
-  ): Promise<ApiKey & { value: string }> {
+  ): ApiKey & { value: string } {
     const response = parseResponseHelper(responseSchema, rawResponse)
     if (response.errors) {
       throw new CommandError(this.constructor.name, response.errors[0].message)
@@ -66,19 +65,10 @@ export class ApiKeyCreateCommand extends GraphQlCommand<ApiKeyCreateInput, ApiKe
       throw new CommandError(this.constructor.name, "Failed to create API key")
     }
 
-    const apiKeys = await flowcoreClient.execute(
-      new ApiKeyListCommand({
-        tenantId: this.input.tenantId,
-      }),
-    )
-
-    const apiKey = apiKeys.find((apiKey) => apiKey.name === this.input.name)
-    if (!apiKey) {
-      throw new Error("API key not found")
-    }
-
     return {
-      ...apiKey,
+      id: "",
+      name: "",
+      createdAt: "",
       value: response.data.organization.createApiKey,
     }
   }
@@ -86,10 +76,32 @@ export class ApiKeyCreateCommand extends GraphQlCommand<ApiKeyCreateInput, ApiKe
   /**
    * Get the body for the request
    */
-  protected override getBody(): string {
-    return JSON.stringify({
+  protected override getBody(): Record<string, unknown> {
+    return {
       query: graphQlQueryById,
       variables: this.input,
-    })
+    }
+  }
+
+  /**
+   * Fill in the missing fields
+   */
+  protected override async processResponse(
+    flowcoreClient: FlowcoreClient,
+    response: ApiKey & { value: string },
+  ): Promise<ApiKey & { value: string }> {
+    const apiKeys = await flowcoreClient.execute(
+      new ApiKeyListCommand({
+        tenantId: this.input.tenantId,
+      }),
+    )
+    const apiKey = apiKeys.find((apiKey) => apiKey.name === this.input.name)
+    if (!apiKey) {
+      throw new Error("API key not found")
+    }
+    return {
+      ...apiKey,
+      value: response.value,
+    }
   }
 }
