@@ -81,13 +81,13 @@ export class EventsFetchCommand extends Command<EventsFetchEventsInput, EventsFe
   /**
    * Get the body for the request
    */
-  protected override getBody(): string {
-    return JSON.stringify({
+  protected override getBody() {
+    return {
       tenant: this.input.tenant,
       dataCoreId: this.input.dataCoreId,
       flowType: this.input.flowType,
       eventTypes: this.input.eventTypes,
       timeBucket: this.input.timeBucket,
-    })
+    }
   }
 }

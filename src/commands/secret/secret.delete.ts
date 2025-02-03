@@ -49,7 +49,6 @@ export class SecretDeleteCommand extends GraphQlCommand<SecretDeleteInput, boole
    * Parse the response
    */
   protected override parseResponse(rawResponse: unknown): boolean {
-    console.log("rawResponse", rawResponse)
     const response = parseResponseHelper(responseSchema, rawResponse)
     if (response.errors) {
       throw new CommandError(this.constructor.name, response.errors[0].message)
@@ -63,10 +62,10 @@ export class SecretDeleteCommand extends GraphQlCommand<SecretDeleteInput, boole
   /**
    * Get the body for the request
    */
-  protected override getBody(): string {
-    return JSON.stringify({
+  protected override getBody() {
+    return {
       query: graphQlQueryById,
       variables: this.input,
-    })
+    }
   }
 }

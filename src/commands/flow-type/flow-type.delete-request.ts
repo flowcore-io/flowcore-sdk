@@ -6,6 +6,7 @@ import { CommandError } from "../../exceptions/command-error.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 import { NotFoundException } from "../../exceptions/not-found.ts"
 import { FlowTypeExistsCommand } from "./flow-type.exists.ts"
+import type { ClientError } from "../../exceptions/client-error.ts"
 
 /**
  * The input for the flow type delete request command
@@ -78,7 +79,7 @@ export class FlowTypeDeleteRequestCommand extends GraphQlCommand<FlowTypeDeleteR
       throw new CommandError(this.constructor.name, parsedResponse.errors[0].message)
     }
     if (!parsedResponse.data?.datacore?.flowtype?.requestDelete) {
-      throw new NotFoundException("FlowType", this.input.flowTypeId)
+      throw new NotFoundException("FlowType", { id: this.input.flowTypeId })
     }
     return parsedResponse.data.datacore.flowtype.requestDelete.deleting
   }
@@ -91,8 +92,9 @@ export class FlowTypeDeleteRequestCommand extends GraphQlCommand<FlowTypeDeleteR
       baseUrl: string
       path: string
       method: string
-      parseResponse: (response: unknown, flowcoreClient: FlowcoreClient) => boolean | Promise<boolean>
-      waitForResponse: (client: FlowcoreClient, response: boolean) => Promise<boolean>
+      parseResponse: (response: unknown) => boolean | Promise<boolean>
+      processResponse: (client: FlowcoreClient, response: boolean) => Promise<boolean>
+      handleClientError: (error: ClientError) => void
     }
   > {
     const request = await super.getRequest(client)
@@ -118,17 +120,17 @@ export class FlowTypeDeleteRequestCommand extends GraphQlCommand<FlowTypeDeleteR
   /**
    * Get the body for the request
    */
-  protected override getBody(): string {
-    return JSON.stringify({
+  protected override getBody() {
+    return {
       query: graphQlQuery,
       variables: this.input,
-    })
+    }
   }
 
   /**
    * Wait for the response (timeout: 25 seconds)
    */
-  protected override async waitForResponse(client: FlowcoreClient, response: boolean): Promise<boolean> {
+  protected override async processResponse(client: FlowcoreClient, response: boolean): Promise<boolean> {
     if (!this.input.waitForDelete) {
       return response
     }

@@ -42,4 +42,4 @@ jobs:
       - name: Format
         run: deno fmt
       - name: Test
-        run: deno test
+        run: deno test -A

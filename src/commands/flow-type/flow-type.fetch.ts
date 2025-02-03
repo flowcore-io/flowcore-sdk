@@ -3,6 +3,7 @@ import { Command } from "../../common/command.ts"
 import { type FlowType, FlowTypeSchema } from "../../contracts/flow-type.ts"
 import { NotFoundException } from "../../exceptions/not-found.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
+import type { ClientError } from "../../exceptions/client-error.ts"
 
 /**
  * The input for the flow type fetch by name command
@@ -74,8 +75,20 @@ export class FlowTypeFetchCommand extends Command<FlowTypeFetchInput, FlowType> 
     }
     const response = parseResponseHelper(Type.Array(FlowTypeSchema), rawResponse)
     if (response.length === 0) {
-      throw new NotFoundException("FlowType", this.input.flowType)
+      throw new NotFoundException("FlowType", { name: this.input.flowType })
     }
     return response[0]
+  }
+
+  /**
+   * Handle the client error
+   */
+  protected override handleClientError(error: ClientError): void {
+    if (error.status === 404) {
+      throw new NotFoundException("FlowType", {
+        [this.input.flowTypeId ? "id" : "name"]: this.input.flowTypeId ?? this.input.flowType,
+      })
+    }
+    throw error
   }
 }

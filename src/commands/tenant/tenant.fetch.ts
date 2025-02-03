@@ -77,7 +77,9 @@ export class TenantFetchCommand extends GraphQlCommand<TenantFetchInput, Tenant>
   protected override parseResponse(rawResponse: unknown): Tenant {
     const response = parseResponseHelper(responseSchema, rawResponse)
     if (!response.data.organization) {
-      throw new NotFoundException("Tenant", this.input.tenantId ?? this.input.tenant)
+      throw new NotFoundException("Tenant", {
+        [this.input.tenantId ? "id" : "name"]: this.input.tenantId ?? this.input.tenant,
+      })
     }
     return tenantV0ToTenant(response.data.organization)
   }
@@ -85,16 +87,16 @@ export class TenantFetchCommand extends GraphQlCommand<TenantFetchInput, Tenant>
   /**
    * Get the body for the request
    */
-  protected override getBody(): string {
+  protected override getBody() {
     if ("tenantId" in this.input) {
-      return JSON.stringify({
+      return {
         query: graphQlQueryById,
         variables: this.input,
-      })
+      }
     }
-    return JSON.stringify({
+    return {
       query: graphQlQueryByName,
       variables: this.input,
-    })
+    }
   }
 }

@@ -63,10 +63,10 @@ export class SecretListCommand extends GraphQlCommand<SecretListInput, string[]>
   /**
    * Get the body for the request
    */
-  protected override getBody(): string {
-    return JSON.stringify({
+  protected override getBody() {
+    return {
       query: graphQlQueryById,
       variables: this.input,
-    })
+    }
   }
 }

@@ -1,3 +1,4 @@
+import type { ClientError } from "../exceptions/client-error.ts"
 import type { FlowcoreClient } from "./flowcore-client.ts"
 
 /**
@@ -43,18 +44,18 @@ export abstract class Command<Input, Output> {
   /**
    * Get the body for the request
    */
-  protected getBody(): string | undefined {
+  protected getBody(): Record<string, unknown> | Array<unknown> | undefined {
     if (this.getMethod() === "GET") {
       return undefined
     }
-    return this.input ? JSON.stringify(this.input) : undefined
+    return this.input ?? undefined
   }
 
   /**
    * Get the headers for the request
    */
   protected getHeaders(): Record<string, string> {
-    return this.getBody()
+    return typeof this.getBody() === "object"
       ? {
         "Content-Type": "application/json",
       }
@@ -64,7 +65,14 @@ export abstract class Command<Input, Output> {
   /**
    * Parse the response
    */
-  protected abstract parseResponse(response: unknown, flowcoreClient: FlowcoreClient): Output | Promise<Output>
+  protected abstract parseResponse(response: unknown): Output
+
+  /**
+   * Handle the client error
+   */
+  protected handleClientError(error: ClientError): void {
+    throw error
+  }
 
   /**
    * Get the request object
@@ -72,13 +80,14 @@ export abstract class Command<Input, Output> {
   // deno-lint-ignore require-await
   public async getRequest(_client: FlowcoreClient): Promise<{
     allowedModes: ("apiKey" | "bearer")[]
-    body: string | undefined
+    body: string | Record<string, unknown> | Array<unknown> | undefined
     headers: Record<string, string>
     baseUrl: string
     path: string
     method: string
-    parseResponse: (response: unknown, client: FlowcoreClient) => Output | Promise<Output>
-    waitForResponse: (client: FlowcoreClient, response: Output) => Promise<Output>
+    parseResponse: (response: unknown) => Output | Promise<Output>
+    processResponse: (client: FlowcoreClient, response: Output) => Promise<Output>
+    handleClientError: (error: ClientError) => void
   }> {
     return {
       allowedModes: this.allowedModes,
@@ -88,7 +97,8 @@ export abstract class Command<Input, Output> {
       path: this.getPath(),
       method: this.getMethod(),
       parseResponse: this.parseResponse.bind(this),
-      waitForResponse: this.waitForResponse.bind(this),
+      processResponse: this.processResponse.bind(this),
+      handleClientError: this.handleClientError.bind(this),
     }
   }
 
@@ -96,7 +106,7 @@ export abstract class Command<Input, Output> {
    * Wait for the response
    */
   // deno-lint-ignore require-await
-  protected async waitForResponse(_client: FlowcoreClient, response: Output): Promise<Output> {
+  protected async processResponse(_client: FlowcoreClient, response: Output): Promise<Output> {
     return response
   }
 }

@@ -55,10 +55,10 @@ export class ApiKeyListCommand extends GraphQlCommand<ApiKeyListInput, ApiKey[]>
   /**
    * Get the body for the request
    */
-  protected override getBody(): string {
-    return JSON.stringify({
+  protected override getBody() {
+    return {
       query: graphQlQueryById,
       variables: this.input,
-    })
+    }
   }
 }

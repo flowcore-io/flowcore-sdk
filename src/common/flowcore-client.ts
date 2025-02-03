@@ -90,17 +90,22 @@ export class FlowcoreClient {
     }
 
     const authHeader = await this.getAuthHeader()
+    const headers: Record<string, string> = {
+      ...request.headers,
+      ...(authHeader ? { Authorization: authHeader } : {}),
+    }
 
     let response: Response
     const url = this.baseUrl ? this.baseUrl + request.path : request.baseUrl + request.path
+    let body: string | undefined
+    if (typeof request.body === "object") {
+      body = JSON.stringify(request.body)
+    }
     try {
       response = await fetch(url, {
         method: request.method,
-        headers: {
-          ...request.headers,
-          ...(authHeader ? { Authorization: authHeader } : {}),
-        },
-        body: request.body,
+        headers,
+        body,
       })
     } catch (error) {
       if (this.options.retry && retryCount < this.options.retry.maxRetries) {
@@ -126,15 +131,16 @@ export class FlowcoreClient {
       }
       const body = await response.json().catch(() => undefined)
       const commandName = command.constructor.name
-      throw new ClientError(
+      const error = new ClientError(
         `${commandName} failed with ${response.status}: ${response.statusText}`,
         response.status,
         body,
       )
+      request.handleClientError(error)
     }
-    const body = await response.json()
-    const parsedBody = await request.parseResponse(body, this)
-    return request.waitForResponse(this, parsedBody)
+    const responseBody = await response.json()
+    const parsedBody = await request.parseResponse(responseBody)
+    return request.processResponse(this, parsedBody)
   }
 
   /**

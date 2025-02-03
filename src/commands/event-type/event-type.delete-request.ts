@@ -74,7 +74,7 @@ export class EventTypeDeleteRequestCommand extends GraphQlCommand<EventTypeDelet
       throw new CommandError(this.constructor.name, parsedResponse.errors[0].message)
     }
     if (!parsedResponse.data?.eventType?.requestDelete) {
-      throw new NotFoundException("EventType", this.input.eventTypeId)
+      throw new NotFoundException("EventType", { id: this.input.eventTypeId })
     }
     return parsedResponse.data.eventType.requestDelete.deleting
   }
@@ -82,18 +82,18 @@ export class EventTypeDeleteRequestCommand extends GraphQlCommand<EventTypeDelet
   /**
    * Get the body for the request
    */
-  protected override getBody(): string {
+  protected override getBody() {
     const { waitForDelete: _, ...rest } = this.input
-    return JSON.stringify({
+    return {
       query: graphQlQuery,
       variables: rest,
-    })
+    }
   }
 
   /**
    * Wait for the response (timeout: 25 seconds)
    */
-  protected override async waitForResponse(client: FlowcoreClient, response: boolean): Promise<boolean> {
+  protected override async processResponse(client: FlowcoreClient, response: boolean): Promise<boolean> {
     if (!this.input.waitForDelete) {
       return response
     }
