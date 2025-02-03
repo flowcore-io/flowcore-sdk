@@ -72,7 +72,7 @@ export class EventsFetchTimeBucketsByNamesCommand extends Command<
   /**
    * Get the body for the request
    */
-  protected override getBody() {
+  protected override getBody(): Record<string, unknown> {
     const { ...rest } = this.input
     return rest
   }

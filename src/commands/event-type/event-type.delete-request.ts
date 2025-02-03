@@ -82,7 +82,7 @@ export class EventTypeDeleteRequestCommand extends GraphQlCommand<EventTypeDelet
   /**
    * Get the body for the request
    */
-  protected override getBody() {
+  protected override getBody(): Record<string, unknown> {
     const { waitForDelete: _, ...rest } = this.input
     return {
       query: graphQlQuery,

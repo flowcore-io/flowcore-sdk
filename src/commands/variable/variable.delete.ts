@@ -65,7 +65,7 @@ export class VariableDeleteCommand extends GraphQlCommand<VariableDeleteInput, b
   /**
    * Get the body for the request
    */
-  protected override getBody() {
+  protected override getBody(): Record<string, unknown> {
     return {
       query: graphQlQueryById,
       variables: this.input,

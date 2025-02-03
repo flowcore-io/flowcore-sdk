@@ -43,7 +43,7 @@ export class DataCoreUpdateCommand extends Command<DataCoreUpdateInput, DataCore
   /**
    * Get the body for the request
    */
-  protected override getBody() {
+  protected override getBody(): Record<string, unknown> {
     const { dataCoreId: _dataCoreId, ...payload } = this.input
     if (Object.keys(payload).length === 0) {
       throw new CommandError(this.constructor.name, "No fields to update")

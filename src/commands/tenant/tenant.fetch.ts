@@ -87,7 +87,7 @@ export class TenantFetchCommand extends GraphQlCommand<TenantFetchInput, Tenant>
   /**
    * Get the body for the request
    */
-  protected override getBody() {
+  protected override getBody(): Record<string, unknown> {
     if ("tenantId" in this.input) {
       return {
         query: graphQlQueryById,

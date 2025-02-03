@@ -47,11 +47,6 @@ const responseSchema = Type.Object({
  */
 export class DataCoreDeleteRequestCommand extends GraphQlCommand<DataCoreDeleteRequestInput, boolean> {
   /**
-   * The allowed modes for the command
-   */
-  protected override allowedModes: ("apiKey" | "bearer")[] = ["bearer"]
-
-  /**
    * Create a new data core delete request command
    */
   constructor(input: DataCoreDeleteRequestInput) {
@@ -78,7 +73,7 @@ export class DataCoreDeleteRequestCommand extends GraphQlCommand<DataCoreDeleteR
   /**
    * Get the body for the request
    */
-  protected override getBody() {
+  protected override getBody(): Record<string, unknown> {
     return {
       query: graphQlQuery,
       variables: this.input,

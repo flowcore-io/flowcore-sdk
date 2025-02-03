@@ -81,7 +81,7 @@ export class EventsFetchCommand extends Command<EventsFetchEventsInput, EventsFe
   /**
    * Get the body for the request
    */
-  protected override getBody() {
+  protected override getBody(): Record<string, unknown> {
     return {
       tenant: this.input.tenant,
       dataCoreId: this.input.dataCoreId,
