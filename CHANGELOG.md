@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.3](https://github.com/flowcore-io/flowcore-sdk/compare/v1.9.2...v1.9.3) (2025-02-03)
+
+
+### Bug Fixes
+
+* make description in update optional ([5b86c38](https://github.com/flowcore-io/flowcore-sdk/commit/5b86c387b4c1b414fe94c10a9c56d069dc772138))
+
 ## [1.9.2](https://github.com/flowcore-io/flowcore-sdk/compare/v1.9.1...v1.9.2) (2025-01-31)
 
 
