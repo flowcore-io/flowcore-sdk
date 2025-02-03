@@ -117,6 +117,21 @@ export class FetchMockBuilder {
     return methodPath
   }
 
+  public put(path: string) {
+    const methodPath = new FetchMockBuilderPath(this, "PUT", path)
+    return methodPath
+  }
+
+  public delete(path: string) {
+    const methodPath = new FetchMockBuilderPath(this, "DELETE", path)
+    return methodPath
+  }
+
+  public patch(path: string) {
+    const methodPath = new FetchMockBuilderPath(this, "PATCH", path)
+    return methodPath
+  }
+
   public addMock(mockedRequest: MockedRequest) {
     this.mockedRequests.push(mockedRequest)
   }

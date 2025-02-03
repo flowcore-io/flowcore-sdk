@@ -1,11 +1,18 @@
 import { afterAll, afterEach, describe, it } from "jsr:@std/testing/bdd"
 import { assertEquals, assertRejects } from "@std/assert"
-import { type DataCore, DataCoreFetchCommand, FlowcoreClient, NotFoundException } from "../../../src/mod.ts"
+import {
+  type DataCore,
+  DataCoreDeleteRequestCommand,
+  DataCoreFetchCommand,
+  FlowcoreClient,
+  NotFoundException,
+} from "../../../src/mod.ts"
 import { FetchMocker } from "../../fixtures/fetch.fixture.ts"
 
 describe("DataCore", () => {
   const fetchMocker = new FetchMocker()
   const flowcoreClient = new FlowcoreClient({ getBearerToken: () => "BEARER_TOKEN" })
+  const fetchMockerBuilderGraphql = fetchMocker.mock("https://graph.api.flowcore.io")
   const fetchMockerBuilder = fetchMocker.mock("https://data-core-2.api.flowcore.io")
 
   afterEach(() => fetchMocker.assert())
@@ -101,5 +108,71 @@ describe("DataCore", () => {
       NotFoundException,
       `DataCore not found: ${JSON.stringify({ name })}`,
     )
+  })
+
+  it("should request deletion of a data core and wait for deletion", async () => {
+    // arrange
+    const dataCore: DataCore = {
+      id: crypto.randomUUID(),
+      name: "test",
+      tenantId: crypto.randomUUID(),
+      description: "test",
+      accessControl: "public",
+      deleteProtection: false,
+      isDeleting: false,
+    }
+
+    fetchMockerBuilderGraphql.post("/graphql")
+      .respondWith(200, {
+        data: {
+          datacore: {
+            requestDelete: {
+              deleting: true,
+            },
+          },
+        },
+      })
+    fetchMockerBuilder.get(`/api/v1/data-cores/${dataCore.id}/exists`)
+      .respondWith(200, { exists: true })
+    fetchMockerBuilder.get(`/api/v1/data-cores/${dataCore.id}/exists`)
+      .respondWith(200, { exists: false })
+
+    // act
+    const command = new DataCoreDeleteRequestCommand({ dataCoreId: dataCore.id, waitForDelete: true })
+    const response = await flowcoreClient.execute(command)
+
+    // assert
+    assertEquals(response, true)
+  })
+
+  it("should request deletion of a data core and not wait for deletion", async () => {
+    // arrange
+    const dataCore: DataCore = {
+      id: crypto.randomUUID(),
+      name: "test",
+      tenantId: crypto.randomUUID(),
+      description: "test",
+      accessControl: "public",
+      deleteProtection: false,
+      isDeleting: false,
+    }
+
+    fetchMockerBuilderGraphql.post("/graphql")
+      .respondWith(200, {
+        data: {
+          datacore: {
+            requestDelete: {
+              deleting: true,
+            },
+          },
+        },
+      })
+
+    // act
+    const command = new DataCoreDeleteRequestCommand({ dataCoreId: dataCore.id, waitForDelete: false })
+    const response = await flowcoreClient.execute(command)
+
+    // assert
+    assertEquals(response, true)
   })
 })
