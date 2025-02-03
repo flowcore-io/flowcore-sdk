@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.10.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.9.3...v1.10.0) (2025-02-03)
+
+
+### Features
+
+* add tests ([9590ea8](https://github.com/flowcore-io/flowcore-sdk/commit/9590ea8f95b23e219615c3219ae52c042925893f))
+
+
+### Bug Fixes
+
+* add explicit return ([5b30642](https://github.com/flowcore-io/flowcore-sdk/commit/5b3064238fd0c353c43ce9b7af5d42a434ff6e6f))
+* add more tests ([814cb94](https://github.com/flowcore-io/flowcore-sdk/commit/814cb943df9cf5934530dfeec8db7167c4cc1273))
+
 ## [1.9.3](https://github.com/flowcore-io/flowcore-sdk/compare/v1.9.2...v1.9.3) (2025-02-03)
 
 
