@@ -9,7 +9,7 @@ export type FlowTypeUpdateInput = {
   /** The id of the data core */
   flowTypeId: string
   /** The description of the flow type */
-  description: string
+  description?: string
 }
 
 /**

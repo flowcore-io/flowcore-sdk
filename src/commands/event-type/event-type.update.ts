@@ -9,7 +9,7 @@ export type EventTypeUpdateInput = {
   /** The id of the event type */
   eventTypeId: string
   /** The description of the event type */
-  description: string
+  description?: string
 }
 
 /**
