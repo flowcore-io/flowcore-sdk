@@ -1,5 +1,6 @@
 import { Command } from "../../common/command.ts"
-import { type ContainerRegistry, ContainerRegistrySchema } from "../../contracts/container.ts"
+import { ContainerRegistryCreateSchema } from "../../contracts/container.ts"
+import type { ContainerRegistryCreate } from "../../contracts/container.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 
 export interface ContainerRegistryCreateInput {
@@ -17,11 +18,12 @@ export interface ContainerRegistryCreateInput {
   password?: string
 }
 
-export class ContainerRegistryCreateCommand extends Command<ContainerRegistryCreateInput, ContainerRegistry> {
-  /**
-   * Allowed methods of the command
-   */
+export interface ContainerRegistryCreateOutput {
+  /** The id of the new container-registry */
+  id: string
+}
 
+export class ContainerRegistryCreateCommand extends Command<ContainerRegistryCreateInput, ContainerRegistryCreate> {
   /**
    * GET the method
    */
@@ -44,7 +46,7 @@ export class ContainerRegistryCreateCommand extends Command<ContainerRegistryCre
   /**
    * Parse the response
    */
-  protected override parseResponse(response: unknown): ContainerRegistry {
-    return parseResponseHelper(ContainerRegistrySchema, response)
+  protected override parseResponse(response: unknown): ContainerRegistryCreate {
+    return parseResponseHelper(ContainerRegistryCreateSchema, response)
   }
 }
