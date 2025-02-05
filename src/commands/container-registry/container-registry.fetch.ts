@@ -1,12 +1,12 @@
 import { type ContainerRegistry, ContainerRegistrySchema } from "../../contracts/container.ts"
 import { Command, parseResponseHelper } from "../../mod.ts"
 
-export interface ContainerRegistryFetchByIdInput {
+export interface ContainerRegistryFetchInput {
   /** The id of container */
   containerId: string
 }
 
-export class ContainerRegistryFetchById extends Command<ContainerRegistryFetchByIdInput, ContainerRegistry> {
+export class ContainerRegistryFetchCommand extends Command<ContainerRegistryFetchInput, ContainerRegistry> {
   protected override getMethod(): string {
     return "GET"
   }

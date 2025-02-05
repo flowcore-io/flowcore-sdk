@@ -6,7 +6,7 @@ export interface ContainerRegistryFetchTenantInput {
   tenantId: string
 }
 
-export class ContainerRegistList extends Command<ContainerRegistryFetchTenantInput, ContainerRegistryList> {
+export class ContainerRegistListCommand extends Command<ContainerRegistryFetchTenantInput, ContainerRegistryList> {
   protected override getMethod(): string {
     return "GET"
   }
