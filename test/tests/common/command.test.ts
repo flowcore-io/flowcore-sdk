@@ -1,6 +1,6 @@
 import { afterAll, afterEach, describe, it } from "jsr:@std/testing/bdd"
-import { assertEquals, assertObjectMatch, assertRejects } from "@std/assert"
-import { ClientError, Command, CommandError, FlowcoreClient } from "../../../src/mod.ts"
+import { assertRejects } from "@std/assert"
+import { Command, CommandError, FlowcoreClient } from "../../../src/mod.ts"
 import { FetchMocker } from "../../fixtures/fetch.fixture.ts"
 
 class TestCommandBearerOnly extends Command<{ test: string }, { test: string }> {
@@ -45,7 +45,6 @@ class TestCommandApiKeyOnly extends Command<{ test: string }, { test: string }> 
 
 describe("FlowcoreCommand", () => {
   const fetchMocker = new FetchMocker()
-  const fetchMockerBuilder = fetchMocker.mock("https://test-command.api.flowcore.io")
 
   afterEach(() => fetchMocker.assert())
   afterAll(() => fetchMocker.restore())
