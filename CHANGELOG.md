@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.2](https://github.com/flowcore-io/flowcore-sdk/compare/v1.10.1...v1.10.2) (2025-02-07)
+
+
+### Bug Fixes
+
+* add eventtype truncate command ([1f8d4b0](https://github.com/flowcore-io/flowcore-sdk/commit/1f8d4b0afa89e427b5835fa933208f6508d0c578))
+
 ## [1.10.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.10.0...v1.10.1) (2025-02-07)
 
 
