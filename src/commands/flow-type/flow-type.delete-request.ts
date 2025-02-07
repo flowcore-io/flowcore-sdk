@@ -92,7 +92,7 @@ export class FlowTypeDeleteRequestCommand extends GraphQlCommand<FlowTypeDeleteR
   public override async getRequest(client: FlowcoreClient): Promise<
     {
       allowedModes: ("apiKey" | "bearer")[]
-      body: string | undefined
+      body: Record<string, unknown>
       headers: Record<string, string>
       baseUrl: string
       path: string
@@ -113,13 +113,13 @@ export class FlowTypeDeleteRequestCommand extends GraphQlCommand<FlowTypeDeleteR
 
     return {
       ...request,
-      body: JSON.stringify({
+      body: {
         query: graphQlQuery,
         variables: {
           flowTypeId: this.input.flowTypeId,
           dataCoreId: response.dataCoreId,
         },
-      }),
+      },
     }
   }
 
