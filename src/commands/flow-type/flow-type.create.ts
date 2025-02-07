@@ -5,7 +5,7 @@ import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 /**
  * The input for the data core create command
  */
-export type FlowTypeCreateInput = {
+export interface FlowTypeCreateInput {
   /** The id of the data core */
   dataCoreId: string
   /** The name of the flow type */
@@ -18,6 +18,11 @@ export type FlowTypeCreateInput = {
  * Create a flow type
  */
 export class FlowTypeCreateCommand extends Command<FlowTypeCreateInput, FlowType> {
+  /**
+   * Whether the command should retry on failure
+   */
+  protected override retryOnFailure: boolean = false
+
   /**
    * Get the method
    */

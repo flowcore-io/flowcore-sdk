@@ -47,6 +47,11 @@ const responseSchema = Type.Object({
  */
 export class ApiKeyCreateCommand extends GraphQlCommand<ApiKeyCreateInput, ApiKey & { value: string }> {
   /**
+   * Whether the command should retry on failure
+   */
+  protected override retryOnFailure: boolean = false
+
+  /**
    * The allowed modes for the command
    */
   protected override allowedModes: ("apiKey" | "bearer")[] = ["bearer"]

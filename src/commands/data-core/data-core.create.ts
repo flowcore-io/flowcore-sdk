@@ -5,7 +5,7 @@ import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 /**
  * The input for the data core create command
  */
-export type DataCoreCreateInput = {
+export interface DataCoreCreateInput {
   /** The tenant id */
   tenantId: string
   /** The name of the data core */
@@ -22,6 +22,11 @@ export type DataCoreCreateInput = {
  * Create a data core
  */
 export class DataCoreCreateCommand extends Command<DataCoreCreateInput, DataCore> {
+  /**
+   * Whether the command should retry on failure
+   */
+  protected override retryOnFailure: boolean = false
+
   /**
    * Get the method
    */

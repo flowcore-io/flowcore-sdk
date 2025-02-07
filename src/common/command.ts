@@ -6,6 +6,11 @@ import type { FlowcoreClient } from "./flowcore-client.ts"
  */
 export abstract class Command<Input, Output> {
   /**
+   * Whether the command should retry on failure
+   */
+  protected readonly retryOnFailure: boolean = true
+
+  /**
    * The allowed modes for the command
    */
   protected readonly allowedModes: ("apiKey" | "bearer")[] = ["apiKey", "bearer"]
@@ -88,6 +93,7 @@ export abstract class Command<Input, Output> {
     parseResponse: (response: unknown) => Output | Promise<Output>
     processResponse: (client: FlowcoreClient, response: Output) => Promise<Output>
     handleClientError: (error: ClientError) => void
+    retryOnFailure: boolean
   }> {
     return {
       allowedModes: this.allowedModes,
@@ -99,6 +105,7 @@ export abstract class Command<Input, Output> {
       parseResponse: this.parseResponse.bind(this),
       processResponse: this.processResponse.bind(this),
       handleClientError: this.handleClientError.bind(this),
+      retryOnFailure: this.retryOnFailure,
     }
   }
 

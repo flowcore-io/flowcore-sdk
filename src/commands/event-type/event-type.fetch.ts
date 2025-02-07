@@ -5,7 +5,7 @@ import { NotFoundException } from "../../exceptions/not-found.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 import type { ClientError } from "../../exceptions/client-error.ts"
 
-interface EventTypeFetchByIdInput {
+export interface EventTypeFetchByIdInput {
   /** The id of the event type */
   eventTypeId: string
   /** The id of the flow type */
@@ -14,7 +14,7 @@ interface EventTypeFetchByIdInput {
   eventType?: never
 }
 
-interface EventTypeFetchByNameInput {
+export interface EventTypeFetchByNameInput {
   /** The id of the flow type */
   flowTypeId: string
   /** The name of the event type */

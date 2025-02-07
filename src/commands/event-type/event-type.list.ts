@@ -6,7 +6,7 @@ import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 /**
  * The input for the event type list command
  */
-export type EventTypeListInput = {
+export interface EventTypeListInput {
   /** The flow type id */
   flowTypeId: string
 }

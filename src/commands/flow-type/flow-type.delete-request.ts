@@ -11,7 +11,7 @@ import type { ClientError } from "../../exceptions/client-error.ts"
 /**
  * The input for the flow type delete request command
  */
-export type FlowTypeDeleteRequestInput = {
+export interface FlowTypeDeleteRequestInput {
   /** The id of the flow type */
   flowTypeId: string
   /** Whether to wait for the flow type to be deleted */
@@ -56,6 +56,11 @@ const responseSchema = Type.Object({
  */
 export class FlowTypeDeleteRequestCommand extends GraphQlCommand<FlowTypeDeleteRequestInput, boolean> {
   /**
+   * Whether the command should retry on failure
+   */
+  protected override retryOnFailure: boolean = false
+
+  /**
    * The allowed modes for the command
    */
   protected override allowedModes: ("apiKey" | "bearer")[] = ["bearer"]
@@ -95,6 +100,7 @@ export class FlowTypeDeleteRequestCommand extends GraphQlCommand<FlowTypeDeleteR
       parseResponse: (response: unknown) => boolean | Promise<boolean>
       processResponse: (client: FlowcoreClient, response: boolean) => Promise<boolean>
       handleClientError: (error: ClientError) => void
+      retryOnFailure: boolean
     }
   > {
     const request = await super.getRequest(client)

@@ -21,6 +21,10 @@ class TestCommand extends Command<{ test: string }, { test: string }> {
   }
 }
 
+class TestCommandNoRetry extends TestCommand {
+  protected override retryOnFailure: boolean = false
+}
+
 describe("FlowcoreClient", () => {
   const fetchMocker = new FetchMocker()
   const fetchMockerBuilder = fetchMocker.mock("https://test-command.api.flowcore.io")
@@ -93,6 +97,26 @@ describe("FlowcoreClient", () => {
 
     // assert
     assertEquals(response, { test: "test" })
+  })
+
+  it("should not retry request if retryOnFailure is false", async () => {
+    // arrange
+    const flowcoreClient = new FlowcoreClient({
+      getBearerToken: () => "BEARER_TOKEN",
+      retry: {
+        delay: 1,
+        maxRetries: 3,
+      },
+    })
+    fetchMockerBuilder.get("/test")
+      .respondWith(500, { error: "test" })
+
+    // act
+    const command = new TestCommandNoRetry({ test: "test" })
+    const responsePromise = flowcoreClient.execute(command)
+
+    // assert
+    await assertRejects(() => responsePromise, ClientError)
   })
 
   it("should not retry request if max retries is set to 0", async () => {

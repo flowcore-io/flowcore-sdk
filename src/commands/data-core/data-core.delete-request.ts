@@ -9,7 +9,7 @@ import type { FlowcoreClient } from "../../common/flowcore-client.ts"
 /**
  * The input for the data core delete request command
  */
-export type DataCoreDeleteRequestInput = {
+export interface DataCoreDeleteRequestInput {
   /** The id of the data core */
   dataCoreId: string
   /** Wait for the data core to be deleted (default: true) */
@@ -46,6 +46,11 @@ const responseSchema = Type.Object({
  * Request to delete a data core
  */
 export class DataCoreDeleteRequestCommand extends GraphQlCommand<DataCoreDeleteRequestInput, boolean> {
+  /**
+   * Whether the command should retry on failure
+   */
+  protected override retryOnFailure: boolean = false
+
   /**
    * Create a new data core delete request command
    */

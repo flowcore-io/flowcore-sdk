@@ -9,7 +9,7 @@ import { EventTypeExistsCommand } from "./event-type.exists.ts"
 /**
  * The input for the event type delete request command
  */
-export type EventTypeDeleteRequestInput = {
+export interface EventTypeDeleteRequestInput {
   /** The id of the event type */
   eventTypeId: string
 
@@ -50,6 +50,11 @@ const responseSchema = Type.Object({
  * Request to delete a event type
  */
 export class EventTypeDeleteRequestCommand extends GraphQlCommand<EventTypeDeleteRequestInput, boolean> {
+  /**
+   * Whether the command should retry on failure
+   */
+  protected override retryOnFailure: boolean = false
+
   /**
    * The allowed modes for the command
    */

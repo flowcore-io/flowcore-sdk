@@ -6,7 +6,7 @@ import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 /**
  * The input for the data core fetch by name command
  */
-export type DataCoreListInput = {
+export interface DataCoreListInput {
   /** The tenant id */
   tenantId?: string
   /** The tenant name */

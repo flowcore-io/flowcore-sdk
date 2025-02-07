@@ -8,7 +8,7 @@ import type { ClientError } from "../../exceptions/client-error.ts"
 /**
  * The input for the data core fetch by id command
  */
-type DataCoreFetchByIdInput = {
+export interface DataCoreFetchByIdInput {
   /** The id of the data core */
   dataCoreId: string
   /** The name of the data core */
@@ -20,7 +20,7 @@ type DataCoreFetchByIdInput = {
 /**
  * The input for the data core fetch by name command
  */
-interface DataCoreFetchByNameInput {
+export interface DataCoreFetchByNameInput {
   /** The tenant id */
   tenantId: string
   /** The name of the data core */

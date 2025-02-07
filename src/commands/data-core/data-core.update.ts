@@ -5,7 +5,7 @@ import { CommandError } from "../../exceptions/command-error.ts"
 /**
  * The input for the data core update command
  */
-export type DataCoreUpdateInput = {
+export interface DataCoreUpdateInput {
   /** The id of the data core */
   dataCoreId: string
   /** The description of the data core */
