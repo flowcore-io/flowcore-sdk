@@ -7,7 +7,7 @@ import { NotFoundException } from "../../exceptions/not-found.ts"
 /**
  * The input for the tenant fetch by id command
  */
-type TenantFetchByIdInput = {
+export interface TenantFetchByIdInput {
   /** The id of the tenant */
   tenantId: string
   /** The name of the tenant */
@@ -17,7 +17,7 @@ type TenantFetchByIdInput = {
 /**
  * The input for the tenant fetch by name command
  */
-type TenantFetchByNameInput = {
+export interface TenantFetchByNameInput {
   /** The name of the tenant */
   tenant: string
   /** The id of the tenant */

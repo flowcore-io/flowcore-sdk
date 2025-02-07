@@ -5,7 +5,7 @@ import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 /**
  * The input for the flow type update command
  */
-export type FlowTypeUpdateInput = {
+export interface FlowTypeUpdateInput {
   /** The id of the data core */
   flowTypeId: string
   /** The description of the flow type */

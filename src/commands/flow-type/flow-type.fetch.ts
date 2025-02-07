@@ -8,7 +8,7 @@ import type { ClientError } from "../../exceptions/client-error.ts"
 /**
  * The input for the flow type fetch by name command
  */
-type FlowTypeFetchByNameInput = {
+export interface FlowTypeFetchByNameInput {
   /** The id of the data core */
   dataCoreId: string
   /** The name of the flow type */
@@ -20,7 +20,7 @@ type FlowTypeFetchByNameInput = {
 /**
  * The input for the flow type fetch by id command
  */
-type FlowTypeFetchByIdInput = {
+export interface FlowTypeFetchByIdInput {
   /** The id of the flow type */
   flowTypeId: string
   /** The id of the data core */

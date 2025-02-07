@@ -5,7 +5,7 @@ import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 /**
  * The input for the event type create command
  */
-export type EventTypeCreateInput = {
+export interface EventTypeCreateInput {
   /** The id of the flow type */
   flowTypeId: string
   /** The name of the event type */
@@ -18,6 +18,11 @@ export type EventTypeCreateInput = {
  * Create an event type
  */
 export class EventTypeCreateCommand extends Command<EventTypeCreateInput, EventType> {
+  /**
+   * Whether the command should retry on failure
+   */
+  protected override retryOnFailure: boolean = false
+
   /**
    * Get the method
    */
