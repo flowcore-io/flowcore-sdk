@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.10.0...v1.10.1) (2025-02-07)
+
+
+### Bug Fixes
+
+* disable retry for create resource commands ([c97f990](https://github.com/flowcore-io/flowcore-sdk/commit/c97f99017aaf6deef7ca431a61b5b4c322c3788f))
+
 ## [1.10.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.9.3...v1.10.0) (2025-02-03)
 
 
