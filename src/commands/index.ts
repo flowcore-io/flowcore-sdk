@@ -40,7 +40,6 @@ export * from "./event-type/event-type.list.ts"
 export * from "./event-type/event-type.create.ts"
 export * from "./event-type/event-type.update.ts"
 export * from "./event-type/event-type.delete-request.ts"
-export * from "./event-type/event-type.truncate-request.ts"
 
 // Events
 export * from "./events/events.fetch.ts"
