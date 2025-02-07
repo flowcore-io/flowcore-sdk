@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.3](https://github.com/flowcore-io/flowcore-sdk/compare/v1.10.2...v1.10.3) (2025-02-07)
+
+
+### Bug Fixes
+
+* flowtype delete request ([66488ff](https://github.com/flowcore-io/flowcore-sdk/commit/66488ffccef62f6eefb0661c6166f3ff5bb6a82f))
+
 ## [1.10.2](https://github.com/flowcore-io/flowcore-sdk/compare/v1.10.1...v1.10.2) (2025-02-07)
 
 
