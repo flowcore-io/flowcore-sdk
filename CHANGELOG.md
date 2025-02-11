@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.11.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.10.3...v1.11.0) (2025-02-11)
+
+
+### Features
+
+* Add notification client with WebSocket support ([f573957](https://github.com/flowcore-io/flowcore-sdk/commit/f57395798baecfb4f5385820912c996e5bc7e641))
+* Enhance NotificationClient with dynamic data fetching ([7398919](https://github.com/flowcore-io/flowcore-sdk/commit/739891977d862fedc06154ef4b936187f638fa34))
+* Improve WebSocket compatibility and data parsing in NotificationClient ([b2867d3](https://github.com/flowcore-io/flowcore-sdk/commit/b2867d397ac3db2ca8894a738c3ef18ed1805775))
+
+
+### Bug Fixes
+
+* Improve tenant and connection handling in NotificationClient ([0fd04c2](https://github.com/flowcore-io/flowcore-sdk/commit/0fd04c22db8a585786bea1fed15a6cbbb3d8f265))
+
 ## [1.10.3](https://github.com/flowcore-io/flowcore-sdk/compare/v1.10.2...v1.10.3) (2025-02-07)
 
 ### Bug Fixes
