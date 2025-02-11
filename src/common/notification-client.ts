@@ -1,7 +1,7 @@
 import type { Subject } from "npm:rxjs"
 import { type Logger, defaultLogger } from "../utils/logger.ts"
 import { FlowcoreClient } from "./flowcore-client.ts"
-import { DataCoreFetchCommand, FlowType, EventType, FlowTypeFetchCommand, EventTypeFetchCommand } from "../mod.ts"
+import { DataCoreFetchCommand, type FlowType, type EventType, FlowTypeFetchCommand, EventTypeFetchCommand } from "../mod.ts"
 
 /**
  * Represents an event notification from the Flowcore system
