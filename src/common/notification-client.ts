@@ -1,5 +1,7 @@
 import type { Subject } from "npm:rxjs"
 import { type Logger, defaultLogger } from "../utils/logger.ts"
+import { FlowcoreClient } from "./flowcore-client.ts"
+import { DataCoreFetchCommand, FlowType, EventType, FlowTypeFetchCommand, EventTypeFetchCommand } from "../mod.ts"
 
 /**
  * Represents an event notification from the Flowcore system
@@ -75,9 +77,9 @@ export class NotificationClient {
     private readonly oidcClient: OidcClient,
     private readonly subscriptionSpec: {
       tenant: string
-      dataCoreId: string
-      flowTypeId?: string
-      eventTypeId?: string
+      dataCore: string
+      flowType?: string
+      eventType?: string
     },
     options?: Partial<NotificationClientOptions>,
   ) {
@@ -94,6 +96,38 @@ export class NotificationClient {
    */
   async connect() {
     const token = await this.oidcClient.getToken()
+    
+    const flowcoreClient = new FlowcoreClient({
+      getBearerToken: () => Promise.resolve(token.accessToken),
+    })
+
+    const dataCore = await flowcoreClient.execute(
+      new DataCoreFetchCommand({
+        tenantId: this.subscriptionSpec.tenant,
+        dataCore: this.subscriptionSpec.dataCore,
+      }),
+    )
+
+    let flowType: FlowType | undefined
+    let eventType: EventType | undefined
+    if (this.subscriptionSpec.flowType) {
+      flowType = await flowcoreClient.execute(
+        new FlowTypeFetchCommand({
+          dataCoreId: dataCore.id,
+          flowType: this.subscriptionSpec.flowType,
+        }),
+      )
+
+      if (this.subscriptionSpec.eventType) {
+        eventType = await flowcoreClient.execute(
+          new EventTypeFetchCommand({
+            flowTypeId: flowType?.id,
+            eventType: this.subscriptionSpec.eventType,
+          }),
+        )
+      }
+    }
+
     this.webSocket = new WebSocket(`${this.url}?token=${encodeURIComponent(token.accessToken)}`)
 
     this.webSocket.onopen = () => {
@@ -103,9 +137,9 @@ export class NotificationClient {
       this.webSocket.send(
         JSON.stringify({
           tenant: this.subscriptionSpec.tenant,
-          dataCoreId: this.subscriptionSpec.dataCoreId,
-          flowTypeId: this.subscriptionSpec.flowTypeId,
-          eventTypeId: this.subscriptionSpec.eventTypeId,
+          dataCoreId: dataCore.id,
+          flowTypeId: flowType?.id,
+          eventTypeId: eventType?.id,
         }),
       )
     }
