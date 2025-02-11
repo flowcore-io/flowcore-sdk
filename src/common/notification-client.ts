@@ -1,7 +1,20 @@
 import type { Subject } from "npm:rxjs"
-import { type Logger, defaultLogger } from "../utils/logger.ts"
+import {
+  DataCoreFetchCommand,
+  type EventType,
+  EventTypeFetchCommand,
+  type FlowType,
+  FlowTypeFetchCommand,
+} from "../mod.ts"
+import { defaultLogger, type Logger } from "../utils/logger.ts"
 import { FlowcoreClient } from "./flowcore-client.ts"
-import { DataCoreFetchCommand, type FlowType, type EventType, FlowTypeFetchCommand, EventTypeFetchCommand } from "../mod.ts"
+
+// Add type declaration for Node.js Buffer
+declare const Buffer: {
+  isBuffer(obj: unknown): boolean
+  concat(list: Uint8Array[]): Uint8Array
+}
+type BufferType = Uint8Array & { toString(): string }
 
 /**
  * Represents an event notification from the Flowcore system
@@ -96,7 +109,7 @@ export class NotificationClient {
    */
   async connect() {
     const token = await this.oidcClient.getToken()
-    
+
     const flowcoreClient = new FlowcoreClient({
       getBearerToken: () => Promise.resolve(token.accessToken),
     })
@@ -145,7 +158,19 @@ export class NotificationClient {
     }
 
     this.webSocket.onmessage = (event) => {
-      const data = JSON.parse(event.data)
+      let parsedData: string
+      if (event.data instanceof ArrayBuffer) {
+        parsedData = new TextDecoder().decode(event.data)
+      } else if (Buffer.isBuffer(event.data)) {
+        parsedData = (event.data as BufferType).toString()
+      } else if (Array.isArray(event.data)) {
+        // Handle Buffer arrays by concatenating them
+        parsedData = Buffer.concat(event.data as Uint8Array[]).toString()
+      } else {
+        parsedData = event.data as string
+      }
+
+      const data = JSON.parse(parsedData)
 
       if (data.type === "validation") {
         this.logger.error(`Bad request: ${data.summary} - ${data.message} - ${data.found} - ${data.errors}`)
@@ -207,7 +232,9 @@ export class NotificationClient {
     this.reconnectAttempts++
 
     this.logger.info(
-      `Attempting reconnection ${this.reconnectAttempts}${this.options.maxReconnects ? `/${this.options.maxReconnects}` : ""} in ${this.reconnectInterval} ms...`,
+      `Attempting reconnection ${this.reconnectAttempts}${
+        this.options.maxReconnects ? `/${this.options.maxReconnects}` : ""
+      } in ${this.reconnectInterval} ms...`,
     )
     setTimeout(() => {
       this.connect()
