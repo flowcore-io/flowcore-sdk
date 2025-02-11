@@ -5,6 +5,7 @@ import {
   EventTypeFetchCommand,
   type FlowType,
   FlowTypeFetchCommand,
+  TenantFetchCommand,
 } from "../mod.ts"
 import { defaultLogger, type Logger } from "../utils/logger.ts"
 import { FlowcoreClient } from "./flowcore-client.ts"
@@ -114,9 +115,15 @@ export class NotificationClient {
       getBearerToken: () => Promise.resolve(token.accessToken),
     })
 
+    const tenant = await flowcoreClient.execute(
+      new TenantFetchCommand({
+        tenant: this.subscriptionSpec.tenant,
+      }),
+    )
+
     const dataCore = await flowcoreClient.execute(
       new DataCoreFetchCommand({
-        tenantId: this.subscriptionSpec.tenant,
+        tenantId: tenant.id,
         dataCore: this.subscriptionSpec.dataCore,
       }),
     )
@@ -209,7 +216,10 @@ export class NotificationClient {
       this.logger.info(`Connection closed: Code [${event.code}], Reason: ${event.reason}`)
       if (event.code !== 1000) {
         this.attemptReconnect()
+        return
       }
+
+      this.observer.complete()
     }
 
     this.webSocket.onerror = (error) => {
@@ -246,7 +256,7 @@ export class NotificationClient {
   /**
    * Closes the WebSocket connection
    */
-  private disconnect() {
+  disconnect() {
     if (this.webSocket) {
       this.webSocket.close()
     }
