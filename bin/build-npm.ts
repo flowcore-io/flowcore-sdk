@@ -11,6 +11,7 @@ await build({
   shims: {
     // see JS docs for overview and more options
     deno: true,
+    webSocket: true,
   },
   package: {
     name: denoJson.name,
@@ -25,6 +26,9 @@ await build({
     bugs: {
       url: "https://github.com/flowcore-io/flowcore-sdk/issues",
     },
+    devDependencies: {
+      "@types/ws": "^8.5.10"
+    }
   },
   postBuild() {
     // steps to run after building and before running the tests
