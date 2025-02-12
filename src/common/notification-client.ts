@@ -10,7 +10,6 @@ import {
 import { defaultLogger, type Logger } from "../utils/logger.ts"
 import { FlowcoreClient } from "./flowcore-client.ts"
 import { Buffer } from "node:buffer"
-import { WebSocket } from "node:http"
 
 type BufferType = Uint8Array & { toString(): string }
 
