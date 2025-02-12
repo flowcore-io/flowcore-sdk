@@ -20,7 +20,7 @@ export class ContainerRegistListCommand extends Command<ContainerRegistryFetchTe
    * Get the path
    */
   protected override getPath(): string {
-    return `/api/v1/container/organization/${this.input.tenantId}`
+    return `/api/v1/container/tenants/${this.input.tenantId}`
   }
 
   /**

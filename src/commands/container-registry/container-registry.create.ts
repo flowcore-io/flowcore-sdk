@@ -5,7 +5,7 @@ import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 
 export interface ContainerRegistryCreateInput {
   /** The tenant id to add the container registry to*/
-  organizationId: string
+  tenantId: string
   /** The name of the container registry */
   name: string
   /**A description of the container registry */

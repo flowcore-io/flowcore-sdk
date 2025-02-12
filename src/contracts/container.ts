@@ -4,13 +4,13 @@ import { type Static, type TArray, type TObject, type TOptional, type TString, T
  * the schema for a container
  */
 export const ContainerRegistrySchema: TObject<{
-  organizationId: TString
+  tenantId: TString
   name: TString
   description: TOptional<TString>
   username: TOptional<TString>
   id: TString
 }> = Type.Object({
-  organizationId: Type.String(),
+  tenantId: Type.String(),
   name: Type.String(),
   description: Type.Optional(Type.String()),
   username: Type.Optional(Type.String()),
@@ -23,8 +23,11 @@ export const ContainerRegistryCreateSchema: TObject<{
   id: Type.String(),
 })
 
+export const ContainerRegistryDeleteSchema = ContainerRegistryCreateSchema
+
 export const ContainerRegistryListSchema: TArray = Type.Array(ContainerRegistrySchema)
 
 export type ContainerRegistry = Static<typeof ContainerRegistrySchema>
 export type ContainerRegistryList = Static<typeof ContainerRegistryListSchema>
 export type ContainerRegistryCreate = Static<typeof ContainerRegistryCreateSchema>
+export type ContainerRegistryDelete = Static<typeof ContainerRegistryDeleteSchema>

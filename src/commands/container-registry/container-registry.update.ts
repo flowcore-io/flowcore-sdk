@@ -4,7 +4,7 @@ import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 
 interface ContainerRegustryUpdateInput {
   /** The id of the container-registry */
-  id: string
+  containerId: string
   /** The name of the container-registry */
   name?: string
   /** The description */
@@ -29,7 +29,7 @@ export class ContainerRegistryUpdateCommand extends Command<ContainerRegustryUpd
    * Get the path
    */
   protected override getPath(): string {
-    return `/api/v1/container/${this.input.id}`
+    return `/api/v1/container/${this.input.containerId}`
   }
 
   /**
