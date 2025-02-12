@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.2](https://github.com/flowcore-io/flowcore-sdk/compare/v1.11.1...v1.11.2) (2025-02-12)
+
+
+### Bug Fixes
+
+* import node buffer ([6e6caa0](https://github.com/flowcore-io/flowcore-sdk/commit/6e6caa0707bb58987939e39898b32e574e7194f8))
+
 ## [1.11.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.11.0...v1.11.1) (2025-02-12)
 
 
