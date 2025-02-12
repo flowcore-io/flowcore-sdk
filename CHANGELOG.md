@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.5](https://github.com/flowcore-io/flowcore-sdk/compare/v1.11.4...v1.11.5) (2025-02-12)
+
+
+### Bug Fixes
+
+* add websocket import ([073aa8c](https://github.com/flowcore-io/flowcore-sdk/commit/073aa8ce2c7f1bd548bc762816f480f00f6ee126))
+* remove import ([4b76831](https://github.com/flowcore-io/flowcore-sdk/commit/4b7683191ecd7cab84e814ec1285e90f5b9ac320))
+
 ## [1.11.4](https://github.com/flowcore-io/flowcore-sdk/compare/v1.11.3...v1.11.4) (2025-02-12)
 
 
