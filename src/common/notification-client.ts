@@ -9,12 +9,8 @@ import {
 } from "../mod.ts"
 import { defaultLogger, type Logger } from "../utils/logger.ts"
 import { FlowcoreClient } from "./flowcore-client.ts"
+import { Buffer } from "node:buffer"
 
-// Add type declaration for Node.js Buffer
-declare const Buffer: {
-  isBuffer(obj: unknown): boolean
-  concat(list: Uint8Array[]): Uint8Array
-}
 type BufferType = Uint8Array & { toString(): string }
 
 /**
