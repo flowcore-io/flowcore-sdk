@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.11.0...v1.11.1) (2025-02-12)
+
+
+### Bug Fixes
+
+* fix import of rxjs ([3dcc724](https://github.com/flowcore-io/flowcore-sdk/commit/3dcc724d1ae1884441ba26b9c3abf5d24c67edd0))
+
 ## [1.11.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.10.3...v1.11.0) (2025-02-11)
 
 
