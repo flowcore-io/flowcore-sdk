@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.3](https://github.com/flowcore-io/flowcore-sdk/compare/v1.11.2...v1.11.3) (2025-02-12)
+
+
+### Bug Fixes
+
+* add isopen and isconnecting to notification client ([fa90737](https://github.com/flowcore-io/flowcore-sdk/commit/fa907373c05a255889978190bea9a6e3750b18f9))
+* add return types ([c51fbac](https://github.com/flowcore-io/flowcore-sdk/commit/c51fbac0d4fd1ac6208451837fb192afa3ffa6bb))
+
 ## [1.11.2](https://github.com/flowcore-io/flowcore-sdk/compare/v1.11.1...v1.11.2) (2025-02-12)
 
 
