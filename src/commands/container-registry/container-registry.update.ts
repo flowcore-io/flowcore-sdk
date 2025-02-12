@@ -13,6 +13,8 @@ interface ContainerRegustryUpdateInput {
   registryUrl?: string
   /** The username for authentication */
   username?: string
+  /** The password for authentication */
+  password?: string
 }
 
 export class ContainerRegistryUpdateCommand extends Command<ContainerRegustryUpdateInput, ContainerRegistry> {
