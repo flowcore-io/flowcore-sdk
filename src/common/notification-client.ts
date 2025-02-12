@@ -1,4 +1,4 @@
-import type { Subject } from "npm:rxjs"
+import type { Subject } from "rxjs"
 import {
   DataCoreFetchCommand,
   type EventType,
