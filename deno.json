@@ -2,7 +2,7 @@
   "$schema": "https://deno.land/x/deno/cli/schemas/config-file.v1.json",
   "name": "@flowcore/sdk",
   "description": "Flowcore SDK",
-  "version": "1.10.3",
+  "version": "1.11.0",
   "license": "MIT",
   "exports": "./src/mod.ts",
   "publish": {
@@ -12,12 +12,15 @@
       "CHANGELOG.md"
     ]
   },
-  "tasks": {},
+  "tasks": {
+    "build:npm": "deno run -A bin/build-npm.ts"
+  },
   "imports": {
     "@deno/dnt": "jsr:@deno/dnt@^0.41.3",
     "@sinclair/typebox": "npm:@sinclair/typebox@0.32.15",
     "@std/assert": "jsr:@std/assert@^1.0.6",
-    "@std/semver": "jsr:@std/semver@^1.0.3"
+    "@std/semver": "jsr:@std/semver@^1.0.3",
+    "rxjs": "npm:rxjs@^7.8.1"
   },
   "fmt": {
     "exclude": [

@@ -30,4 +30,3 @@ jobs:
           token: ${{ secrets.FLOWCORE_MACHINE_GITHUB_TOKEN }}
           config-file: .github/workflows/release-please-config.json
           manifest-file: .github/workflows/.release-please-manifest.json
-
