@@ -236,7 +236,7 @@ export class NotificationClient {
     this.webSocket.onclose = (event) => {
       this._isOpen = false
       this.logger.info(`Connection closed: Code [${event.code}], Reason: ${event.reason}`)
-      if (event.code !== 1000) {
+      if (![1000, 1005].includes(event.code)) {
         this.attemptReconnect()
         return
       }
