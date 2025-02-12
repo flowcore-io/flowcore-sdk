@@ -20,11 +20,14 @@ This is the Flowcore SDK, a TypeScript library for interacting with the Flowcore
 ## Installation
 
 ```bash
-# npm / yarn
-npx jsr add @flowcore/sdk
+# Bun
+bunx jsr add @flowcore/sdk
 
 # Deno
 deno add jsr:@flowcore/sdk
+
+# npm / yarn
+npx jsr add @flowcore/sdk
 ```
 
 ## Getting Started
