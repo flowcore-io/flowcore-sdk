@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.4](https://github.com/flowcore-io/flowcore-sdk/compare/v1.11.3...v1.11.4) (2025-02-12)
+
+
+### Bug Fixes
+
+* do not reconnect on 1005 ([4949d97](https://github.com/flowcore-io/flowcore-sdk/commit/4949d978c98412a5019a0cd6614d418cad10dc59))
+* use code 1000 when manually disconnecting ([c83202d](https://github.com/flowcore-io/flowcore-sdk/commit/c83202d42e23aeb3d41cfc93ee131b21b2ba11f6))
+
 ## [1.11.3](https://github.com/flowcore-io/flowcore-sdk/compare/v1.11.2...v1.11.3) (2025-02-12)
 
 
