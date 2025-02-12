@@ -74,6 +74,8 @@ export class NotificationClient {
   private eventCount = 0
   private reconnectInterval: number
   private reconnectAttempts = 0
+  private _isOpen: boolean = false
+  private _isConnecting: boolean = false
 
   /**
    * Creates a new NotificationClient instance
@@ -102,9 +104,30 @@ export class NotificationClient {
   }
 
   /**
+   * Is the websocket connection open
+   */
+  public get isOpen(): boolean {
+    return this._isOpen
+  }
+
+  /**
+   * Is the websocket connection currently connecting
+   */
+  public get isConnecting(): boolean {
+    return this._isConnecting
+  }
+
+  /**
    * Establishes WebSocket connection and sets up event handlers
    */
   async connect() {
+    if (this._isConnecting || this._isOpen) {
+      this.logger.debug("Is already connecting or open")
+      return
+    }
+
+    this._isConnecting = true
+
     const token = await this.oidcClient.getToken()
 
     const flowcoreClient = new FlowcoreClient({
@@ -147,6 +170,8 @@ export class NotificationClient {
     this.webSocket = new WebSocket(`${this.url}?token=${encodeURIComponent(token.accessToken)}`)
 
     this.webSocket.onopen = () => {
+      this._isOpen = true
+      this._isConnecting = false
       this.logger.info("WebSocket connection opened.")
       this.reconnectInterval = this.options.reconnectInterval
       this.reconnectAttempts = 0
@@ -209,12 +234,13 @@ export class NotificationClient {
     }
 
     this.webSocket.onclose = (event) => {
+      this._isOpen = false
       this.logger.info(`Connection closed: Code [${event.code}], Reason: ${event.reason}`)
       if (event.code !== 1000) {
         this.attemptReconnect()
         return
       }
-
+      this._isConnecting = false
       this.observer.complete()
     }
 
@@ -236,7 +262,7 @@ export class NotificationClient {
       return
     }
     this.reconnectAttempts++
-
+    this._isConnecting = true
     this.logger.info(
       `Attempting reconnection ${this.reconnectAttempts}${
         this.options.maxReconnects ? `/${this.options.maxReconnects}` : ""
