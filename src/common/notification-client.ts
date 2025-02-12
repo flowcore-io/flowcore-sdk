@@ -106,14 +106,14 @@ export class NotificationClient {
   /**
    * Is the websocket connection open
    */
-  public get isOpen() {
+  public get isOpen(): boolean {
     return this._isOpen
   }
 
   /**
    * Is the websocket connection currently connecting
    */
-  public get isConnecting() {
+  public get isConnecting(): boolean {
     return this._isConnecting
   }
 
