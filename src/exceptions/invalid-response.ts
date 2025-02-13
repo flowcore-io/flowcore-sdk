@@ -3,7 +3,7 @@
  */
 export class InvalidResponseException extends Error {
   constructor(message: string, public readonly errors: Record<string, string>) {
-    super(message)
+    super(`${message}: ${JSON.stringify(errors)}`)
     this.errors = errors
   }
 }
