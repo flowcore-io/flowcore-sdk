@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.7](https://github.com/flowcore-io/flowcore-sdk/compare/v1.11.6...v1.11.7) (2025-02-13)
+
+
+### Bug Fixes
+
+* next cursor in timebuckets is a number ([4cfb89f](https://github.com/flowcore-io/flowcore-sdk/commit/4cfb89f58bf69898df3e7dd9bbe2c28ff93078de))
+
 ## [1.11.6](https://github.com/flowcore-io/flowcore-sdk/compare/v1.11.5...v1.11.6) (2025-02-13)
 
 
