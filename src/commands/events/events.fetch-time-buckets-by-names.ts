@@ -15,7 +15,7 @@ export interface EventsFetchTimeBucketsByNamesInput {
   /** the event type names */
   eventTypes: string[]
   /** the paging cursor */
-  cursor?: string
+  cursor?: number
   /** the page size (default is 10.000) */
   pageSize?: number
   /** start from this time bucket */
