@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.6](https://github.com/flowcore-io/flowcore-sdk/compare/v1.11.5...v1.11.6) (2025-02-13)
+
+
+### Bug Fixes
+
+* limit invalid response to 1000 chars and add test ([93a8dfe](https://github.com/flowcore-io/flowcore-sdk/commit/93a8dfe75e68617e85c30d75c171a9713b8f5730))
+
 ## [1.11.5](https://github.com/flowcore-io/flowcore-sdk/compare/v1.11.4...v1.11.5) (2025-02-13)
 
 
