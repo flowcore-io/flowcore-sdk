@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.8](https://github.com/flowcore-io/flowcore-sdk/compare/v1.11.7...v1.11.8) (2025-02-13)
+
+
+### Bug Fixes
+
+* tiebucket input cursor is number ([67515dd](https://github.com/flowcore-io/flowcore-sdk/commit/67515dd731343b81c76512172572f5362e56535c))
+
 ## [1.11.7](https://github.com/flowcore-io/flowcore-sdk/compare/v1.11.6...v1.11.7) (2025-02-13)
 
 
