@@ -31,7 +31,7 @@ export interface EventsFetchTimeBucketsByNamesOutput {
   /** the time buckets */
   timeBuckets: string[]
   /** the next page cursor */
-  nextCursor?: string
+  nextCursor?: number
 }
 
 /**
@@ -39,7 +39,7 @@ export interface EventsFetchTimeBucketsByNamesOutput {
  */
 const responseSchema = Type.Object({
   timeBuckets: Type.Array(Type.String()),
-  nextCursor: Type.Optional(Type.String()),
+  nextCursor: Type.Optional(Type.Number()),
 })
 
 /**
