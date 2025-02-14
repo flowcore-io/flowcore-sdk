@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.9](https://github.com/flowcore-io/flowcore-sdk/compare/v1.11.8...v1.11.9) (2025-02-14)
+
+
+### Bug Fixes
+
+* handle error response in tenant list ([0cbf9f5](https://github.com/flowcore-io/flowcore-sdk/commit/0cbf9f5c8d526c1d1ebe2d22624f02c603115130))
+
 ## [1.11.8](https://github.com/flowcore-io/flowcore-sdk/compare/v1.11.7...v1.11.8) (2025-02-13)
 
 
