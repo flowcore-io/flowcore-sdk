@@ -157,8 +157,8 @@ export class NotificationClient {
         apiKey: this.authOptions.apiKey,
         apiKeyId: this.authOptions.apiKeyId,
       })
-      urlParams.set("apiKey", this.authOptions.apiKey)
-      urlParams.set("apiKeyId", this.authOptions.apiKeyId)
+      urlParams.set("api_key", this.authOptions.apiKey)
+      urlParams.set("api_key_id", this.authOptions.apiKeyId)
     } else {
       throw new Error("No authentication options provided")
     }
