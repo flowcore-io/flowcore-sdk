@@ -64,12 +64,9 @@ const MAX_RECONNECT_INTERVAL = 30_000
 
 interface NotificationClientAuthOptionsBearer {
   oidcClient: OidcClient
-  apiKey: never
-  apiKeyId: never
 }
 
 interface NotificationClientAuthOptionsApiKey {
-  oidcClient: never
   apiKey: string
   apiKeyId: string
 }
@@ -147,20 +144,19 @@ export class NotificationClient {
     let flowcoreClient: FlowcoreClient | null = null
     const urlParams = new URLSearchParams()
 
-    if (this.authOptions.oidcClient) {
+    if ("oidcClient" in this.authOptions) {
+      const oidcClient = this.authOptions.oidcClient
       flowcoreClient = new FlowcoreClient({
-        getBearerToken: async () => (await this.authOptions.oidcClient.getToken()).accessToken,
+        getBearerToken: async () => (await oidcClient.getToken()).accessToken,
       })
-      urlParams.set("token", (await this.authOptions.oidcClient.getToken()).accessToken)
-    } else if (this.authOptions.apiKey) {
+      urlParams.set("token", (await oidcClient.getToken()).accessToken)
+    } else {
       flowcoreClient = new FlowcoreClient({
         apiKey: this.authOptions.apiKey,
         apiKeyId: this.authOptions.apiKeyId,
       })
       urlParams.set("api_key", this.authOptions.apiKey)
       urlParams.set("api_key_id", this.authOptions.apiKeyId)
-    } else {
-      throw new Error("No authentication options provided")
     }
 
     const tenant = await flowcoreClient.execute(
