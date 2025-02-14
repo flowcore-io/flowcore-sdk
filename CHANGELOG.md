@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.11.10](https://github.com/flowcore-io/flowcore-sdk/compare/v1.11.9...v1.11.10) (2025-02-14)
+
+
+### Bug Fixes
+
+* allow api key in notification client ([62269e9](https://github.com/flowcore-io/flowcore-sdk/commit/62269e94e3fee0fcb7a38c30cd8a595982ea1af9))
+* fix auth interface ([077b727](https://github.com/flowcore-io/flowcore-sdk/commit/077b727bb24234b58036cca6aba5aad5f7b310d0))
+* rename url params ([395b47d](https://github.com/flowcore-io/flowcore-sdk/commit/395b47ddd57f2f79693eacb91fa14aeb5ba43332))
+
 ## [1.11.9](https://github.com/flowcore-io/flowcore-sdk/compare/v1.11.8...v1.11.9) (2025-02-14)
 
 
