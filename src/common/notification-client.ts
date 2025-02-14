@@ -62,6 +62,19 @@ export type NotificationClientOptions = {
 // Maximum reconnection interval in milliseconds
 const MAX_RECONNECT_INTERVAL = 30_000
 
+interface NotificationClientAuthOptionsBearer {
+  oidcClient: OidcClient
+}
+
+interface NotificationClientAuthOptionsApiKey {
+  apiKey: string
+  apiKeyId: string
+}
+
+type NotificationClientAuthOptions =
+  | NotificationClientAuthOptionsBearer
+  | NotificationClientAuthOptionsApiKey
+
 /**
  * Client for handling WebSocket connections to the Flowcore notification system.
  * Manages connection lifecycle, authentication, and event handling.
@@ -80,13 +93,13 @@ export class NotificationClient {
   /**
    * Creates a new NotificationClient instance
    * @param observer - RxJS Subject for emitting notification events
-   * @param oidcClient - Client for handling OIDC authentication
+   * @param authOptions - Auth options for the client
    * @param subscriptionSpec - Specification for what notifications to subscribe to
    * @param options - Configuration options for the client
    */
   constructor(
     private readonly observer: Subject<NotificationEvent>,
-    private readonly oidcClient: OidcClient,
+    private readonly authOptions: NotificationClientAuthOptions,
     private readonly subscriptionSpec: {
       tenant: string
       dataCore: string
@@ -128,11 +141,23 @@ export class NotificationClient {
 
     this._isConnecting = true
 
-    const token = await this.oidcClient.getToken()
+    let flowcoreClient: FlowcoreClient | null = null
+    const urlParams = new URLSearchParams()
 
-    const flowcoreClient = new FlowcoreClient({
-      getBearerToken: () => Promise.resolve(token.accessToken),
-    })
+    if ("oidcClient" in this.authOptions) {
+      const oidcClient = this.authOptions.oidcClient
+      flowcoreClient = new FlowcoreClient({
+        getBearerToken: async () => (await oidcClient.getToken()).accessToken,
+      })
+      urlParams.set("token", (await oidcClient.getToken()).accessToken)
+    } else {
+      flowcoreClient = new FlowcoreClient({
+        apiKey: this.authOptions.apiKey,
+        apiKeyId: this.authOptions.apiKeyId,
+      })
+      urlParams.set("api_key", this.authOptions.apiKey)
+      urlParams.set("api_key_id", this.authOptions.apiKeyId)
+    }
 
     const tenant = await flowcoreClient.execute(
       new TenantFetchCommand({
@@ -167,7 +192,7 @@ export class NotificationClient {
       }
     }
 
-    this.webSocket = new WebSocket(`${this.url}?token=${encodeURIComponent(token.accessToken)}`)
+    this.webSocket = new WebSocket(`${this.url}?${urlParams.toString()}`)
 
     this.webSocket.onopen = () => {
       this._isOpen = true
