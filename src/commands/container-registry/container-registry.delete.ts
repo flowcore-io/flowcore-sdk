@@ -27,7 +27,6 @@ export class ContainerRegistryDeleteCommand extends Command<ContainerRegistryDel
    * Parse the response
    */
   protected override parseResponse(response: unknown): ContainerRegistryDelete {
-    console.log(response)
     return parseResponseHelper(ContainerRegistryDeleteSchema, response)
   }
 }

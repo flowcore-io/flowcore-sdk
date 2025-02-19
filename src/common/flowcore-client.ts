@@ -138,7 +138,7 @@ export class FlowcoreClient {
       )
       request.handleClientError(error)
     }
-    const responseBody = await response.json()
+    const responseBody = response.status === 204 ? { status: response.status } : await response.json()
     const parsedBody = await request.parseResponse(responseBody)
     return request.processResponse(this, parsedBody)
   }
