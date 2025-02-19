@@ -45,3 +45,10 @@ export * from "./event-type/event-type.truncate-request.ts"
 // Events
 export * from "./events/events.fetch.ts"
 export * from "./events/events.fetch-time-buckets-by-names.ts"
+
+//Container
+export * from "./container-registry/container-registry.create.ts"
+export * from "./container-registry/container-registry.fetch.ts"
+export * from "./container-registry/container-registry.list.ts"
+export * from "./container-registry/container-registry.update.ts"
+export * from "./container-registry/container-registry.delete.ts"
