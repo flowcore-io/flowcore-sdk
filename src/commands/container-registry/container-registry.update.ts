@@ -38,7 +38,6 @@ export class ContainerRegistryUpdateCommand extends Command<ContainerRegustryUpd
    * Parse the response
    */
   protected override parseResponse(response: unknown): ContainerRegistry {
-    //console.log(response)
     return parseResponseHelper(ContainerRegistrySchema, response)
   }
 }
