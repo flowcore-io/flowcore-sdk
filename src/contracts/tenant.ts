@@ -1,6 +1,6 @@
 import {
   type Static,
-  TBoolean,
+  type TBoolean,
   type TLiteral,
   type TNull,
   type TObject,
