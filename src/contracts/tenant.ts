@@ -1,4 +1,13 @@
-import { type Static, type TObject, type TString, Type } from "@sinclair/typebox"
+import {
+  type Static,
+  TBoolean,
+  type TLiteral,
+  type TNull,
+  type TObject,
+  type TString,
+  type TUnion,
+  Type,
+} from "@sinclair/typebox"
 
 interface TenantById {
   tenantId: string
@@ -20,59 +29,52 @@ export const TenantSchema: TObject<{
   name: TString
   displayName: TString
   description: TString
-  website: TString
+  websiteUrl: TString
+  isDedicated: TBoolean
+  dedicated: TUnion<[
+    TNull,
+    TObject<{
+      status: TUnion<[
+        TLiteral<"none">,
+        TLiteral<"ready">,
+        TLiteral<"degraded">,
+        TLiteral<"offline">,
+      ]>
+      configuration: TObject<{
+        webhookUrl: TString
+        eventSourceUrl: TString
+        deleteManagerUrl: TString
+        configurationRepoUrl: TString
+      }>
+    }>,
+  ]>
 }> = Type.Object({
   id: Type.String(),
   name: Type.String(),
   displayName: Type.String(),
   description: Type.String(),
-  website: Type.String(),
+  websiteUrl: Type.String(),
+  isDedicated: Type.Boolean(),
+  dedicated: Type.Union([
+    Type.Null(),
+    Type.Object({
+      status: Type.Union([
+        Type.Literal("none"),
+        Type.Literal("ready"),
+        Type.Literal("degraded"),
+        Type.Literal("offline"),
+      ]),
+      configuration: Type.Object({
+        webhookUrl: Type.String(),
+        eventSourceUrl: Type.String(),
+        deleteManagerUrl: Type.String(),
+        configurationRepoUrl: Type.String(),
+      }),
+    }),
+  ]),
 })
+
 /**
  * The type for a tenant
  */
 export type Tenant = Static<typeof TenantSchema>
-
-/**
- * The type for a tenant with a link type
- */
-export type TenantWithLinkType = Tenant & {
-  linkType: "OWNER" | "COLLABORATOR"
-}
-
-/**
- * The schema for a tenant v0
- */
-export const TenantV0Schema: TObject<{
-  id: TString
-  org: TString
-  displayName: TString
-  description: TString
-  website: TString
-}> = Type.Object({
-  id: Type.String(),
-  org: Type.String(),
-  displayName: Type.String(),
-  description: Type.String(),
-  website: Type.String(),
-})
-
-/**
- * The type for a tenant v0
- */
-export type TenantV0 = Static<typeof TenantV0Schema>
-
-/**
- * Convert a data core v0 to a data core
- */
-export const tenantV0ToTenant = (
-  tenantV0: TenantV0,
-): Tenant => {
-  return {
-    id: tenantV0.id,
-    name: tenantV0.org,
-    displayName: tenantV0.displayName,
-    description: tenantV0.description,
-    website: tenantV0.website,
-  }
-}

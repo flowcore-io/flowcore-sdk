@@ -1,8 +1,16 @@
 import { Type } from "@sinclair/typebox"
 import { GraphQlCommand } from "../../common/command.ts"
-import { TenantV0Schema, tenantV0ToTenant, type TenantWithLinkType } from "../../contracts/tenant.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 import { CommandError } from "../../exceptions/command-error.ts"
+
+interface TenantListItem {
+  id: string
+  name: string
+  displayName: string
+  description: string
+  websiteUrl: string
+  linkType: "OWNER" | "COLLABORATOR"
+}
 
 const graphQlQueryById = `
   query FLOWCORE_SDK_TENANT_LIST {
@@ -28,7 +36,13 @@ const responseSchema = Type.Object({
         me: Type.Object({
           organizations: Type.Array(Type.Object({
             linkType: Type.Union([Type.Literal("OWNER"), Type.Literal("COLLABORATOR")]),
-            organization: TenantV0Schema,
+            organization: Type.Object({
+              id: Type.String(),
+              org: Type.String(),
+              displayName: Type.String(),
+              description: Type.String(),
+              website: Type.String(),
+            }),
           })),
         }),
       }),
@@ -44,7 +58,7 @@ const responseSchema = Type.Object({
 /**
  * List tenants
  */
-export class TenantListCommand extends GraphQlCommand<void, TenantWithLinkType[]> {
+export class TenantListCommand extends GraphQlCommand<void, TenantListItem[]> {
   /**
    * The allowed modes for the command
    */
@@ -53,7 +67,7 @@ export class TenantListCommand extends GraphQlCommand<void, TenantWithLinkType[]
   /**
    * Parse the response
    */
-  protected override parseResponse(rawResponse: unknown): TenantWithLinkType[] {
+  protected override parseResponse(rawResponse: unknown): TenantListItem[] {
     const response = parseResponseHelper(responseSchema, rawResponse)
     if (response.errors?.length) {
       throw new CommandError(this.constructor.name, response.errors.map((error) => error.message).join("; "))
@@ -61,7 +75,11 @@ export class TenantListCommand extends GraphQlCommand<void, TenantWithLinkType[]
       throw new CommandError(this.constructor.name, "No data returned from the command")
     }
     return response.data.me.organizations.flatMap((organization) => ({
-      ...tenantV0ToTenant(organization.organization),
+      id: organization.organization.id,
+      name: organization.organization.org,
+      displayName: organization.organization.displayName,
+      description: organization.organization.description,
+      websiteUrl: organization.organization.website,
       linkType: organization.linkType,
     }))
   }
