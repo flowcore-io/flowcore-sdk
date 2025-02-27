@@ -35,7 +35,6 @@ export const TenantSchema: TObject<{
     TNull,
     TObject<{
       status: TUnion<[
-        TLiteral<"none">,
         TLiteral<"ready">,
         TLiteral<"degraded">,
         TLiteral<"offline">,
@@ -59,7 +58,6 @@ export const TenantSchema: TObject<{
     Type.Null(),
     Type.Object({
       status: Type.Union([
-        Type.Literal("none"),
         Type.Literal("ready"),
         Type.Literal("degraded"),
         Type.Literal("offline"),
