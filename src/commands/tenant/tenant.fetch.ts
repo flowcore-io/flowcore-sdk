@@ -5,7 +5,7 @@ import type { ClientError } from "../../exceptions/client-error.ts"
 import { type Tenant, TenantSchema } from "../../contracts/tenant.ts"
 
 /**
- * The input for the data core fetch by id command
+ * The input for the tenant fetch by id command
  */
 export interface TenantFetchByIdInput {
   /** The id of the tenant */
@@ -15,7 +15,7 @@ export interface TenantFetchByIdInput {
 }
 
 /**
- * The input for the data core fetch by name command
+ * The input for the tenant fetch by name command
  */
 export interface TenantFetchByNameInput {
   /** The name of the tenant */
@@ -25,7 +25,7 @@ export interface TenantFetchByNameInput {
 }
 
 /**
- * The input for the data core fetch command
+ * The input for the tenant fetch command
  */
 export type TenantFetchInput = TenantFetchByIdInput | TenantFetchByNameInput
 
