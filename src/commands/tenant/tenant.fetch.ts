@@ -1,8 +1,8 @@
-import { Type } from "@sinclair/typebox"
-import { GraphQlCommand } from "../../common/command.ts"
-import { type Tenant, TenantV0Schema, tenantV0ToTenant } from "../../contracts/tenant.ts"
+import { Command } from "../../common/command.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 import { NotFoundException } from "../../exceptions/not-found.ts"
+import type { ClientError } from "../../exceptions/client-error.ts"
+import { type Tenant, TenantSchema } from "../../contracts/tenant.ts"
 
 /**
  * The input for the tenant fetch by id command
@@ -29,74 +29,51 @@ export interface TenantFetchByNameInput {
  */
 export type TenantFetchInput = TenantFetchByIdInput | TenantFetchByNameInput
 
-const graphQlQueryById = `
-  query FLOWCORE_SDK_TENANT_FETCH($tenantId: ID!) {
-    organization(search: {id: $tenantId}) {
-      id
-      org
-      displayName
-      description
-      website
-    }
-  }
-`
-
-const graphQlQueryByName = `
-  query FLOWCORE_SDK_TENANT_FETCH($tenant: String) {
-    organization(search: {org: $tenant}) {
-      id
-      org
-      displayName
-      description
-      website
-    }
-  }
-`
-
-const responseSchema = Type.Object({
-  data: Type.Object({
-    organization: Type.Union([
-      TenantV0Schema,
-      Type.Null(),
-    ]),
-  }),
-})
-
 /**
  * Fetch a tenant
  */
-export class TenantFetchCommand extends GraphQlCommand<TenantFetchInput, Tenant> {
+export class TenantFetchCommand extends Command<TenantFetchInput, Tenant> {
   /**
-   * The allowed modes for the command
+   * Get the method
    */
-  protected override allowedModes: ("apiKey" | "bearer")[] = ["bearer"]
+  protected override getMethod(): string {
+    return "GET"
+  }
+
+  /**
+   * Get the base url
+   */
+  protected override getBaseUrl(): string {
+    return "https://tenant.api.flowcore.io"
+  }
+
+  /**
+   * Get the path
+   */
+  protected override getPath(): string {
+    if ("tenantId" in this.input) {
+      return `/api/v1/tenants/by-id/${this.input.tenantId}`
+    }
+    return `/api/v1/tenants/by-name/${this.input.tenant}`
+  }
 
   /**
    * Parse the response
    */
   protected override parseResponse(rawResponse: unknown): Tenant {
-    const response = parseResponseHelper(responseSchema, rawResponse)
-    if (!response.data.organization) {
+    const response = parseResponseHelper(TenantSchema, rawResponse)
+    return response
+  }
+
+  /**
+   * Handle the client error
+   */
+  protected override handleClientError(error: ClientError): void {
+    if (error.status === 404) {
       throw new NotFoundException("Tenant", {
         [this.input.tenantId ? "id" : "name"]: this.input.tenantId ?? this.input.tenant,
       })
     }
-    return tenantV0ToTenant(response.data.organization)
-  }
-
-  /**
-   * Get the body for the request
-   */
-  protected override getBody(): Record<string, unknown> {
-    if ("tenantId" in this.input) {
-      return {
-        query: graphQlQueryById,
-        variables: this.input,
-      }
-    }
-    return {
-      query: graphQlQueryByName,
-      variables: this.input,
-    }
+    throw error
   }
 }
