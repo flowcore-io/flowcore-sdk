@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.12.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.11.10...v1.12.0) (2025-02-28)
+
+
+### Features
+
+* change tenant fetch command to use rest api ([81bb088](https://github.com/flowcore-io/flowcore-sdk/commit/81bb08869313ddb2b91ad7820a901d481f82f83c))
+
+
+### Bug Fixes
+
+* fix import ([e78844d](https://github.com/flowcore-io/flowcore-sdk/commit/e78844db2acb969d3800d319627ce2833502f606))
+* fix typos in comments ([551e257](https://github.com/flowcore-io/flowcore-sdk/commit/551e25720926cb2b2b4f028f5a1b717c54eb8fdf))
+* remove none from tenant dedicated status ([38a970a](https://github.com/flowcore-io/flowcore-sdk/commit/38a970ab10aa89d405eb71471330e358f0086b41))
+
 ## [1.11.10](https://github.com/flowcore-io/flowcore-sdk/compare/v1.11.9...v1.11.10) (2025-02-14)
 
 
