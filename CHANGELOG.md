@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.12.0...v1.12.1) (2025-03-03)
+
+
+### Bug Fixes
+
+* **tenant:** :recycle: Simplify tenant configuration schema ([4f1bbcb](https://github.com/flowcore-io/flowcore-sdk/commit/4f1bbcb80329148ef5d68726600a246eaee34de5))
+
 ## [1.12.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.11.10...v1.12.0) (2025-02-28)
 
 
