@@ -40,9 +40,7 @@ export const TenantSchema: TObject<{
         TLiteral<"offline">,
       ]>
       configuration: TObject<{
-        webhookUrl: TString
-        eventSourceUrl: TString
-        deleteManagerUrl: TString
+        domain: TString
         configurationRepoUrl: TString
       }>
     }>,
@@ -63,9 +61,7 @@ export const TenantSchema: TObject<{
         Type.Literal("offline"),
       ]),
       configuration: Type.Object({
-        webhookUrl: Type.String(),
-        eventSourceUrl: Type.String(),
-        deleteManagerUrl: Type.String(),
+        domain: Type.String(),
         configurationRepoUrl: Type.String(),
       }),
     }),
