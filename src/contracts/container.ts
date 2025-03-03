@@ -1,4 +1,12 @@
-import { type Static, type TArray, type TObject, type TOptional, type TString, Type } from "@sinclair/typebox"
+import {
+  type Static,
+  type TArray,
+  type TNumber,
+  type TObject,
+  type TOptional,
+  type TString,
+  Type,
+} from "@sinclair/typebox"
 
 /**
  * the schema for a container
@@ -23,7 +31,11 @@ export const ContainerRegistryCreateSchema: TObject<{
   id: Type.String(),
 })
 
-export const ContainerRegistryDeleteSchema = ContainerRegistryCreateSchema
+export const ContainerRegistryDeleteSchema: TObject<{
+  status: TNumber
+}> = Type.Object({
+  status: Type.Number(),
+})
 
 export const ContainerRegistryListSchema: TArray = Type.Array(ContainerRegistrySchema)
 
