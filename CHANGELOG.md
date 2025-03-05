@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.14.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.13.0...v1.14.0) (2025-03-05)
+
+
+### Features
+
+* **tenant:** :sparkles: Add tenant name to ID translation command ([7d16207](https://github.com/flowcore-io/flowcore-sdk/commit/7d1620762a5b99b9ae9cb9b25d07b9222fdd5e9f))
+
+
+### Bug Fixes
+
+* **tenant:** :art: Improve type definitions for tenant translate name to ID schema ([232c441](https://github.com/flowcore-io/flowcore-sdk/commit/232c4417b34b42130f093a10f0daf7657e011c32))
+
 ## [1.13.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.12.1...v1.13.0) (2025-03-05)
 
 
