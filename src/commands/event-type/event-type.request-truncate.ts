@@ -3,6 +3,8 @@ import { Command } from "../../common/command.ts"
 import { NotFoundException } from "../../exceptions/not-found.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 import type { ClientError } from "../../exceptions/client-error.ts"
+import { FlowcoreClient } from "../../common/flowcore-client.ts"
+import { EventTypeFetchCommand } from "./event-type.fetch.ts"
 
 /**
  * The input for the event type request truncate command
@@ -10,6 +12,9 @@ import type { ClientError } from "../../exceptions/client-error.ts"
 export interface EventTypeRequestTruncateInput {
   /** The id of the event type */
   eventTypeId: string
+
+  /** Wait for the event type to be truncated (default: false) */
+  waitForTruncate?: boolean
 }
 
 /**
@@ -68,5 +73,31 @@ export class EventTypeRequestTruncateCommand
       })
     }
     throw error
+  }
+
+  /**
+   * Wait for the response (timeout: 25 seconds)
+   */
+  protected override async processResponse(
+    client: FlowcoreClient,
+    response: EventTypeRequestTruncateOutput,
+  ): Promise<EventTypeRequestTruncateOutput> {
+    if (!this.input.waitForTruncate) {
+      return response
+    }
+    await new Promise((resolve) => setTimeout(resolve, 1_000))
+    const start = Date.now()
+    while (Date.now() - start < 25_000) {
+      const response = await client.execute(
+        new EventTypeFetchCommand({
+          eventTypeId: this.input.eventTypeId,
+        }),
+      )
+      if (response.isTruncating) {
+        break
+      }
+      await new Promise((resolve) => setTimeout(resolve, 100))
+    }
+    return response
   }
 }

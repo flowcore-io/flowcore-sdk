@@ -3,6 +3,8 @@ import { Command } from "../../common/command.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 import { NotFoundException } from "../../exceptions/not-found.ts"
 import type { ClientError } from "../../exceptions/client-error.ts"
+import type { FlowcoreClient } from "../../common/flowcore-client.ts"
+import { DataCoreExistsCommand } from "./data-core.exists.ts"
 
 /**
  * The input for the data core request delete command
@@ -10,6 +12,8 @@ import type { ClientError } from "../../exceptions/client-error.ts"
 export interface DataCoreRequestDeleteInput {
   /** The id of the data core */
   dataCoreId: string
+  /** Wait for the data core to be deleted (default: false) */
+  waitForDelete?: boolean
 }
 
 /**
@@ -68,5 +72,30 @@ export class DataCoreRequestDeleteCommand extends Command<DataCoreRequestDeleteI
       })
     }
     throw error
+  }
+
+  /**
+   * Wait for the response (timeout: 25 seconds)
+   */
+  protected override async processResponse(
+    client: FlowcoreClient,
+    response: DataCoreRequestDeleteOutput,
+  ): Promise<DataCoreRequestDeleteOutput> {
+    if (!this.input.waitForDelete) {
+      return response
+    }
+    const start = Date.now()
+    while (Date.now() - start < 25_000) {
+      const response = await client.execute(
+        new DataCoreExistsCommand({
+          dataCoreId: this.input.dataCoreId,
+        }),
+      )
+      if (!response.exists) {
+        break
+      }
+      await new Promise((resolve) => setTimeout(resolve, 100))
+    }
+    return response
   }
 }

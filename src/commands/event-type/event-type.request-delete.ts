@@ -3,6 +3,8 @@ import { Command } from "../../common/command.ts"
 import { NotFoundException } from "../../exceptions/not-found.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 import type { ClientError } from "../../exceptions/client-error.ts"
+import { EventTypeExistsCommand } from "./event-type.exists.ts"
+import type { FlowcoreClient } from "../../common/flowcore-client.ts"
 
 /**
  * The input for the event type request delete command
@@ -10,6 +12,8 @@ import type { ClientError } from "../../exceptions/client-error.ts"
 export interface EventTypeRequestDeleteInput {
   /** The id of the event type */
   eventTypeId: string
+  /** Wait for the event type to be deleted (default: false) */
+  waitForDelete?: boolean
 }
 
 /**
@@ -67,5 +71,30 @@ export class EventTypeRequestDeleteCommand extends Command<EventTypeRequestDelet
       })
     }
     throw error
+  }
+
+  /**
+   * Wait for the response (timeout: 25 seconds)
+   */
+  protected override async processResponse(
+    client: FlowcoreClient,
+    response: EventTypeRequestDeleteOutput,
+  ): Promise<EventTypeRequestDeleteOutput> {
+    if (!this.input.waitForDelete) {
+      return response
+    }
+    const start = Date.now()
+    while (Date.now() - start < 25_000) {
+      const response = await client.execute(
+        new EventTypeExistsCommand({
+          eventTypeId: this.input.eventTypeId,
+        }),
+      )
+      if (!response.exists) {
+        break
+      }
+      await new Promise((resolve) => setTimeout(resolve, 100))
+    }
+    return response
   }
 }
