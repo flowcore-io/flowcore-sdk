@@ -1,4 +1,4 @@
-import { type Static, Type } from "@sinclair/typebox"
+import { type Static, type TObject, type TString, Type } from "@sinclair/typebox"
 import { Command } from "../../common/command.ts"
 import type { ClientError } from "../../exceptions/client-error.ts"
 import { NotFoundException } from "../../exceptions/not-found.ts"
@@ -13,7 +13,13 @@ export interface TenantTranslateNameToIdInput {
   tenant: string
 }
 
-export const TenantTranslateNameToIdSchema = Type.Object({
+/**
+ * The schema for the tenant translate name to id command
+ */
+export const TenantTranslateNameToIdSchema: TObject<{
+  id: TString
+  name: TString
+}> = Type.Object({
   id: Type.String(),
   name: Type.String(),
 })
