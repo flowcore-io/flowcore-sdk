@@ -3,6 +3,6 @@
  */
 export class ClientError extends Error {
   constructor(message: string, public readonly status: number, public readonly body?: unknown) {
-    super(`Client failed with ${status}: ${message}`)
+    super(`Client failed with ${status}: ${body ? JSON.stringify(body) : message}`)
   }
 }
