@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.15.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.14.0...v1.15.0) (2025-03-05)
+
+
+### Features
+
+* **commands:** :sparkles: Add fetch first and last timebuckets command ([f134e59](https://github.com/flowcore-io/flowcore-sdk/commit/f134e59e274740c6f460681944200082ab8fc69a))
+
 ## [1.14.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.13.0...v1.14.0) (2025-03-05)
 
 
