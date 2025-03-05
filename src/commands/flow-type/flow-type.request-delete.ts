@@ -1,6 +1,5 @@
 import { Type } from "@sinclair/typebox"
 import { Command } from "../../common/command.ts"
-import { type FlowType, FlowTypeSchema } from "../../contracts/flow-type.ts"
 import { NotFoundException } from "../../exceptions/not-found.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 import type { ClientError } from "../../exceptions/client-error.ts"
