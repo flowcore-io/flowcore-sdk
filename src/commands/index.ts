@@ -49,6 +49,7 @@ export * from "./event-type/event-type.request-delete.ts"
 // Events
 export * from "./events/events.fetch.ts"
 export * from "./events/events.fetch-time-buckets-by-names.ts"
+export * from "./events/events.fetch-first-and-last-time-buckets.ts"
 
 //Container
 export * from "./container-registry/container-registry.create.ts"
