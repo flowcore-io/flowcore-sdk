@@ -1,5 +1,32 @@
 # Changelog
 
+## [1.14.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.13.0...v1.14.0) (2025-03-05)
+
+
+### Features
+
+* **tenant:** :sparkles: Add tenant name to ID translation command ([7d16207](https://github.com/flowcore-io/flowcore-sdk/commit/7d1620762a5b99b9ae9cb9b25d07b9222fdd5e9f))
+
+
+### Bug Fixes
+
+* **tenant:** :art: Improve type definitions for tenant translate name to ID schema ([232c441](https://github.com/flowcore-io/flowcore-sdk/commit/232c4417b34b42130f093a10f0daf7657e011c32))
+
+## [1.13.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.12.1...v1.13.0) (2025-03-05)
+
+
+### Features
+
+* change client error message to include response body ([67ee317](https://github.com/flowcore-io/flowcore-sdk/commit/67ee31700dc48022f98f403a984eae28a0648cc2))
+* **commands:** :sparkles: Add waitfordelete and waitfortruncate to new delete/truncate commands ([3ffcf57](https://github.com/flowcore-io/flowcore-sdk/commit/3ffcf5748f641df185bf8dc6984b8b7fdd7509a8))
+* **commands:** :sparkles: Delete/truncate request commands for datacore, flowtype and eventtype ([418708c](https://github.com/flowcore-io/flowcore-sdk/commit/418708c91e3a5893618f059648f540be01bae8cc))
+
+
+### Bug Fixes
+
+* export new commands ([84264cd](https://github.com/flowcore-io/flowcore-sdk/commit/84264cd136c1b03ab10a83e5f59b777193f927a4))
+* force ([388db43](https://github.com/flowcore-io/flowcore-sdk/commit/388db43bd22bbe4ccd724f34ca1956bb8c42b192))
+
 ## [1.12.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.12.0...v1.12.1) (2025-03-03)
 
 
