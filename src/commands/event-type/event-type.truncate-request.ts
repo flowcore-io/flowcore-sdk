@@ -48,6 +48,7 @@ const responseSchema = Type.Object({
 
 /**
  * Request to truncate a event type
+ * @deprecated Use `EventTypeRequestTruncateCommand` instead
  */
 export class EventTypeTruncateRequestCommand extends GraphQlCommand<EventTypeTruncateRequestInput, boolean> {
   /**

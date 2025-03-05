@@ -44,6 +44,7 @@ const responseSchema = Type.Object({
 
 /**
  * Request to delete a data core
+ * @deprecated Use `DataCoreRequestDeleteCommand` instead
  */
 export class DataCoreDeleteRequestCommand extends GraphQlCommand<DataCoreDeleteRequestInput, boolean> {
   /**

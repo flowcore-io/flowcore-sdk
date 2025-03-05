@@ -53,6 +53,7 @@ const responseSchema = Type.Object({
 
 /**
  * Request to delete a flow type
+ * @deprecated Use `FlowTypeRequestDeleteCommand` instead
  */
 export class FlowTypeDeleteRequestCommand extends GraphQlCommand<FlowTypeDeleteRequestInput, boolean> {
   /**

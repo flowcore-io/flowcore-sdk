@@ -48,6 +48,7 @@ const responseSchema = Type.Object({
 
 /**
  * Request to delete a event type
+ * @deprecated Use `EventTypeRequestDeleteCommand` instead
  */
 export class EventTypeDeleteRequestCommand extends GraphQlCommand<EventTypeDeleteRequestInput, boolean> {
   /**

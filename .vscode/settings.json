@@ -4,5 +4,8 @@
   "prettier.enable": false,
   "biome.enable": false,
   "biome.enabled": false,
-  "conventionalCommits.scopes": ["exports"]
+  "conventionalCommits.scopes": [
+    "exports",
+    "commands"
+  ]
 }
