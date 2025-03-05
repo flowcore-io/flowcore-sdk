@@ -3,7 +3,7 @@ import { Command } from "../../common/command.ts"
 import { NotFoundException } from "../../exceptions/not-found.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 import type { ClientError } from "../../exceptions/client-error.ts"
-import { FlowcoreClient } from "../../common/flowcore-client.ts"
+import type { FlowcoreClient } from "../../common/flowcore-client.ts"
 import { EventTypeFetchCommand } from "./event-type.fetch.ts"
 
 /**
