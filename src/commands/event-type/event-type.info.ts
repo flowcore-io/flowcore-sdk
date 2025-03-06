@@ -5,7 +5,7 @@ import { EventListCommand } from "../events/event.list.ts"
 import { TimeBucketListCommand } from "../events/time-bucket.list.ts"
 
 /**
- * The input for the events fetch indexes command
+ * The input for the events fetch info command
  */
 export interface EventTypeInfoInput {
   /** the event type id or ids */
@@ -15,7 +15,7 @@ export interface EventTypeInfoInput {
 }
 
 /**
- * The output for the events tail indexes command
+ * The output for the events fetch info command
  */
 export interface EventTypeInfoOutput {
   /** the first time bucket */
@@ -27,7 +27,9 @@ export interface EventTypeInfoOutput {
 }
 
 /**
- * Fetch time buckets for an event type
+ * Fetch information about an event type
+ *
+ * contains the first and last time bucket and the last {limit} events
  */
 export class EventTypeInfoCommand extends CustomCommand<EventTypeInfoInput, EventTypeInfoOutput> {
   /**
