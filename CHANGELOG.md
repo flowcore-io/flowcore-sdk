@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.16.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.15.0...v1.16.0) (2025-03-06)
+
+
+### Features
+
+* add custom command and bucket/event list commands ([ec37bc7](https://github.com/flowcore-io/flowcore-sdk/commit/ec37bc7125f85c03f3a5f3357d59e6fe11f145ae))
+* add custom command and bucket/event list commands ([081c338](https://github.com/flowcore-io/flowcore-sdk/commit/081c3381db0a0b5d513fc9cc6fefce02fe071921))
+
+
+### Bug Fixes
+
+* **container-registry:** :bug: Update import statements for container registry commands ([802e15a](https://github.com/flowcore-io/flowcore-sdk/commit/802e15a05616b41da49032c579291940e9cd5057))
+* fix imports ([e6cf6b9](https://github.com/flowcore-io/flowcore-sdk/commit/e6cf6b92596dbaad48938818e4d62180c508b401))
+
 ## [1.15.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.14.0...v1.15.0) (2025-03-05)
 
 
