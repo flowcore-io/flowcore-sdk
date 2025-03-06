@@ -1,6 +1,6 @@
 import { CustomCommand } from "../../common/command-custom.ts"
+import type { FlowcoreClient } from "../../common/flowcore-client.ts"
 import type { FlowcoreEvent } from "../../contracts/event.ts"
-import type { FlowcoreClient } from "../../mod.ts"
 import { EventListCommand } from "../events/event.list.ts"
 import { TimeBucketListCommand } from "../events/time-bucket.list.ts"
 
