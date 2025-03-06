@@ -94,6 +94,7 @@ export abstract class Command<Input, Output> {
     processResponse: (client: FlowcoreClient, response: Output) => Promise<Output>
     handleClientError: (error: ClientError) => void
     retryOnFailure: boolean
+    customExecute?: (client: FlowcoreClient) => Promise<unknown>
   }> {
     return {
       allowedModes: this.allowedModes,
@@ -115,29 +116,5 @@ export abstract class Command<Input, Output> {
   // deno-lint-ignore require-await
   protected async processResponse(_client: FlowcoreClient, response: Output): Promise<Output> {
     return response
-  }
-}
-
-/**
- * Abstract command for executing GraphQL requests
- */
-export abstract class GraphQlCommand<Input, Output> extends Command<Input, Output> {
-  /**
-   * The allowed modes for the command
-   */
-  protected override allowedModes: ("apiKey" | "bearer")[] = ["bearer"]
-
-  /**
-   * Get the base URL for the request
-   */
-  protected override getBaseUrl(): string {
-    return "https://graph.api.flowcore.io"
-  }
-
-  /**
-   * Get the path for the request
-   */
-  protected override getPath(): string {
-    return "/graphql"
   }
 }

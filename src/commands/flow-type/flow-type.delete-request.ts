@@ -1,5 +1,5 @@
 import { Type } from "@sinclair/typebox"
-import { GraphQlCommand } from "../../common/command.ts"
+import { GraphQlCommand } from "../../common/command-graphql.ts"
 import type { FlowcoreClient } from "../../common/flowcore-client.ts"
 import { FlowTypeFetchCommand } from "./flow-type.fetch.ts"
 import { CommandError } from "../../exceptions/command-error.ts"

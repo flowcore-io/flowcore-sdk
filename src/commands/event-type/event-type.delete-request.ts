@@ -1,5 +1,5 @@
 import { Type } from "@sinclair/typebox"
-import { GraphQlCommand } from "../../common/command.ts"
+import { GraphQlCommand } from "../../common/command-graphql.ts"
 import { CommandError } from "../../exceptions/command-error.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 import { NotFoundException } from "../../exceptions/not-found.ts"
