@@ -1,5 +1,6 @@
+import { Command } from "../../common/command.ts"
 import { type ContainerRegistryDelete, ContainerRegistryDeleteSchema } from "../../contracts/container.ts"
-import { Command, parseResponseHelper } from "../../mod.ts"
+import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 
 export interface ContainerRegistryDeleteInput {
   /** The id of the new container-registry */
