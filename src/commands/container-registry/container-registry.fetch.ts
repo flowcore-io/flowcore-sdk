@@ -1,5 +1,6 @@
 import { type ContainerRegistry, ContainerRegistrySchema } from "../../contracts/container.ts"
-import { Command, parseResponseHelper } from "../../mod.ts"
+import { Command } from "../../common/command.ts"
+import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 
 export interface ContainerRegistryFetchInput {
   /** The id of container */

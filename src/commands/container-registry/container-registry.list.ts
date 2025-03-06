@@ -1,5 +1,6 @@
+import { Command } from "../../common/command.ts"
 import { type ContainerRegistryList, ContainerRegistryListSchema } from "../../contracts/container.ts"
-import { Command, parseResponseHelper } from "../../mod.ts"
+import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 
 export interface ContainerRegistryFetchTenantInput {
   /** The tenant id */
