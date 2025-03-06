@@ -85,6 +85,10 @@ export class FlowcoreClient {
   ): Promise<Output> {
     const request = await command.getRequest(this)
 
+    if (request.customExecute) {
+      return request.customExecute(this) as Promise<Output>
+    }
+
     if (!request.allowedModes.includes(this.mode)) {
       throw new CommandError(command.constructor.name, `Not allowed in "${this.mode}" mode`)
     }
@@ -114,7 +118,7 @@ export class FlowcoreClient {
         return this.innerExecute(command, retryCount + 1)
       }
       const message = error instanceof Error ? error.message : "Unknown error"
-      throw new ClientError(`Failed to execute command: ${message}`, 0, {
+      throw new ClientError(`Failed to execute command: ${message}`, 0, command.constructor.name, {
         command: command.constructor.name,
         error: error,
       })
@@ -135,6 +139,7 @@ export class FlowcoreClient {
       const error = new ClientError(
         `${commandName} failed with ${response.status}: ${response.statusText}`,
         response.status,
+        command.constructor.name,
         body,
       )
       request.handleClientError(error)

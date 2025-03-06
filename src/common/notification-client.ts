@@ -1,15 +1,13 @@
 import type { Subject } from "rxjs"
-import {
-  DataCoreFetchCommand,
-  type EventType,
-  EventTypeFetchCommand,
-  type FlowType,
-  FlowTypeFetchCommand,
-  TenantFetchCommand,
-} from "../mod.ts"
 import { defaultLogger, type Logger } from "../utils/logger.ts"
 import { FlowcoreClient } from "./flowcore-client.ts"
 import { Buffer } from "node:buffer"
+import { TenantFetchCommand } from "../commands/tenant/tenant.fetch.ts"
+import { DataCoreFetchCommand } from "../commands/data-core/data-core.fetch.ts"
+import { FlowTypeFetchCommand } from "../commands/flow-type/flow-type.fetch.ts"
+import type { FlowType } from "../contracts/flow-type.ts"
+import type { EventType } from "../contracts/event-type.ts"
+import { EventTypeFetchCommand } from "../commands/event-type/event-type.fetch.ts"
 
 type BufferType = Uint8Array & { toString(): string }
 

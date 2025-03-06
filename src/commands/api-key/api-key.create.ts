@@ -1,5 +1,5 @@
 import { Type } from "@sinclair/typebox"
-import { GraphQlCommand } from "../../common/command.ts"
+import { GraphQlCommand } from "../../common/command-graphql.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 import type { ApiKey } from "../../contracts/api-key.ts"
 import type { FlowcoreClient } from "../../common/flowcore-client.ts"
