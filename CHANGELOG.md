@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.17.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.16.0...v1.17.0) (2025-03-07)
+
+
+### Features
+
+* add tenant to dataCore schema and remove v0 schemas ([f710f14](https://github.com/flowcore-io/flowcore-sdk/commit/f710f1427f86b7730162e05f0935829ae139534d))
+* add tenant to dataCore schema and remove v0 schemas ([91158d2](https://github.com/flowcore-io/flowcore-sdk/commit/91158d25cb5838072a8785051dbcc82d28a0aa26))
+
+
+### Bug Fixes
+
+* add tenant arg to fetch datacore ([92b5e29](https://github.com/flowcore-io/flowcore-sdk/commit/92b5e296031d728c90b1f965033ee090bd8e06f2))
+* fix tests ([ea249d4](https://github.com/flowcore-io/flowcore-sdk/commit/ea249d4c3d1076df4f4cba521bf97316a57769aa))
+* fix tests ([99ffaf8](https://github.com/flowcore-io/flowcore-sdk/commit/99ffaf859040d6f057c522a27f2d53d6963b1fd0))
+
 ## [1.16.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.15.0...v1.16.0) (2025-03-06)
 
 
