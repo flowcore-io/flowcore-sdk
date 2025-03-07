@@ -11,18 +11,22 @@ import type { ClientError } from "../../exceptions/client-error.ts"
 export interface DataCoreFetchByIdInput {
   /** The id of the data core */
   dataCoreId: string
-  /** The name of the data core */
-  dataCore?: never
   /** The tenant id */
   tenantId?: never
+  /** The tenant */
+  tenant?: never
+  /** The name of the data core */
+  dataCore?: never
 }
 
 /**
- * The input for the data core fetch by name command
+ * The input for the data core fetch by name and tenant id command
  */
-export interface DataCoreFetchByNameInput {
+export interface DataCoreFetchByNameAndTenantIdInput {
   /** The tenant id */
   tenantId: string
+  /** The tenant */
+  tenant?: never
   /** The name of the data core */
   dataCore: string
   /** The id of the data core */
@@ -30,9 +34,40 @@ export interface DataCoreFetchByNameInput {
 }
 
 /**
+ * The input for the data core fetch by name and tenant command
+ */
+export interface DataCoreFetchByNameAndTenantInput {
+  /** The tenant id */
+  tenantId?: never
+  /** The tenant */
+  tenant: string
+  /** The name of the data core */
+  dataCore: string
+  /** The id of the data core */
+  dataCoreId?: never
+}
+
+function isDataCoreFetchByIdInput(input: DataCoreFetchInput): input is DataCoreFetchByIdInput {
+  return "dataCoreId" in input
+}
+
+function isDataCoreFetchByNameAndTenantIdInput(
+  input: DataCoreFetchInput,
+): input is DataCoreFetchByNameAndTenantIdInput {
+  return "tenantId" in input
+}
+
+function isDataCoreFetchByNameAndTenantInput(input: DataCoreFetchInput): input is DataCoreFetchByNameAndTenantInput {
+  return "tenant" in input
+}
+
+/**
  * The input for the data core fetch command
  */
-export type DataCoreFetchInput = DataCoreFetchByIdInput | DataCoreFetchByNameInput
+export type DataCoreFetchInput =
+  | DataCoreFetchByIdInput
+  | DataCoreFetchByNameAndTenantIdInput
+  | DataCoreFetchByNameAndTenantInput
 
 /**
  * Fetch a data core
@@ -56,11 +91,16 @@ export class DataCoreFetchCommand extends Command<DataCoreFetchInput, DataCore> 
    * Get the path
    */
   protected override getPath(): string {
-    if ("dataCoreId" in this.input) {
+    if (isDataCoreFetchByIdInput(this.input)) {
       return `/api/v1/data-cores/${this.input.dataCoreId}`
     }
     const queryParams = new URLSearchParams()
-    queryParams.set("tenantId", this.input.tenantId)
+    if (isDataCoreFetchByNameAndTenantIdInput(this.input)) {
+      queryParams.set("tenantId", this.input.tenantId)
+    }
+    if (isDataCoreFetchByNameAndTenantInput(this.input)) {
+      queryParams.set("tenant", this.input.tenant)
+    }
     queryParams.set("name", this.input.dataCore)
     return `/api/v1/data-cores?${queryParams.toString()}`
   }
@@ -69,13 +109,17 @@ export class DataCoreFetchCommand extends Command<DataCoreFetchInput, DataCore> 
    * Parse the response
    */
   protected override parseResponse(rawResponse: unknown): DataCore {
-    if ("dataCoreId" in this.input) {
+    if (isDataCoreFetchByIdInput(this.input)) {
       const response = parseResponseHelper(DataCoreSchema, rawResponse)
       return response
     }
     const response = parseResponseHelper(Type.Array(DataCoreSchema), rawResponse)
     if (response.length === 0) {
-      throw new NotFoundException("DataCore", { name: this.input.dataCore })
+      if (isDataCoreFetchByNameAndTenantIdInput(this.input)) {
+        throw new NotFoundException("DataCore", { name: this.input.dataCore, tenantId: this.input.tenantId })
+      } else {
+        throw new NotFoundException("DataCore", { name: this.input.dataCore, tenant: this.input.tenant })
+      }
     }
     return response[0]
   }
@@ -85,9 +129,13 @@ export class DataCoreFetchCommand extends Command<DataCoreFetchInput, DataCore> 
    */
   protected override handleClientError(error: ClientError): void {
     if (error.status === 404) {
-      throw new NotFoundException("DataCore", {
-        [this.input.dataCoreId ? "id" : "name"]: this.input.dataCoreId ?? this.input.dataCore,
-      })
+      if (isDataCoreFetchByIdInput(this.input)) {
+        throw new NotFoundException("DataCore", { id: this.input.dataCoreId })
+      } else if (isDataCoreFetchByNameAndTenantIdInput(this.input)) {
+        throw new NotFoundException("DataCore", { name: this.input.dataCore, tenantId: this.input.tenantId })
+      } else {
+        throw new NotFoundException("DataCore", { name: this.input.dataCore, tenant: this.input.tenant })
+      }
     }
     throw error
   }

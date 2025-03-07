@@ -24,6 +24,7 @@ describe("DataCore", () => {
       id: crypto.randomUUID(),
       name: "test",
       tenantId: crypto.randomUUID(),
+      tenant: "test",
       description: "test",
       accessControl: "public",
       deleteProtection: false,
@@ -41,12 +42,13 @@ describe("DataCore", () => {
     assertEquals(response, dataCore)
   })
 
-  it("should fetch a data core by tenant and name", async () => {
+  it("should fetch a data core by tenantId and name", async () => {
     // arrange
     const dataCore: DataCore = {
       id: crypto.randomUUID(),
       name: "test",
       tenantId: crypto.randomUUID(),
+      tenant: "test",
       description: "test",
       accessControl: "public",
       deleteProtection: false,
@@ -62,6 +64,34 @@ describe("DataCore", () => {
 
     // act
     const command = new DataCoreFetchCommand({ dataCore: dataCore.name, tenantId: dataCore.tenantId })
+    const response = await flowcoreClient.execute(command)
+
+    // assert
+    assertEquals(response, dataCore)
+  })
+
+  it("should fetch a data core by tenant and name", async () => {
+    // arrange
+    const dataCore: DataCore = {
+      id: crypto.randomUUID(),
+      name: "test",
+      tenantId: crypto.randomUUID(),
+      tenant: "test",
+      description: "test",
+      accessControl: "public",
+      deleteProtection: false,
+      isDeleting: false,
+    }
+
+    fetchMockerBuilder.get(`/api/v1/data-cores`)
+      .matchSearchParams({
+        name: dataCore.name,
+        tenant: dataCore.tenant,
+      })
+      .respondWith(200, [dataCore])
+
+    // act
+    const command = new DataCoreFetchCommand({ dataCore: dataCore.name, tenant: dataCore.tenant })
     const response = await flowcoreClient.execute(command)
 
     // assert
@@ -86,7 +116,7 @@ describe("DataCore", () => {
     )
   })
 
-  it("should throw NotFoundException when data core is not found by tenant and name", async () => {
+  it("should throw NotFoundException when data core is not found by tenantId and name", async () => {
     const tenantId = crypto.randomUUID()
     const name = "test"
 
@@ -106,7 +136,31 @@ describe("DataCore", () => {
     await assertRejects(
       () => responsPromise,
       NotFoundException,
-      `DataCore not found: ${JSON.stringify({ name })}`,
+      `DataCore not found: ${JSON.stringify({ name, tenantId })}`,
+    )
+  })
+
+  it("should throw NotFoundException when data core is not found by tenant and name", async () => {
+    const tenant = "test"
+    const name = "test"
+
+    // arrange
+    fetchMockerBuilder.get(`/api/v1/data-cores`)
+      .matchSearchParams({
+        name,
+        tenant,
+      })
+      .respondWith(200, [])
+
+    // act
+    const command = new DataCoreFetchCommand({ dataCore: name, tenant })
+    const responsPromise = flowcoreClient.execute(command)
+
+    // assert
+    await assertRejects(
+      () => responsPromise,
+      NotFoundException,
+      `DataCore not found: ${JSON.stringify({ name, tenant })}`,
     )
   })
 
@@ -116,6 +170,7 @@ describe("DataCore", () => {
       id: crypto.randomUUID(),
       name: "test",
       tenantId: crypto.randomUUID(),
+      tenant: "test",
       description: "test",
       accessControl: "public",
       deleteProtection: false,
@@ -151,6 +206,7 @@ describe("DataCore", () => {
       id: crypto.randomUUID(),
       name: "test",
       tenantId: crypto.randomUUID(),
+      tenant: "test",
       description: "test",
       accessControl: "public",
       deleteProtection: false,
