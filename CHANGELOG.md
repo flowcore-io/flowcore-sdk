@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.19.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.19.0...v1.19.1) (2025-03-17)
+
+
+### Bug Fixes
+
+* **security:** :art: update PATSchema to use optional description and add createdAt field ([389907f](https://github.com/flowcore-io/flowcore-sdk/commit/389907fec1e060a3cb99cc3231a6fe86696ff035))
+
 ## [1.19.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.18.0...v1.19.0) (2025-03-17)
 
 
