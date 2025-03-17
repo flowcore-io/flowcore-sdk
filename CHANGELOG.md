@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.18.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.17.0...v1.18.0) (2025-03-17)
+
+
+### Features
+
+* **security:** :sparkles: add commands for managing Personal Access Tokens (PAT) ([4c3760a](https://github.com/flowcore-io/flowcore-sdk/commit/4c3760aa880c8bbd793b64a9653080fa308b64e7))
+
+
+### Bug Fixes
+
+* **security:** :art: remove unused import for PAT and PATSchema ([4d281d6](https://github.com/flowcore-io/flowcore-sdk/commit/4d281d6bf75f122448f9d62aa395d95b96faf221))
+
 ## [1.17.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.16.0...v1.17.0) (2025-03-07)
 
 
