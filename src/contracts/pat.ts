@@ -12,13 +12,15 @@ import {
 export const PATSchema: TObject<{
   id: TString
   name: TString
-  description: TString
+  description: TOptional<TString>
   token: TOptional<TString>
+  createdAt: TString
 }> = Type.Object({
   id: Type.String(),
   name: Type.String(),
-  description: Type.String(),
+  description: Type.Optional(Type.String()),
   token: Type.Optional(Type.String()),
+  createdAt: Type.String(),
 })
 /**
  * The type for a PAT
