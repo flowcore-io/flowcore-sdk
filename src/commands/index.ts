@@ -60,3 +60,10 @@ export * from "./container-registry/container-registry.delete.ts"
 export * from "./container-registry/container-registry.fetch.ts"
 export * from "./container-registry/container-registry.list.ts"
 export * from "./container-registry/container-registry.update.ts"
+
+// Security
+export * from "./security/pat.create.ts"
+export * from "./security/pat.delete.ts"
+export * from "./security/pat.exchange.ts"
+export * from "./security/pat.get.ts"
+export * from "./security/pat.list.ts"

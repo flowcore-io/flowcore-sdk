@@ -18,9 +18,9 @@ export interface SecurityExchangePATResponse {
 }
 
 /**
- * Create a Personal Access Token (PAT)
+ * Exchange a Personal Access Token (PAT) for an access token
  */
-export class SecurityCreatePATCommand extends Command<SecurityExchangePAT, SecurityExchangePATResponse> {
+export class SecurityExchangePATCommand extends Command<SecurityExchangePAT, SecurityExchangePATResponse> {
   /**
    * Whether the command should retry on failure
    */
