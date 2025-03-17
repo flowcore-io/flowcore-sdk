@@ -1,6 +1,5 @@
 import { Type } from "@sinclair/typebox"
 import { Command } from "../../common/command.ts"
-import { type PAT, PATSchema } from "../../contracts/pat.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 
 /**
