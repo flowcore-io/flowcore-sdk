@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.19.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.18.0...v1.19.0) (2025-03-17)
+
+
+### Features
+
+* **security:** :sparkles: add commands for exchanging Personal Access Tokens (PAT) ([8b42470](https://github.com/flowcore-io/flowcore-sdk/commit/8b42470423d8904bd210e887f4377751f0b8981a))
+
 ## [1.18.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.17.0...v1.18.0) (2025-03-17)
 
 
