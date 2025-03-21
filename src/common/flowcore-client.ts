@@ -1,6 +1,6 @@
 import NodeCache from "npm:node-cache@5.1.2";
 import { TenantFetchCommand } from "../commands/index.ts";
-import { Tenant } from "../contracts/tenant.ts";
+import type { Tenant } from "../contracts/tenant.ts";
 import { ClientError } from "../exceptions/client-error.ts";
 import { CommandError } from "../exceptions/command-error.ts";
 import type { Command } from "./command.ts";
