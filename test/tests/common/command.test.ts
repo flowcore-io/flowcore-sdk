@@ -1,9 +1,9 @@
-import { afterAll, afterEach, describe, it } from "jsr:@std/testing/bdd"
-import { assertRejects } from "@std/assert"
-import { Command, CommandError, FlowcoreClient, InvalidResponseException } from "../../../src/mod.ts"
-import { FetchMocker } from "../../fixtures/fetch.fixture.ts"
-import { parseResponseHelper } from "../../../src/utils/parse-response-helper.ts"
 import { Type } from "@sinclair/typebox"
+import { assertRejects } from "@std/assert"
+import { afterAll, afterEach, describe, it } from "jsr:@std/testing/bdd"
+import { Command, CommandError, FlowcoreClient, InvalidResponseException } from "../../../src/mod.ts"
+import { parseResponseHelper } from "../../../src/utils/parse-response-helper.ts"
+import { FetchMocker } from "../../fixtures/fetch.fixture.ts"
 
 class TestCommandBearerOnly extends Command<{ test: string }, { test: string }> {
   protected override allowedModes: ("apiKey" | "bearer")[] = ["bearer"]
@@ -79,6 +79,8 @@ describe("FlowcoreCommand", () => {
 
     // assert
     await assertRejects(() => flowcoreClient.execute(command), CommandError, 'Not allowed in "apiKey" mode')
+
+    flowcoreClient.close()
   })
 
   it("should not allow bearer mode", async () => {
@@ -90,6 +92,8 @@ describe("FlowcoreCommand", () => {
 
     // assert
     await assertRejects(() => flowcoreClient.execute(command), CommandError, 'Not allowed in "bearer" mode')
+
+    flowcoreClient.close()
   })
 
   it("should fail with invalid response", async () => {
@@ -108,5 +112,7 @@ describe("FlowcoreCommand", () => {
       InvalidResponseException,
       'Invalid response: {"/test":"Expected string"}',
     )
+
+    flowcoreClient.close()
   })
 })

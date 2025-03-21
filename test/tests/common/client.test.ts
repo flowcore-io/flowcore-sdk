@@ -1,5 +1,5 @@
-import { afterAll, afterEach, describe, it } from "jsr:@std/testing/bdd"
 import { assertEquals, assertObjectMatch, assertRejects } from "@std/assert"
+import { afterAll, afterEach, describe, it } from "jsr:@std/testing/bdd"
 import { ClientError, Command, FlowcoreClient } from "../../../src/mod.ts"
 import { FetchMocker } from "../../fixtures/fetch.fixture.ts"
 
@@ -50,6 +50,7 @@ describe("FlowcoreClient", () => {
     assertEquals(response, { test: "test" })
 
     assertObjectMatch({ foo: "bar", bar: { foo: "bar", bar: "foo" } }, { foo: "bar", bar: { foo: "bar" } })
+    flowcoreClient.close()
   })
 
   it("should add apiKeyId and apiKey to request", async () => {
@@ -71,6 +72,8 @@ describe("FlowcoreClient", () => {
     assertEquals(response, { test: "test" })
 
     assertObjectMatch({ foo: "bar", bar: { foo: "bar", bar: "foo" } }, { foo: "bar", bar: { foo: "bar" } })
+
+    flowcoreClient.close()
   })
 
   it("should retry request", async () => {
@@ -97,6 +100,8 @@ describe("FlowcoreClient", () => {
 
     // assert
     assertEquals(response, { test: "test" })
+
+    flowcoreClient.close()
   })
 
   it("should not retry request if retryOnFailure is false", async () => {
@@ -117,6 +122,8 @@ describe("FlowcoreClient", () => {
 
     // assert
     await assertRejects(() => responsePromise, ClientError)
+
+    flowcoreClient.close()
   })
 
   it("should not retry request if max retries is set to 0", async () => {
@@ -137,6 +144,8 @@ describe("FlowcoreClient", () => {
 
     // assert
     await assertRejects(() => responsePromise, ClientError)
+    
+    flowcoreClient.close()
   })
 
   it("should not retry on non retryable status code", async () => {
@@ -157,5 +166,7 @@ describe("FlowcoreClient", () => {
 
     // assert
     await assertRejects(() => responsePromise, ClientError)
+
+    flowcoreClient.close()
   })
 })
