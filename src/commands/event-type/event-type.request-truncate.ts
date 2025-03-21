@@ -1,9 +1,9 @@
 import { Type } from "@sinclair/typebox"
 import { Command } from "../../common/command.ts"
+import type { FlowcoreClient } from "../../common/flowcore-client.ts"
+import type { ClientError } from "../../exceptions/client-error.ts"
 import { NotFoundException } from "../../exceptions/not-found.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
-import type { ClientError } from "../../exceptions/client-error.ts"
-import type { FlowcoreClient } from "../../common/flowcore-client.ts"
 import { EventTypeFetchCommand } from "./event-type.fetch.ts"
 
 /**
@@ -29,6 +29,9 @@ export interface EventTypeRequestTruncateOutput {
  */
 export class EventTypeRequestTruncateCommand
   extends Command<EventTypeRequestTruncateInput, EventTypeRequestTruncateOutput> {
+  protected override supportsDedicatedUrl: boolean = true
+  protected override dedicatedSubdomain: string = "delete-manager"
+
   /**
    * Get the method
    */

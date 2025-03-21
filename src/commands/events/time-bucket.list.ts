@@ -1,6 +1,6 @@
 import { Type } from "@sinclair/typebox"
-import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 import { Command } from "../../common/command.ts"
+import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 
 /**
  * The input for the events fetch indexes command
@@ -45,6 +45,9 @@ export class TimeBucketListCommand extends Command<
   TimeBucketListInput,
   TimeBucketListOutput
 > {
+  protected override supportsDedicatedUrl: boolean = true
+  protected override dedicatedSubdomain: string = "event-source"
+
   /**
    * Get the method for the request
    */

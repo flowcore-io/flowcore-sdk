@@ -55,6 +55,9 @@ const responseSchema = Type.Object({
  * Fetch time buckets for an event type
  */
 export class EventListCommand extends Command<EventListInput, EventListOutput> {
+  protected override supportsDedicatedUrl: boolean = true
+  protected override dedicatedSubdomain: string = "event-source"
+
   /**
    * Get the method for the request
    */

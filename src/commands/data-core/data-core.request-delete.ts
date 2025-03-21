@@ -28,6 +28,9 @@ export interface DataCoreRequestDeleteOutput {
  * Request to delete a data core
  */
 export class DataCoreRequestDeleteCommand extends Command<DataCoreRequestDeleteInput, DataCoreRequestDeleteOutput> {
+  protected override supportsDedicatedUrl: boolean = true
+  protected override dedicatedSubdomain: string = "delete-manager"
+
   /**
    * Get the method
    */

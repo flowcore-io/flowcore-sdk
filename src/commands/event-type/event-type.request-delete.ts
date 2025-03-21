@@ -27,6 +27,9 @@ export interface EventTypeRequestDeleteOutput {
  * Request to delete an event type
  */
 export class EventTypeRequestDeleteCommand extends Command<EventTypeRequestDeleteInput, EventTypeRequestDeleteOutput> {
+  protected override supportsDedicatedUrl: boolean = true
+  protected override dedicatedSubdomain: string = "delete-manager"
+
   /**
    * Get the method
    */
