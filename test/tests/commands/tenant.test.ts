@@ -13,7 +13,10 @@ describe("Tenant", () => {
   const fetchMockerBuilder = fetchMocker.mock("https://tenant.api.flowcore.io")
 
   afterEach(() => fetchMocker.assert())
-  afterAll(() => fetchMocker.restore())
+  afterAll(() => {
+    fetchMocker.restore()
+    flowcoreClient.clearDedicatedTenantCache()
+  })
 
   it("should translate a tenant name to an tenant id", async () => {
     // arrange

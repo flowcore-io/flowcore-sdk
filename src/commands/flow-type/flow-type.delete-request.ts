@@ -102,6 +102,8 @@ export class FlowTypeDeleteRequestCommand extends GraphQlCommand<FlowTypeDeleteR
       processResponse: (client: FlowcoreClient, response: boolean) => Promise<boolean>
       handleClientError: (error: ClientError) => void
       retryOnFailure: boolean
+      supportsDedicatedUrl: boolean
+      dedicatedSubdomain: string | undefined
     }
   > {
     const request = await super.getRequest(client)

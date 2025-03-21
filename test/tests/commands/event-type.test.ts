@@ -1,5 +1,5 @@
-import { afterAll, afterEach, describe, it } from "jsr:@std/testing/bdd"
 import { assertEquals, assertRejects } from "@std/assert"
+import { afterAll, afterEach, describe, it } from "jsr:@std/testing/bdd"
 import { type EventType, EventTypeFetchCommand, FlowcoreClient, NotFoundException } from "../../../src/mod.ts"
 import { FetchMocker } from "../../fixtures/fetch.fixture.ts"
 
@@ -9,7 +9,10 @@ describe("EventType", () => {
   const fetchMockerBuilder = fetchMocker.mock("https://event-type-2.api.flowcore.io")
 
   afterEach(() => fetchMocker.assert())
-  afterAll(() => fetchMocker.restore())
+  afterAll(() => {
+    fetchMocker.restore()
+    flowcoreClient.clearDedicatedTenantCache()
+  })
 
   it("should fetch an event type by id", async () => {
     // arrange

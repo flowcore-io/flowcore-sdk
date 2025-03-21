@@ -9,6 +9,8 @@ export abstract class Command<Input, Output> {
    * Whether the command should retry on failure
    */
   protected readonly retryOnFailure: boolean = true
+  protected readonly supportsDedicatedUrl: boolean = false
+  protected readonly dedicatedSubdomain: string | undefined
 
   /**
    * The allowed modes for the command
@@ -95,6 +97,8 @@ export abstract class Command<Input, Output> {
     handleClientError: (error: ClientError) => void
     retryOnFailure: boolean
     customExecute?: (client: FlowcoreClient) => Promise<unknown>
+    supportsDedicatedUrl: boolean
+    dedicatedSubdomain: string | undefined
   }> {
     return {
       allowedModes: this.allowedModes,
@@ -107,6 +111,8 @@ export abstract class Command<Input, Output> {
       processResponse: this.processResponse.bind(this),
       handleClientError: this.handleClientError.bind(this),
       retryOnFailure: this.retryOnFailure,
+      supportsDedicatedUrl: this.supportsDedicatedUrl,
+      dedicatedSubdomain: this.dedicatedSubdomain,
     }
   }
 

@@ -31,6 +31,8 @@
     "npm:@sinclair/typebox@0.32.15": "0.32.15",
     "npm:@types/node@*": "22.5.4",
     "npm:nock@*": "14.0.0",
+    "npm:node-cache@5.1.2": "5.1.2",
+    "npm:node-cache@^5.1.2": "5.1.2",
     "npm:rxjs@^7.8.1": "7.8.1"
   },
   "jsr": {
@@ -195,6 +197,9 @@
         "undici-types"
       ]
     },
+    "clone@2.1.2": {
+      "integrity": "sha512-3Pe/CF1Nn94hyhIYpjtiLhdCoEoz0DqQ+988E9gmeEdQZlojxnOb74wctFyuwWQHzqyf9X7C7MG8juUpqBJT8w=="
+    },
     "is-node-process@1.2.0": {
       "integrity": "sha512-Vg4o6/fqPxIjtxgUH5QLJhwZ7gW5diGCVlXpuUfELC62CuxM1iHcRe51f2W1FDy04Ai4KJkagKjx3XaqyfRKXw=="
     },
@@ -207,6 +212,12 @@
         "@mswjs/interceptors",
         "json-stringify-safe",
         "propagate"
+      ]
+    },
+    "node-cache@5.1.2": {
+      "integrity": "sha512-t1QzWwnk4sjLWaQAS8CHgOJ+RAfmHpxFWmc36IWTiWHQfs0w5JDMBS1b1ZxQteo0vVVuWJvIUKHDkkeK7vIGCg==",
+      "dependencies": [
+        "clone"
       ]
     },
     "outvariant@1.4.3": {
@@ -237,6 +248,7 @@
       "jsr:@std/assert@^1.0.6",
       "jsr:@std/semver@^1.0.3",
       "npm:@sinclair/typebox@0.32.15",
+      "npm:node-cache@^5.1.2",
       "npm:rxjs@^7.8.1"
     ]
   }

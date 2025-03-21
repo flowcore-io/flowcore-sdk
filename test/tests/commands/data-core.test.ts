@@ -16,7 +16,10 @@ describe("DataCore", () => {
   const fetchMockerBuilder = fetchMocker.mock("https://data-core-2.api.flowcore.io")
 
   afterEach(() => fetchMocker.assert())
-  afterAll(() => fetchMocker.restore())
+  afterAll(() => {
+    fetchMocker.restore()
+    flowcoreClient.clearDedicatedTenantCache()
+  })
 
   it("should fetch a data core by id", async () => {
     // arrange
