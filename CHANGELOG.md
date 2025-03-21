@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.20.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.19.1...v1.20.0) (2025-03-21)
+
+
+### Features
+
+* **command:** :sparkles: add support for dedicated URLs in command structure ([d80d56c](https://github.com/flowcore-io/flowcore-sdk/commit/d80d56cd4cea37e886315812fa85569d7ffa39f8))
+* **commands:** :sparkles: add support for dedicated URLs in multiple command classes ([0d26cb5](https://github.com/flowcore-io/flowcore-sdk/commit/0d26cb5bad1bd9c75c186265dc09472cdc1c5493))
+
+
+### Bug Fixes
+
+* **flowcore-client:** :art: update import statement for Tenant type to use type-only import ([448580e](https://github.com/flowcore-io/flowcore-sdk/commit/448580ef38dc8130178ed2df55e2c976ea6740f0))
+* **tests:** :bug: Fix memory leaks in NodeCache timers by adding close() method ([407d348](https://github.com/flowcore-io/flowcore-sdk/commit/407d348f2d9eaec79fa8cb15229224b13d562f90))
+
 ## [1.19.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.19.0...v1.19.1) (2025-03-17)
 
 
