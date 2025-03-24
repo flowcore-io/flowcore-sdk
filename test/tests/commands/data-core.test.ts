@@ -2,23 +2,28 @@ import { afterAll, afterEach, describe, it } from "jsr:@std/testing/bdd"
 import { assertEquals, assertRejects } from "@std/assert"
 import {
   type DataCore,
-  DataCoreDeleteRequestCommand,
   DataCoreFetchCommand,
+  DataCoreRequestDeleteCommand,
   FlowcoreClient,
   NotFoundException,
 } from "../../../src/mod.ts"
 import { FetchMocker } from "../../fixtures/fetch.fixture.ts"
+import { tenantCache } from "../../../src/common/tenant.cache.ts"
+import type { Tenant } from "../../../src/contracts/tenant.ts"
 
 describe("DataCore", () => {
   const fetchMocker = new FetchMocker()
   const flowcoreClient = new FlowcoreClient({ getBearerToken: () => "BEARER_TOKEN" })
-  const fetchMockerBuilderGraphql = fetchMocker.mock("https://graph.api.flowcore.io")
   const fetchMockerBuilder = fetchMocker.mock("https://data-core-2.api.flowcore.io")
+  const fetchMockerBuilderTenant = fetchMocker.mock("https://tenant.api.flowcore.io")
+  const fetchMockerBuilderDeleteManager = fetchMocker.mock("https://delete-manager.api.flowcore.io")
 
-  afterEach(() => fetchMocker.assert())
+  afterEach(() => {
+    fetchMocker.assert()
+    tenantCache.clear()
+  })
   afterAll(() => {
     fetchMocker.restore()
-    flowcoreClient.clearDedicatedTenantCache()
   })
 
   it("should fetch a data core by id", async () => {
@@ -180,27 +185,39 @@ describe("DataCore", () => {
       isDeleting: false,
     }
 
-    fetchMockerBuilderGraphql.post("/graphql")
-      .respondWith(200, {
-        data: {
-          datacore: {
-            requestDelete: {
-              deleting: true,
-            },
-          },
-        },
-      })
+    fetchMockerBuilderTenant.get(`/api/v1/tenants/by-name/${dataCore.tenant}`)
+      .respondWith(
+        200,
+        {
+          id: dataCore.tenantId,
+          name: dataCore.tenant,
+          displayName: dataCore.tenant,
+          description: dataCore.tenant,
+          websiteUrl: "https://test.com",
+          isDedicated: false,
+          dedicated: null,
+        } satisfies Tenant,
+      )
+
+    fetchMockerBuilderDeleteManager.delete(`/api/v1/data-cores/${dataCore.id}/request-delete`)
+      .respondWith(200, { success: true })
+
     fetchMockerBuilder.get(`/api/v1/data-cores/${dataCore.id}/exists`)
       .respondWith(200, { exists: true })
+
     fetchMockerBuilder.get(`/api/v1/data-cores/${dataCore.id}/exists`)
       .respondWith(200, { exists: false })
 
     // act
-    const command = new DataCoreDeleteRequestCommand({ dataCoreId: dataCore.id, waitForDelete: true })
+    const command = new DataCoreRequestDeleteCommand({
+      tenant: dataCore.tenant,
+      dataCoreId: dataCore.id,
+      waitForDelete: true,
+    })
     const response = await flowcoreClient.execute(command)
 
     // assert
-    assertEquals(response, true)
+    assertEquals(response, { success: true })
   })
 
   it("should request deletion of a data core and not wait for deletion", async () => {
@@ -216,22 +233,32 @@ describe("DataCore", () => {
       isDeleting: false,
     }
 
-    fetchMockerBuilderGraphql.post("/graphql")
-      .respondWith(200, {
-        data: {
-          datacore: {
-            requestDelete: {
-              deleting: true,
-            },
-          },
-        },
-      })
+    fetchMockerBuilderTenant.get(`/api/v1/tenants/by-name/${dataCore.tenant}`)
+      .respondWith(
+        200,
+        {
+          id: dataCore.tenantId,
+          name: dataCore.tenant,
+          displayName: dataCore.tenant,
+          description: dataCore.tenant,
+          websiteUrl: "https://test.com",
+          isDedicated: false,
+          dedicated: null,
+        } satisfies Tenant,
+      )
+
+    fetchMockerBuilderDeleteManager.delete(`/api/v1/data-cores/${dataCore.id}/request-delete`)
+      .respondWith(200, { success: true })
 
     // act
-    const command = new DataCoreDeleteRequestCommand({ dataCoreId: dataCore.id, waitForDelete: false })
+    const command = new DataCoreRequestDeleteCommand({
+      tenant: dataCore.tenant,
+      dataCoreId: dataCore.id,
+      waitForDelete: false,
+    })
     const response = await flowcoreClient.execute(command)
 
     // assert
-    assertEquals(response, true)
+    assertEquals(response, { success: true })
   })
 })

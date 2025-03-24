@@ -9,10 +9,7 @@ describe("EventType", () => {
   const fetchMockerBuilder = fetchMocker.mock("https://event-type-2.api.flowcore.io")
 
   afterEach(() => fetchMocker.assert())
-  afterAll(() => {
-    fetchMocker.restore()
-    flowcoreClient.clearDedicatedTenantCache()
-  })
+  afterAll(() => fetchMocker.restore())
 
   it("should fetch an event type by id", async () => {
     // arrange

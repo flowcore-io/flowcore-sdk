@@ -10,6 +10,8 @@ import { DataCoreExistsCommand } from "./data-core.exists.ts"
  * The input for the data core request delete command
  */
 export interface DataCoreRequestDeleteInput {
+  /** The tenant */
+  tenant: string
   /** The id of the data core */
   dataCoreId: string
   /** Wait for the data core to be deleted (default: false) */
@@ -28,7 +30,9 @@ export interface DataCoreRequestDeleteOutput {
  * Request to delete a data core
  */
 export class DataCoreRequestDeleteCommand extends Command<DataCoreRequestDeleteInput, DataCoreRequestDeleteOutput> {
-  protected override supportsDedicatedUrl: boolean = true
+  /**
+   * The dedicated subdomain for the command
+   */
   protected override dedicatedSubdomain: string = "delete-manager"
 
   /**

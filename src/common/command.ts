@@ -1,5 +1,8 @@
+import { TenantFetchCommand } from "../commands/tenant/tenant.fetch.ts"
 import type { ClientError } from "../exceptions/client-error.ts"
+import { CommandError } from "../exceptions/command-error.ts"
 import type { FlowcoreClient } from "./flowcore-client.ts"
+import { tenantCache } from "./tenant.cache.ts"
 
 /**
  * Abstract command for executing requests
@@ -9,8 +12,11 @@ export abstract class Command<Input, Output> {
    * Whether the command should retry on failure
    */
   protected readonly retryOnFailure: boolean = true
-  protected readonly supportsDedicatedUrl: boolean = false
-  protected readonly dedicatedSubdomain: string | undefined
+
+  /**
+   * The dedicated subdomain for the command
+   */
+  protected readonly dedicatedSubdomain?: string
 
   /**
    * The allowed modes for the command
@@ -27,6 +33,38 @@ export abstract class Command<Input, Output> {
      * The input for the command
      */
     this.input = input
+  }
+
+  /**
+   * Get the dedicated base URL
+   */
+  protected async getDedicatedBaseUrl(client: FlowcoreClient): Promise<string | null> {
+    if (!this.dedicatedSubdomain) {
+      return null
+    }
+
+    const inputTenant = typeof this.input === "object" && this.input !== null && "tenant" in this.input &&
+      typeof this.input.tenant === "string" && this.input.tenant
+
+    if (!inputTenant) {
+      return null
+    }
+
+    let tenant = tenantCache.get(inputTenant)
+    if (!tenant) {
+      tenant = await client.execute(new TenantFetchCommand({ tenant: inputTenant }))
+      tenantCache.set(inputTenant, tenant)
+    }
+
+    if (!tenant.isDedicated) {
+      return null
+    }
+
+    if (!tenant.dedicated?.configuration.domain) {
+      throw new CommandError(this.constructor.name, `Tenant ${inputTenant} does not have a dedicated domain configured`)
+    }
+
+    return `https://${this.dedicatedSubdomain}.${tenant.dedicated.configuration.domain}`
   }
 
   /**
@@ -84,8 +122,7 @@ export abstract class Command<Input, Output> {
   /**
    * Get the request object
    */
-  // deno-lint-ignore require-await
-  public async getRequest(_client: FlowcoreClient): Promise<{
+  public async getRequest(client: FlowcoreClient): Promise<{
     allowedModes: ("apiKey" | "bearer")[]
     body: string | Record<string, unknown> | Array<unknown> | undefined
     headers: Record<string, string>
@@ -97,22 +134,18 @@ export abstract class Command<Input, Output> {
     handleClientError: (error: ClientError) => void
     retryOnFailure: boolean
     customExecute?: (client: FlowcoreClient) => Promise<unknown>
-    supportsDedicatedUrl: boolean
-    dedicatedSubdomain: string | undefined
   }> {
     return {
       allowedModes: this.allowedModes,
       body: this.getBody(),
       headers: this.getHeaders(),
-      baseUrl: this.getBaseUrl(),
+      baseUrl: (await this.getDedicatedBaseUrl(client)) ?? this.getBaseUrl(),
       path: this.getPath(),
       method: this.getMethod(),
       parseResponse: this.parseResponse.bind(this),
       processResponse: this.processResponse.bind(this),
       handleClientError: this.handleClientError.bind(this),
       retryOnFailure: this.retryOnFailure,
-      supportsDedicatedUrl: this.supportsDedicatedUrl,
-      dedicatedSubdomain: this.dedicatedSubdomain,
     }
   }
 

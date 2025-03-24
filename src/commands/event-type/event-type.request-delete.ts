@@ -10,6 +10,8 @@ import type { FlowcoreClient } from "../../common/flowcore-client.ts"
  * The input for the event type request delete command
  */
 export interface EventTypeRequestDeleteInput {
+  /** The tenant */
+  tenant: string
   /** The id of the event type */
   eventTypeId: string
   /** Wait for the event type to be deleted (default: false) */
@@ -27,7 +29,9 @@ export interface EventTypeRequestDeleteOutput {
  * Request to delete an event type
  */
 export class EventTypeRequestDeleteCommand extends Command<EventTypeRequestDeleteInput, EventTypeRequestDeleteOutput> {
-  protected override supportsDedicatedUrl: boolean = true
+  /**
+   * The dedicated subdomain for the command
+   */
   protected override dedicatedSubdomain: string = "delete-manager"
 
   /**

@@ -1,10 +1,8 @@
-import NodeCache from "npm:node-cache@5.1.2"
-import { TenantFetchCommand } from "../commands/index.ts"
-import type { Tenant } from "../contracts/tenant.ts"
 import { ClientError } from "../exceptions/client-error.ts"
 import { CommandError } from "../exceptions/command-error.ts"
 import type { Command } from "./command.ts"
 import { tryCatch } from "../utils/try-catch.ts"
+import { tenantCache } from "./tenant.cache.ts"
 
 const RETRYABLE_ERROR_CODES = [408, 429, 500, 502, 503, 504]
 
@@ -39,15 +37,12 @@ interface ClientOptionsApiKey {
  */
 export type ClientOptions = ClientOptionsBearer | ClientOptionsApiKey
 
-const getDedicatedTenantCacheKey = (tenantId: string) => `dedicated-tenant-${tenantId}`
-
 /**
  * A base client for executing commands
  */
 export class FlowcoreClient {
   private mode: "apiKey" | "bearer"
   private baseUrl: string | undefined
-  private dedicatedTenantCache = new NodeCache()
 
   constructor(private readonly options: ClientOptions) {
     if ((this.options as ClientOptionsBearer).getBearerToken) {
@@ -89,28 +84,8 @@ export class FlowcoreClient {
   private async innerExecute<Input, Output>(
     command: Command<Input, Output>,
     retryCount: number = 0,
-    dedicatedTenantId?: string,
   ): Promise<Output> {
     const request = await command.getRequest(this)
-
-    if (request.supportsDedicatedUrl && request.dedicatedSubdomain && dedicatedTenantId) {
-      let tenantConfig = this.dedicatedTenantCache.get<Tenant>(getDedicatedTenantCacheKey(dedicatedTenantId))
-      if (tenantConfig === undefined) {
-        const tenant = await this.execute(new TenantFetchCommand({ tenantId: dedicatedTenantId }))
-        tenantConfig = tenant
-        this.dedicatedTenantCache.set<Tenant>(getDedicatedTenantCacheKey(dedicatedTenantId), tenant, 60 * 5)
-      }
-
-      if (tenantConfig.isDedicated) {
-        if (!tenantConfig.dedicated?.configuration.domain) {
-          throw new CommandError(
-            command.constructor.name,
-            `Tenant ${dedicatedTenantId} does not have a dedicated domain configured`,
-          )
-        }
-        this.baseUrl = `https://${request.dedicatedSubdomain}.${tenantConfig.dedicated?.configuration.domain}`
-      }
-    }
 
     if (request.customExecute) {
       return request.customExecute(this) as Promise<Output>
@@ -192,15 +167,8 @@ export class FlowcoreClient {
   /**
    * Execute a command
    */
-  execute<Input, Output>(command: Command<Input, Output>, dedicatedTenantId?: string): Promise<Output> {
-    return this.innerExecute(command, 0, dedicatedTenantId)
-  }
-
-  /**
-   * Clear the dedicated tenant cache
-   */
-  clearDedicatedTenantCache(): void {
-    this.dedicatedTenantCache.flushAll()
+  execute<Input, Output>(command: Command<Input, Output>): Promise<Output> {
+    return this.innerExecute(command, 0)
   }
 
   /**
@@ -208,7 +176,14 @@ export class FlowcoreClient {
    * This should be called when the client is no longer needed to prevent memory leaks
    */
   close(): void {
-    // Close the NodeCache instance to prevent timer leaks
-    this.dedicatedTenantCache.close()
+    // Clear the tenant cache
+    tenantCache.clear()
+  }
+
+  /**
+   * Dispose the client
+   */
+  [Symbol.dispose](): void {
+    this.close()
   }
 }

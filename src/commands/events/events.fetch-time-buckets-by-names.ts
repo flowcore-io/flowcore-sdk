@@ -49,7 +49,9 @@ export class EventsFetchTimeBucketsByNamesCommand extends Command<
   EventsFetchTimeBucketsByNamesInput,
   EventsFetchTimeBucketsByNamesOutput
 > {
-  protected override supportsDedicatedUrl: boolean = true
+  /**
+   * The dedicated subdomain for the command
+   */
   protected override dedicatedSubdomain: string = "event-source"
 
   /**

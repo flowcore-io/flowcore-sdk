@@ -6,6 +6,8 @@ import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
  * The input for the events fetch indexes command
  */
 export interface TimeBucketListInput {
+  /** the tenant */
+  tenant: string
   /** the event type ids */
   eventTypeId: [string, ...string[]] | string
   /** the start time */
@@ -45,7 +47,9 @@ export class TimeBucketListCommand extends Command<
   TimeBucketListInput,
   TimeBucketListOutput
 > {
-  protected override supportsDedicatedUrl: boolean = true
+  /**
+   * The dedicated subdomain for the command
+   */
   protected override dedicatedSubdomain: string = "event-source"
 
   /**

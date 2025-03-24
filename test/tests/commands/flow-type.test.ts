@@ -9,10 +9,7 @@ describe("FlowType", () => {
   const fetchMockerBuilder = fetchMocker.mock("https://flow-type-2.api.flowcore.io")
 
   afterEach(() => fetchMocker.assert())
-  afterAll(() => {
-    fetchMocker.restore()
-    flowcoreClient.clearDedicatedTenantCache()
-  })
+  afterAll(() => fetchMocker.restore())
 
   it("should fetch a flow type by id", async () => {
     // arrange

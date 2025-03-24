@@ -10,9 +10,10 @@ import { EventTypeFetchCommand } from "./event-type.fetch.ts"
  * The input for the event type request truncate command
  */
 export interface EventTypeRequestTruncateInput {
+  /** The tenant */
+  tenant: string
   /** The id of the event type */
   eventTypeId: string
-
   /** Wait for the event type to be truncated (default: false) */
   waitForTruncate?: boolean
 }
@@ -29,7 +30,9 @@ export interface EventTypeRequestTruncateOutput {
  */
 export class EventTypeRequestTruncateCommand
   extends Command<EventTypeRequestTruncateInput, EventTypeRequestTruncateOutput> {
-  protected override supportsDedicatedUrl: boolean = true
+  /**
+   * The dedicated subdomain for the command
+   */
   protected override dedicatedSubdomain: string = "delete-manager"
 
   /**

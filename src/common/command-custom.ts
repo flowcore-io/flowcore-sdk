@@ -33,8 +33,6 @@ export abstract class CustomCommand<Input, Output> extends Command<Input, Output
     processResponse: (client: FlowcoreClient, response: Output) => Promise<Output>
     handleClientError: (error: ClientError) => void
     retryOnFailure: boolean
-    supportsDedicatedUrl: boolean
-    dedicatedSubdomain: string | undefined
   }> {
     return {
       ...super.getRequest(_client),

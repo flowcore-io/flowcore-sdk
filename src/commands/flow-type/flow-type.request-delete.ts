@@ -10,6 +10,8 @@ import { FlowTypeExistsCommand } from "./flow-type.exists.ts"
  * The input for the flow type request delete command
  */
 export interface FlowTypeRequestDeleteInput {
+  /** The tenant */
+  tenant: string
   /** The id of the flow type */
   flowTypeId: string
   /** Wait for the flow type to be deleted (default: false) */
@@ -27,7 +29,9 @@ export interface FlowTypeRequestDeleteOutput {
  * Request to delete a flow type
  */
 export class FlowTypeRequestDeleteCommand extends Command<FlowTypeRequestDeleteInput, FlowTypeRequestDeleteOutput> {
-  protected override supportsDedicatedUrl: boolean = true
+  /**
+   * The dedicated subdomain for the command
+   */
   protected override dedicatedSubdomain: string = "delete-manager"
 
   /**

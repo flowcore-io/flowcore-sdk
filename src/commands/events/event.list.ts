@@ -7,6 +7,8 @@ import { type FlowcoreEvent, FlowcoreEventSchema } from "../../contracts/event.t
  * The input for the events fetch indexes command
  */
 export interface EventListInput {
+  /** The tenant */
+  tenant: string
   /** the event type id or ids */
   eventTypeId: [string, ...string[]] | string
   /** the time bucket */
@@ -55,7 +57,9 @@ const responseSchema = Type.Object({
  * Fetch time buckets for an event type
  */
 export class EventListCommand extends Command<EventListInput, EventListOutput> {
-  protected override supportsDedicatedUrl: boolean = true
+  /**
+   * The dedicated subdomain for the command
+   */
   protected override dedicatedSubdomain: string = "event-source"
 
   /**
