@@ -27,8 +27,8 @@ await build({
       url: "https://github.com/flowcore-io/flowcore-sdk/issues",
     },
     devDependencies: {
-      "@types/ws": "^8.5.10"
-    }
+      "@types/ws": "^8.5.10",
+    },
   },
   postBuild() {
     // steps to run after building and before running the tests

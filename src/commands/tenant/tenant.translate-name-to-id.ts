@@ -4,7 +4,6 @@ import type { ClientError } from "../../exceptions/client-error.ts"
 import { NotFoundException } from "../../exceptions/not-found.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 
-
 /**
  * The input for the tenant translate name to id command
  */

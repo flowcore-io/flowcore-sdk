@@ -56,8 +56,11 @@ export class SecurityExchangePATCommand extends Command<SecurityExchangePAT, Sec
    * Parse the response
    */
   protected override parseResponse(rawResponse: unknown): SecurityExchangePATResponse {
-    return parseResponseHelper(Type.Object({
-      accessToken: Type.String(),
-    }), rawResponse)
+    return parseResponseHelper(
+      Type.Object({
+        accessToken: Type.String(),
+      }),
+      rawResponse,
+    )
   }
 }

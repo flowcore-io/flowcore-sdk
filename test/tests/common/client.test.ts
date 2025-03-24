@@ -144,7 +144,7 @@ describe("FlowcoreClient", () => {
 
     // assert
     await assertRejects(() => responsePromise, ClientError)
-    
+
     flowcoreClient.close()
   })
 
