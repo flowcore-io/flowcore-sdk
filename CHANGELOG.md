@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.21.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.20.0...v1.21.0) (2025-03-24)
+
+
+### Features
+
+* add permissions list command ([8c0bb59](https://github.com/flowcore-io/flowcore-sdk/commit/8c0bb594d9110f69209047ad252bf5e7a1a1a483))
+* add permissions list command ([66c4f75](https://github.com/flowcore-io/flowcore-sdk/commit/66c4f75033a42458c5b4db7403b69188fd46b8e3))
+* rework dedicated tenant ([45e1887](https://github.com/flowcore-io/flowcore-sdk/commit/45e1887e4468db9ba18964ebac0cdf326e1763fa))
+
+
+### Bug Fixes
+
+* add explicit type for permission schema ([d541a83](https://github.com/flowcore-io/flowcore-sdk/commit/d541a8321a7c238df7ea29cc344e99d1f8a7ae44))
+* fix eventtypeinfo command ([72e04e2](https://github.com/flowcore-io/flowcore-sdk/commit/72e04e2290913a10660dd4c872e5b9ec4c50067f))
+* remove node-cache ([ddc409d](https://github.com/flowcore-io/flowcore-sdk/commit/ddc409d22100a12252968d8afdd5bf66a0eff28d))
+
 ## [1.20.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.19.1...v1.20.0) (2025-03-21)
 
 
