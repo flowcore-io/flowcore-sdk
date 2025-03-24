@@ -8,6 +8,8 @@ import { TimeBucketListCommand } from "../events/time-bucket.list.ts"
  * The input for the events fetch info command
  */
 export interface EventTypeInfoInput {
+  /** the tenant */
+  tenant: string
   /** the event type id or ids */
   eventTypeId: [string, ...string[]] | string
   /** the limit for the number of last events to fetch (default is 5) */
@@ -39,11 +41,13 @@ export class EventTypeInfoCommand extends CustomCommand<EventTypeInfoInput, Even
     const lastEventsLimit = this.input.limit ?? 5
 
     const firstTimeBucketCommand = new TimeBucketListCommand({
+      tenant: this.input.tenant,
       eventTypeId: this.input.eventTypeId,
       order: "asc",
       pageSize: 1,
     })
     const lastTimeBucketCommand = new TimeBucketListCommand({
+      tenant: this.input.tenant,
       eventTypeId: this.input.eventTypeId,
       order: "desc",
       pageSize: lastEventsLimit,
@@ -68,6 +72,7 @@ export class EventTypeInfoCommand extends CustomCommand<EventTypeInfoInput, Even
 
     for (const timeBucket of lastTimeBucketResponse.timeBuckets) {
       const eventListCommand = new EventListCommand({
+        tenant: this.input.tenant,
         eventTypeId: this.input.eventTypeId,
         timeBucket,
         pageSize: lastEventsLimit - lastEvents.length,
