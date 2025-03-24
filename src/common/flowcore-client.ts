@@ -1,9 +1,10 @@
-import NodeCache from "npm:node-cache@5.1.2";
-import { TenantFetchCommand } from "../commands/index.ts";
-import type { Tenant } from "../contracts/tenant.ts";
-import { ClientError } from "../exceptions/client-error.ts";
-import { CommandError } from "../exceptions/command-error.ts";
-import type { Command } from "./command.ts";
+import NodeCache from "npm:node-cache@5.1.2"
+import { TenantFetchCommand } from "../commands/index.ts"
+import type { Tenant } from "../contracts/tenant.ts"
+import { ClientError } from "../exceptions/client-error.ts"
+import { CommandError } from "../exceptions/command-error.ts"
+import type { Command } from "./command.ts"
+import { tryCatch } from "../utils/try-catch.ts"
 
 const RETRYABLE_ERROR_CODES = [408, 429, 500, 502, 503, 504]
 
@@ -46,7 +47,7 @@ const getDedicatedTenantCacheKey = (tenantId: string) => `dedicated-tenant-${ten
 export class FlowcoreClient {
   private mode: "apiKey" | "bearer"
   private baseUrl: string | undefined
-  private dedicatedTenantCache = new NodeCache();
+  private dedicatedTenantCache = new NodeCache()
 
   constructor(private readonly options: ClientOptions) {
     if ((this.options as ClientOptionsBearer).getBearerToken) {
@@ -102,7 +103,10 @@ export class FlowcoreClient {
 
       if (tenantConfig.isDedicated) {
         if (!tenantConfig.dedicated?.configuration.domain) {
-          throw new CommandError(command.constructor.name, `Tenant ${dedicatedTenantId} does not have a dedicated domain configured`)
+          throw new CommandError(
+            command.constructor.name,
+            `Tenant ${dedicatedTenantId} does not have a dedicated domain configured`,
+          )
         }
         this.baseUrl = `https://${request.dedicatedSubdomain}.${tenantConfig.dedicated?.configuration.domain}`
       }
@@ -116,7 +120,13 @@ export class FlowcoreClient {
       throw new CommandError(command.constructor.name, `Not allowed in "${this.mode}" mode`)
     }
 
-    const authHeader = await this.getAuthHeader()
+    const { data: authHeader, error: authHeaderError } = await tryCatch(this.getAuthHeader())
+    if (authHeaderError) {
+      throw new ClientError("Failed to get auth header", 0, command.constructor.name, {
+        command: command.constructor.name,
+        error: authHeaderError,
+      })
+    }
     const headers: Record<string, string> = {
       ...request.headers,
       ...(authHeader ? { Authorization: authHeader } : {}),
@@ -199,6 +209,6 @@ export class FlowcoreClient {
    */
   close(): void {
     // Close the NodeCache instance to prevent timer leaks
-    this.dedicatedTenantCache.close();
+    this.dedicatedTenantCache.close()
   }
 }
