@@ -25,13 +25,16 @@
   },
   "fmt": {
     "exclude": [
+      ".github",
       "node_modules",
-      "npm"
+      "npm",
+      "*.md"
     ],
     "lineWidth": 120,
     "indentWidth": 2,
     "useTabs": false,
-    "semiColons": false
+    "semiColons": false,
+    "singleQuote": false
   },
   "lint": {
     "exclude": [
