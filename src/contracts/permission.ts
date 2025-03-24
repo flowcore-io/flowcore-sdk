@@ -1,9 +1,30 @@
-import { type Static, Type } from "@sinclair/typebox"
+import {
+  type Static,
+  type TArray,
+  type TLiteral,
+  type TObject,
+  type TString,
+  type TUnion,
+  Type,
+} from "@sinclair/typebox"
 
 /**
  * The schema for a permission
  */
-export const PermissionSchema = Type.Object({
+export const PermissionSchema: TObject<{
+  tenant: TString
+  type: TString
+  id: TString
+  action: TArray<
+    TUnion<[
+      TLiteral<"read">,
+      TLiteral<"write">,
+      TLiteral<"ingest">,
+      TLiteral<"fetch">,
+      TLiteral<"*">,
+    ]>
+  >
+}> = Type.Object({
   tenant: Type.String(),
   type: Type.String(),
   id: Type.String(),
