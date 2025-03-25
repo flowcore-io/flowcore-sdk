@@ -72,11 +72,11 @@ export class EventTypeInfoCommand extends CustomCommand<EventTypeInfoInput, Even
 
     for (const timeBucket of lastTimeBucketResponse.timeBuckets) {
       const eventListCommand = new EventListCommand({
-        tenant: this.input.tenant,
         eventTypeId: this.input.eventTypeId,
         timeBucket,
         pageSize: lastEventsLimit - lastEvents.length,
         order: "desc",
+        tenant: this.input.tenant,
       })
       const eventListResponse = await client.execute(eventListCommand)
       lastEvents.push(...eventListResponse.events)
