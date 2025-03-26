@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.21.2](https://github.com/flowcore-io/flowcore-sdk/compare/v1.21.1...v1.21.2) (2025-03-26)
+
+
+### Bug Fixes
+
+* ignore 403 from tenant fetch command ([c9c49df](https://github.com/flowcore-io/flowcore-sdk/commit/c9c49df3e61d0d93bb795d59e52b7202d65d805f))
+* ignore 403 from tenant fetch command ([984f1da](https://github.com/flowcore-io/flowcore-sdk/commit/984f1da2ca75377ef590ca07fd46ea88b507f365))
+
 ## [1.21.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.21.0...v1.21.1) (2025-03-26)
 
 
