@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.21.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.21.0...v1.21.1) (2025-03-26)
+
+
+### Bug Fixes
+
+* change union literals to string (to make forward compatible) ([9b8c14d](https://github.com/flowcore-io/flowcore-sdk/commit/9b8c14d3b25485e2b3ca26a5fbdb86c35e2a493d))
+* **event-type:** :bug: add tenant to EventListCommand ([7b7e989](https://github.com/flowcore-io/flowcore-sdk/commit/7b7e9898bab300d55261d53667f704193b373620))
+* permissions should never return action.all (*) ([d28c20d](https://github.com/flowcore-io/flowcore-sdk/commit/d28c20d43f41db560c535fcb12c6e97ceeae2ec9))
+* permissions should never return action.all (*) ([48190e2](https://github.com/flowcore-io/flowcore-sdk/commit/48190e29f703ae6b0eae087d9dcae5aea66c410e))
+
 ## [1.21.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.20.0...v1.21.0) (2025-03-24)
 
 
