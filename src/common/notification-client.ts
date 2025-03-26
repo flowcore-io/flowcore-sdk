@@ -2,7 +2,6 @@ import type { Subject } from "rxjs"
 import { defaultLogger, type Logger } from "../utils/logger.ts"
 import { FlowcoreClient } from "./flowcore-client.ts"
 import { Buffer } from "node:buffer"
-import { TenantFetchCommand } from "../commands/tenant/tenant.fetch.ts"
 import { DataCoreFetchCommand } from "../commands/data-core/data-core.fetch.ts"
 import { FlowTypeFetchCommand } from "../commands/flow-type/flow-type.fetch.ts"
 import type { FlowType } from "../contracts/flow-type.ts"
@@ -157,15 +156,9 @@ export class NotificationClient {
       urlParams.set("api_key_id", this.authOptions.apiKeyId)
     }
 
-    const tenant = await flowcoreClient.execute(
-      new TenantFetchCommand({
-        tenant: this.subscriptionSpec.tenant,
-      }),
-    )
-
     const dataCore = await flowcoreClient.execute(
       new DataCoreFetchCommand({
-        tenantId: tenant.id,
+        tenant: this.subscriptionSpec.tenant,
         dataCore: this.subscriptionSpec.dataCore,
       }),
     )
