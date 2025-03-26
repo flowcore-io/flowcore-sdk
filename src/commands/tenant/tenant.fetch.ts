@@ -3,6 +3,7 @@ import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 import { NotFoundException } from "../../exceptions/not-found.ts"
 import type { ClientError } from "../../exceptions/client-error.ts"
 import { type Tenant, TenantSchema } from "../../contracts/tenant.ts"
+import { Type } from "@sinclair/typebox"
 
 /**
  * The input for the tenant fetch by id command
@@ -28,6 +29,24 @@ export interface TenantFetchByNameInput {
  * The input for the tenant fetch command
  */
 export type TenantFetchInput = TenantFetchByIdInput | TenantFetchByNameInput
+
+/**
+ * The response schema for the tenant fetch command
+ */
+const responseSchema = Type.Object({
+  ...TenantSchema.properties,
+  dedicated: Type.Union([
+    Type.Null(),
+    Type.Object({
+      // parse as string to prevent sdk to fail when new status are added
+      status: Type.String(),
+      configuration: Type.Object({
+        domain: Type.String(),
+        configurationRepoUrl: Type.String(),
+      }),
+    }),
+  ]),
+})
 
 /**
  * Fetch a tenant
@@ -61,8 +80,8 @@ export class TenantFetchCommand extends Command<TenantFetchInput, Tenant> {
    * Parse the response
    */
   protected override parseResponse(rawResponse: unknown): Tenant {
-    const response = parseResponseHelper(TenantSchema, rawResponse)
-    return response
+    const response = parseResponseHelper(responseSchema, rawResponse)
+    return response as Tenant
   }
 
   /**
