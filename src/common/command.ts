@@ -1,5 +1,5 @@
 import { TenantFetchCommand } from "../commands/tenant/tenant.fetch.ts"
-import type { ClientError } from "../exceptions/client-error.ts"
+import { ClientError } from "../exceptions/client-error.ts"
 import { CommandError } from "../exceptions/command-error.ts"
 import type { FlowcoreClient } from "./flowcore-client.ts"
 import { tenantCache } from "./tenant.cache.ts"
@@ -51,8 +51,18 @@ export abstract class Command<Input, Output> {
     }
 
     let tenant = tenantCache.get(inputTenant)
+
     if (!tenant) {
       tenant = await client.execute(new TenantFetchCommand({ tenant: inputTenant }))
+        .catch((error) => {
+          if (error instanceof ClientError && error.status === 403) {
+            return {
+              isDedicated: false,
+              dedicated: null,
+            }
+          }
+          throw error
+        })
       tenantCache.set(inputTenant, tenant)
     }
 

@@ -1,4 +1,11 @@
-import type { Tenant } from "../contracts/tenant.ts"
 import { LocalCache } from "../utils/local-cache.ts"
 
-export const tenantCache = new LocalCache<Tenant>(60 * 1000)
+type DedicatedTenant = {
+  isDedicated: boolean
+  dedicated: {
+    status: "ready" | "degraded" | "offline"
+    configuration: { domain: string }
+  } | null
+}
+
+export const tenantCache = new LocalCache<DedicatedTenant>(60 * 1000)
