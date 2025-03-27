@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.22.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.21.3...v1.22.0) (2025-03-27)
+
+
+### Features
+
+* **tenant:** :sparkles: add configurationRepoCredentials to tenant schema ([69e5c10](https://github.com/flowcore-io/flowcore-sdk/commit/69e5c10dd9d8b5a2b8f8f1ff36055cd280182142))
+
+
+### Bug Fixes
+
+* **tenant:** :art: make configurationRepoCredentials optional in tenant schema ([a9324fd](https://github.com/flowcore-io/flowcore-sdk/commit/a9324fd8ed381a77bfb79b889eaa69ed7950d13a))
+
 ## [1.21.3](https://github.com/flowcore-io/flowcore-sdk/compare/v1.21.2...v1.21.3) (2025-03-27)
 
 
