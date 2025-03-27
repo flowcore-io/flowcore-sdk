@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.22.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.22.0...v1.22.1) (2025-03-27)
+
+
+### Bug Fixes
+
+* **tenant:** :art: make configurationRepoCredentials required in tenant schema ([8fc755d](https://github.com/flowcore-io/flowcore-sdk/commit/8fc755dba5afccac58a034c14fb5881c4868a653))
+* **tenant:** :art: remove unused TOptional type from tenant schema ([d757d09](https://github.com/flowcore-io/flowcore-sdk/commit/d757d09dd8eb211a4730822c04ea374463d0b347))
+
 ## [1.22.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.21.3...v1.22.0) (2025-03-27)
 
 
