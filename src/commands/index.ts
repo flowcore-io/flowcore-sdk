@@ -20,7 +20,6 @@ export * from "./variable/variable.list.ts"
 
 // Data Core
 export * from "./data-core/data-core.create.ts"
-export * from "./data-core/data-core.delete-request.ts"
 export * from "./data-core/data-core.exists.ts"
 export * from "./data-core/data-core.fetch.ts"
 export * from "./data-core/data-core.list.ts"
@@ -29,7 +28,6 @@ export * from "./data-core/data-core.update.ts"
 
 // Flow Types
 export * from "./flow-type/flow-type.create.ts"
-export * from "./flow-type/flow-type.delete-request.ts"
 export * from "./flow-type/flow-type.exists.ts"
 export * from "./flow-type/flow-type.fetch.ts"
 export * from "./flow-type/flow-type.list.ts"
@@ -38,13 +36,11 @@ export * from "./flow-type/flow-type.update.ts"
 
 // Event Types
 export * from "./event-type/event-type.create.ts"
-export * from "./event-type/event-type.delete-request.ts"
 export * from "./event-type/event-type.exists.ts"
 export * from "./event-type/event-type.fetch.ts"
 export * from "./event-type/event-type.list.ts"
 export * from "./event-type/event-type.request-delete.ts"
 export * from "./event-type/event-type.request-truncate.ts"
-export * from "./event-type/event-type.truncate-request.ts"
 export * from "./event-type/event-type.update.ts"
 export * from "./event-type/event-type.info.ts"
 
