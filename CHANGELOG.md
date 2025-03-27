@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.22.2](https://github.com/flowcore-io/flowcore-sdk/compare/v1.22.1...v1.22.2) (2025-03-27)
+
+
+### Bug Fixes
+
+* change datacore list command ([5b75ed9](https://github.com/flowcore-io/flowcore-sdk/commit/5b75ed9a11410404e585800d782951c3a96451f6))
+
 ## [1.22.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.22.0...v1.22.1) (2025-03-27)
 
 
