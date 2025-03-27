@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.23.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.22.2...v1.23.0) (2025-03-27)
+
+
+### Features
+
+* remove deprecated commands ([4b49c13](https://github.com/flowcore-io/flowcore-sdk/commit/4b49c13737ff49cb9a384c15fe292a3efdb0c2b8))
+* remove deprecated commands ([4b78d07](https://github.com/flowcore-io/flowcore-sdk/commit/4b78d078ff4d0587f3bbdc2100485b93595b76aa))
+
 ## [1.22.2](https://github.com/flowcore-io/flowcore-sdk/compare/v1.22.1...v1.22.2) (2025-03-27)
 
 
