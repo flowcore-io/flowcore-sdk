@@ -1,6 +1,6 @@
 import { Type } from "@sinclair/typebox"
 import { Command } from "../../common/command.ts"
-import { type DataCore, DataCoreSchema } from "../../contracts/data-core.ts"
+import { type DataCoreWithAccess, DataCoreWithAccessSchema } from "../../contracts/data-core.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 
 /**
@@ -11,12 +11,19 @@ export interface DataCoreListInput {
   tenantId?: string
   /** The tenant name */
   tenant?: string
+  /** The data core name */
+  name?: string
 }
+
+const responseSchema = Type.Object({
+  ...DataCoreWithAccessSchema.properties,
+  access: Type.Array(Type.String()),
+})
 
 /**
  * Fetch all data cores for a tenant
  */
-export class DataCoreListCommand extends Command<DataCoreListInput, DataCore[]> {
+export class DataCoreListCommand extends Command<DataCoreListInput, DataCoreWithAccess[]> {
   /**
    * Get the method
    */
@@ -41,13 +48,16 @@ export class DataCoreListCommand extends Command<DataCoreListInput, DataCore[]> 
     if (this.input.tenant) {
       queryParams.set("tenant", this.input.tenant)
     }
+    if (this.input.name) {
+      queryParams.set("name", this.input.name)
+    }
     return `/api/v1/data-cores?${queryParams.toString()}`
   }
 
   /**
    * Parse the response
    */
-  protected override parseResponse(rawResponse: unknown): DataCore[] {
-    return parseResponseHelper(Type.Array(DataCoreSchema), rawResponse)
+  protected override parseResponse(rawResponse: unknown): DataCoreWithAccess[] {
+    return parseResponseHelper(Type.Array(responseSchema), rawResponse) as DataCoreWithAccess[]
   }
 }

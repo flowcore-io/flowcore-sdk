@@ -24,7 +24,6 @@ export * from "./data-core/data-core.delete-request.ts"
 export * from "./data-core/data-core.exists.ts"
 export * from "./data-core/data-core.fetch.ts"
 export * from "./data-core/data-core.list.ts"
-export * from "./data-core/data-core.list-new.ts"
 export * from "./data-core/data-core.request-delete.ts"
 export * from "./data-core/data-core.update.ts"
 
