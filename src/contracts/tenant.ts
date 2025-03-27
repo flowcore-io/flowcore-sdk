@@ -4,6 +4,7 @@ import {
   type TLiteral,
   type TNull,
   type TObject,
+  type TOptional,
   type TString,
   type TUnion,
   Type,
@@ -42,7 +43,7 @@ export const TenantSchema: TObject<{
       configuration: TObject<{
         domain: TString
         configurationRepoUrl: TString
-        configurationRepoCredentials: TString
+        configurationRepoCredentials: TOptional<TString>
       }>
     }>,
   ]>
@@ -64,7 +65,7 @@ export const TenantSchema: TObject<{
       configuration: Type.Object({
         domain: Type.String(),
         configurationRepoUrl: Type.String(),
-        configurationRepoCredentials: Type.String(),
+        configurationRepoCredentials: Type.Optional(Type.String()),
       }),
     }),
   ]),

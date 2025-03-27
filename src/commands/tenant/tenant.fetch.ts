@@ -1,9 +1,9 @@
-import { Command } from "../../common/command.ts"
-import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
-import { NotFoundException } from "../../exceptions/not-found.ts"
-import type { ClientError } from "../../exceptions/client-error.ts"
-import { type Tenant, TenantSchema } from "../../contracts/tenant.ts"
 import { Type } from "@sinclair/typebox"
+import { Command } from "../../common/command.ts"
+import { type Tenant, TenantSchema } from "../../contracts/tenant.ts"
+import type { ClientError } from "../../exceptions/client-error.ts"
+import { NotFoundException } from "../../exceptions/not-found.ts"
+import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 
 /**
  * The input for the tenant fetch by id command
@@ -43,7 +43,7 @@ const responseSchema = Type.Object({
       configuration: Type.Object({
         domain: Type.String(),
         configurationRepoUrl: Type.String(),
-        configurationRepoCredentials: Type.String(),
+        configurationRepoCredentials: Type.Optional(Type.String()),
       }),
     }),
   ]),
