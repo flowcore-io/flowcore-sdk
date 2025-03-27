@@ -42,6 +42,7 @@ export const TenantSchema: TObject<{
       configuration: TObject<{
         domain: TString
         configurationRepoUrl: TString
+        configurationRepoCredentials: TString
       }>
     }>,
   ]>
@@ -63,6 +64,7 @@ export const TenantSchema: TObject<{
       configuration: Type.Object({
         domain: Type.String(),
         configurationRepoUrl: Type.String(),
+        configurationRepoCredentials: Type.String(),
       }),
     }),
   ]),

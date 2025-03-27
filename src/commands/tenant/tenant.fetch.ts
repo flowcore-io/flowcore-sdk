@@ -43,6 +43,7 @@ const responseSchema = Type.Object({
       configuration: Type.Object({
         domain: Type.String(),
         configurationRepoUrl: Type.String(),
+        configurationRepoCredentials: Type.String(),
       }),
     }),
   ]),
