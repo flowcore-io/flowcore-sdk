@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.21.3](https://github.com/flowcore-io/flowcore-sdk/compare/v1.21.2...v1.21.3) (2025-03-27)
+
+
+### Bug Fixes
+
+* add temp list datacore command ([5004bea](https://github.com/flowcore-io/flowcore-sdk/commit/5004beac0e194a063b6a61f261eb3c5298cf0de7))
+
 ## [1.21.2](https://github.com/flowcore-io/flowcore-sdk/compare/v1.21.1...v1.21.2) (2025-03-26)
 
 
