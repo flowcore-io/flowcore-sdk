@@ -1,10 +1,10 @@
 import { Type } from "@sinclair/typebox"
 import { assertEquals, assertRejects } from "@std/assert"
 import { afterAll, afterEach, describe, it } from "jsr:@std/testing/bdd"
+import type { Tenant } from "../../../src/contracts/tenant.ts"
 import { Command, CommandError, FlowcoreClient, InvalidResponseException } from "../../../src/mod.ts"
 import { parseResponseHelper } from "../../../src/utils/parse-response-helper.ts"
 import { FetchMocker } from "../../fixtures/fetch.fixture.ts"
-import type { Tenant } from "../../../src/contracts/tenant.ts"
 
 describe("FlowcoreCommand", () => {
   const fetchMocker = new FetchMocker()
@@ -111,6 +111,7 @@ describe("FlowcoreCommand", () => {
             configuration: {
               domain: "dedicated.test.com",
               configurationRepoUrl: "https://github.com/test/test",
+              configurationRepoCredentials: "test",
             },
             status: "ready",
           },
