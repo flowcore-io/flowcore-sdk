@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.24.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.23.0...v1.24.0) (2025-03-31)
+
+
+### Features
+
+* add iam role associations commands ([e7ea5b6](https://github.com/flowcore-io/flowcore-sdk/commit/e7ea5b615a9efa08acb71cfab4d2901ac810b5af))
+* add iam role associations commands ([4760d8f](https://github.com/flowcore-io/flowcore-sdk/commit/4760d8f178b940c4e9054dececd9950e9b61f34e))
+
 ## [1.23.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.22.2...v1.23.0) (2025-03-27)
 
 
