@@ -51,6 +51,7 @@ export * from "./iam/api-key-role-association.list.ts"
 export * from "./iam/user-role-association.create.ts"
 export * from "./iam/user-role-association.delete.ts"
 export * from "./iam/user-role-association.list.ts"
+export * from "./iam/role.list.ts"
 
 // Events
 export * from "./events/events.fetch-time-buckets-by-names.ts"

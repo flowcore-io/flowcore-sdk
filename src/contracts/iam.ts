@@ -4,16 +4,16 @@ export const RoleSchema: TObject<{
   id: TString
   organizationId: TString
   name: TString
-  description: TString
+  description: TOptional<TString>
   flowcoreManaged: TOptional<TBoolean>
-  frn: TString
+  frn: TOptional<TString>
 }> = Type.Object({
   id: Type.String(),
   organizationId: Type.String(),
   name: Type.String(),
-  description: Type.String(),
+  description: Type.Optional(Type.String()),
   flowcoreManaged: Type.Optional(Type.Boolean()),
-  frn: Type.String(),
+  frn: Type.Optional(Type.String()),
 })
 
 export type Role = Omit<Static<typeof RoleSchema>, "organizationId"> & {
