@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.24.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.24.0...v1.24.1) (2025-03-31)
+
+
+### Bug Fixes
+
+* add role list command ([9d7909e](https://github.com/flowcore-io/flowcore-sdk/commit/9d7909ea4cce70ca173715fb6ac5dd4dc799015c))
+* add role list command ([c7f5695](https://github.com/flowcore-io/flowcore-sdk/commit/c7f56958426e86fc753742d3390dcd7225cbcc78))
+
 ## [1.24.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.23.0...v1.24.0) (2025-03-31)
 
 
