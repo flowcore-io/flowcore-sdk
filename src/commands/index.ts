@@ -44,6 +44,14 @@ export * from "./event-type/event-type.request-truncate.ts"
 export * from "./event-type/event-type.update.ts"
 export * from "./event-type/event-type.info.ts"
 
+// IAM
+export * from "./iam/api-key-role-association.create.ts"
+export * from "./iam/api-key-role-association.delete.ts"
+export * from "./iam/api-key-role-association.list.ts"
+export * from "./iam/user-role-association.create.ts"
+export * from "./iam/user-role-association.delete.ts"
+export * from "./iam/user-role-association.list.ts"
+
 // Events
 export * from "./events/events.fetch-time-buckets-by-names.ts"
 export * from "./events/events.fetch.ts"
