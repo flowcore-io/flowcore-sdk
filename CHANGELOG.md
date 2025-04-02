@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.24.3](https://github.com/flowcore-io/flowcore-sdk/compare/v1.24.2...v1.24.3) (2025-04-02)
+
+
+### Bug Fixes
+
+* **commands:** :poop: add debug logs for dedicated base URL retrieval ([af97d4c](https://github.com/flowcore-io/flowcore-sdk/commit/af97d4c90c48f87a4be5154d1bc120d9e3559d7c))
+
 ## [1.24.2](https://github.com/flowcore-io/flowcore-sdk/compare/v1.24.1...v1.24.2) (2025-04-02)
 
 
