@@ -43,12 +43,16 @@ export abstract class Command<Input, Output> {
       return null
     }
 
+    console.log("getDedicatedBaseUrl", this.dedicatedSubdomain)
+
     const inputTenant = typeof this.input === "object" && this.input !== null && "tenant" in this.input &&
       typeof this.input.tenant === "string" && this.input.tenant
 
     if (!inputTenant) {
       return null
     }
+
+    console.log("getDedicatedBaseUrl", inputTenant)
 
     let tenant = tenantCache.get(inputTenant)
 
