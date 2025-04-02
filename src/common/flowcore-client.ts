@@ -84,8 +84,9 @@ export class FlowcoreClient {
   private async innerExecute<Input, Output>(
     command: Command<Input, Output>,
     retryCount: number = 0,
+    direct?: boolean,
   ): Promise<Output> {
-    const request = await command.getRequest(this)
+    const request = await command.getRequest(this, direct)
 
     if (request.customExecute) {
       return request.customExecute(this) as Promise<Output>
@@ -123,7 +124,7 @@ export class FlowcoreClient {
       if (request.retryOnFailure && this.options.retry && retryCount < this.options.retry.maxRetries) {
         const delay = this.options.retry.delay
         await new Promise((resolve) => setTimeout(resolve, delay))
-        return this.innerExecute(command, retryCount + 1)
+        return this.innerExecute(command, retryCount + 1, direct)
       }
       const message = error instanceof Error ? error.message : "Unknown error"
       throw new ClientError(`Failed to execute command: ${message}`, 0, command.constructor.name, {
@@ -140,7 +141,7 @@ export class FlowcoreClient {
       ) {
         const delay = this.options.retry.delay
         await new Promise((resolve) => setTimeout(resolve, delay))
-        return this.innerExecute(command, retryCount + 1)
+        return this.innerExecute(command, retryCount + 1, direct)
       }
       const body = await response.json().catch(() => undefined)
       const commandName = command.constructor.name
@@ -167,8 +168,8 @@ export class FlowcoreClient {
   /**
    * Execute a command
    */
-  execute<Input, Output>(command: Command<Input, Output>): Promise<Output> {
-    return this.innerExecute(command, 0)
+  execute<Input, Output>(command: Command<Input, Output>, direct?: boolean): Promise<Output> {
+    return this.innerExecute(command, 0, direct)
   }
 
   /**

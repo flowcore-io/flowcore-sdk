@@ -22,7 +22,7 @@ export abstract class CustomCommand<Input, Output> extends Command<Input, Output
    * Get the request object
    */
   // deno-lint-ignore require-await
-  public override async getRequest(_client: FlowcoreClient): Promise<{
+  public override async getRequest(_client: FlowcoreClient, direct?: boolean): Promise<{
     allowedModes: ("apiKey" | "bearer")[]
     body: string | Record<string, unknown> | Array<unknown> | undefined
     headers: Record<string, string>
@@ -35,7 +35,7 @@ export abstract class CustomCommand<Input, Output> extends Command<Input, Output
     retryOnFailure: boolean
   }> {
     return {
-      ...super.getRequest(_client),
+      ...super.getRequest(_client, direct),
       customExecute: this.customExecute.bind(this),
     }
   }

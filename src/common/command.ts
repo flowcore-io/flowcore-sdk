@@ -132,7 +132,7 @@ export abstract class Command<Input, Output> {
   /**
    * Get the request object
    */
-  public async getRequest(client: FlowcoreClient): Promise<{
+  public async getRequest(client: FlowcoreClient, direct?: boolean): Promise<{
     allowedModes: ("apiKey" | "bearer")[]
     body: string | Record<string, unknown> | Array<unknown> | undefined
     headers: Record<string, string>
@@ -149,7 +149,7 @@ export abstract class Command<Input, Output> {
       allowedModes: this.allowedModes,
       body: this.getBody(),
       headers: this.getHeaders(),
-      baseUrl: (await this.getDedicatedBaseUrl(client)) ?? this.getBaseUrl(),
+      baseUrl: direct ? this.getBaseUrl() : (await this.getDedicatedBaseUrl(client)) ?? this.getBaseUrl(),
       path: this.getPath(),
       method: this.getMethod(),
       parseResponse: this.parseResponse.bind(this),
