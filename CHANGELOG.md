@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.24.2](https://github.com/flowcore-io/flowcore-sdk/compare/v1.24.1...v1.24.2) (2025-04-02)
+
+
+### Bug Fixes
+
+* **command:** :art: update getRequest method to include direct parameter ([dcb9ac9](https://github.com/flowcore-io/flowcore-sdk/commit/dcb9ac9a4a08935547d18df68c114dbdafbf0412))
+
 ## [1.24.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.24.0...v1.24.1) (2025-03-31)
 
 
