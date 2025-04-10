@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.26.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.26.0...v1.26.1) (2025-04-10)
+
+
+### Bug Fixes
+
+* **ai-agent-coordinator:** :art: improve class formatting in command files ([5d574fb](https://github.com/flowcore-io/flowcore-sdk/commit/5d574fb31a2ee793aff32c7a2912e600276ea5e4))
+* **ai-agent-coordinator:** :art: remove unnecessary interface implementation in command classes ([18a26de](https://github.com/flowcore-io/flowcore-sdk/commit/18a26dee0a96ebdb014478f97c2341143dac7aaa))
+
 ## [1.26.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.25.0...v1.26.0) (2025-04-10)
 
 
