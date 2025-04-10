@@ -9,6 +9,7 @@
     "jsr:@std/assert@0.226": "0.226.0",
     "jsr:@std/assert@^1.0.10": "1.0.11",
     "jsr:@std/assert@^1.0.6": "1.0.9",
+    "jsr:@std/async@*": "1.0.12",
     "jsr:@std/bytes@0.223": "0.223.0",
     "jsr:@std/dotenv@*": "0.225.3",
     "jsr:@std/fmt@0.223": "0.223.0",
@@ -78,6 +79,9 @@
       "dependencies": [
         "jsr:@std/internal"
       ]
+    },
+    "@std/async@1.0.12": {
+      "integrity": "d1bfcec459e8012846fe4e38dfc4241ab23240ecda3d8d6dfcf6d81a632e803d"
     },
     "@std/bytes@0.223.0": {
       "integrity": "84b75052cd8680942c397c2631318772b295019098f40aac5c36cead4cba51a8"
