@@ -1,4 +1,3 @@
-import type { Command } from "../../common/command.ts"
 import { Command as BaseCommandClass } from "../../common/command.ts"
 import type { ContextUpdateResponse } from "../../contracts/ai-agent-coordinator.ts"
 
@@ -24,8 +23,7 @@ export type ContextRemoveItemCommandOutput = ContextUpdateResponse
  * Command to remove a specific item from the context of a conversation.
  */
 export class ContextRemoveItemCommand
-  extends BaseCommandClass<ContextRemoveItemCommandInput, ContextRemoveItemCommandOutput>
-  implements Command<ContextRemoveItemCommandInput, ContextRemoveItemCommandOutput> {
+  extends BaseCommandClass<ContextRemoveItemCommandInput, ContextRemoveItemCommandOutput> {
   constructor(input: ContextRemoveItemCommandInput) {
     super(input)
   }

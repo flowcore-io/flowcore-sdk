@@ -1,4 +1,3 @@
-import type { Command } from "../../common/command.ts"
 import { Command as BaseCommandClass } from "../../common/command.ts"
 import type { Conversation } from "../../contracts/ai-agent-coordinator.ts"
 import type { ClientError } from "../../exceptions/client-error.ts"
@@ -23,8 +22,7 @@ export type ConversationGetCommandOutput = Conversation
 /**
  * Command to fetch the details of a specific conversation by its ID.
  */
-export class ConversationGetCommand extends BaseCommandClass<ConversationGetCommandInput, ConversationGetCommandOutput>
-  implements Command<ConversationGetCommandInput, ConversationGetCommandOutput> {
+export class ConversationGetCommand extends BaseCommandClass<ConversationGetCommandInput, ConversationGetCommandOutput> {
   constructor(input: ConversationGetCommandInput) {
     super(input)
   }

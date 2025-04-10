@@ -1,4 +1,3 @@
-import type { Command } from "../../common/command.ts"
 import { Command as BaseCommandClass } from "../../common/command.ts"
 import type { AddContextItem, ContextUpdateResponse } from "../../contracts/ai-agent-coordinator.ts"
 
@@ -24,7 +23,7 @@ export type ContextAddItemCommandOutput = ContextUpdateResponse
  * Command to add one or more items to the context of a specific conversation.
  */
 export class ContextAddItemCommand extends BaseCommandClass<ContextAddItemCommandInput, ContextAddItemCommandOutput>
-  implements Command<ContextAddItemCommandInput, ContextAddItemCommandOutput> {
+  {
   constructor(input: ContextAddItemCommandInput) {
     super(input)
   }

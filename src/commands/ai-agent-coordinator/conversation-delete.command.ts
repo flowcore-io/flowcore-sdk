@@ -1,4 +1,3 @@
-import type { Command } from "../../common/command.ts"
 import { Command as BaseCommandClass } from "../../common/command.ts"
 import type { ConversationDeleteResponse } from "../../contracts/ai-agent-coordinator.ts"
 
@@ -22,8 +21,7 @@ export type ConversationDeleteCommandOutput = ConversationDeleteResponse
  * Command to delete a specific conversation by its ID.
  */
 export class ConversationDeleteCommand
-  extends BaseCommandClass<ConversationDeleteCommandInput, ConversationDeleteCommandOutput>
-  implements Command<ConversationDeleteCommandInput, ConversationDeleteCommandOutput> {
+  extends BaseCommandClass<ConversationDeleteCommandInput, ConversationDeleteCommandOutput> {
   constructor(input: ConversationDeleteCommandInput) {
     super(input)
   }

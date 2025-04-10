@@ -1,4 +1,3 @@
-import type { Command } from "../../common/command.ts"
 import { Command as BaseCommandClass } from "../../common/command.ts"
 import type { ConversationListResponse, ConversationMetadata } from "../../contracts/ai-agent-coordinator.ts"
 
@@ -20,8 +19,7 @@ export type ConversationListCommandOutput = ConversationMetadata[]
  * Command to list all conversations accessible by the user.
  */
 export class ConversationListCommand
-  extends BaseCommandClass<ConversationListCommandInput, ConversationListCommandOutput>
-  implements Command<ConversationListCommandInput, ConversationListCommandOutput> {
+  extends BaseCommandClass<ConversationListCommandInput, ConversationListCommandOutput> {
   constructor() {
     super({})
   }
