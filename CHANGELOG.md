@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.26.3](https://github.com/flowcore-io/flowcore-sdk/compare/v1.26.2...v1.26.3) (2025-04-10)
+
+
+### Bug Fixes
+
+* **ai-agent-coordinator:** :art: update WebSocket path format in conversation stream command ([2765218](https://github.com/flowcore-io/flowcore-sdk/commit/276521843729dbbc3755fd63b923e59b3066f9a7))
+* **websocket-client:** :art: improve WebSocket URL construction and logging ([9d2ca4e](https://github.com/flowcore-io/flowcore-sdk/commit/9d2ca4e0570cd38e1af137c7520ec692c0f972aa))
+
 ## [1.26.2](https://github.com/flowcore-io/flowcore-sdk/compare/v1.26.1...v1.26.2) (2025-04-10)
 
 
