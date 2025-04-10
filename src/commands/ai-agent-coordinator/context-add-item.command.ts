@@ -22,8 +22,7 @@ export type ContextAddItemCommandOutput = ContextUpdateResponse
 /**
  * Command to add one or more items to the context of a specific conversation.
  */
-export class ContextAddItemCommand extends BaseCommandClass<ContextAddItemCommandInput, ContextAddItemCommandOutput>
-  {
+export class ContextAddItemCommand extends BaseCommandClass<ContextAddItemCommandInput, ContextAddItemCommandOutput> {
   constructor(input: ContextAddItemCommandInput) {
     super(input)
   }

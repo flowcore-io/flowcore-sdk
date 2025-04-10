@@ -22,7 +22,8 @@ export type ConversationGetCommandOutput = Conversation
 /**
  * Command to fetch the details of a specific conversation by its ID.
  */
-export class ConversationGetCommand extends BaseCommandClass<ConversationGetCommandInput, ConversationGetCommandOutput> {
+export class ConversationGetCommand
+  extends BaseCommandClass<ConversationGetCommandInput, ConversationGetCommandOutput> {
   constructor(input: ConversationGetCommandInput) {
     super(input)
   }
