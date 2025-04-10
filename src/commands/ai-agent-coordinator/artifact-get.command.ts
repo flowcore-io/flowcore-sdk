@@ -1,6 +1,6 @@
-import { Type } from "@sinclair/typebox"
+import { Type, type TObject } from "@sinclair/typebox"
 import { Command } from "../../common/command.ts"
-import { ClientError } from "../../exceptions/client-error.ts"
+import type { ClientError } from "../../exceptions/client-error.ts"
 import { NotFoundException } from "../../exceptions/not-found.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 
@@ -12,7 +12,7 @@ export interface ArtifactGetCommandInput {
  * Represents the structure of the artifact returned by the API.
  * Based on the Swagger spec example.
  */
-const ArtifactSchema = Type.Object({
+const ArtifactSchema: TObject = Type.Object({
   artifactId: Type.String({ example: "artifact_code_123" }),
   artifactType: Type.Union([
     Type.Literal("code"),
@@ -63,4 +63,4 @@ export class ArtifactGetCommand extends Command<ArtifactGetCommandInput, Artifac
     }
     throw error
   }
-} 
+}
