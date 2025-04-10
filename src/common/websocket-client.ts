@@ -150,7 +150,11 @@ export class WebSocketClient {
         throw new Error("Invalid authentication configuration.")
       }
 
-      const streamUrl = `${baseUrl}${pathSegment}?${urlParams.toString()}` // Construct URL from command parts
+      // Ensure exactly one slash between base URL and path segment
+      const cleanedBaseUrl = baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl
+      const cleanedPathSegment = pathSegment.startsWith("/") ? pathSegment.slice(1) : pathSegment
+      const streamUrl = `${cleanedBaseUrl}/${cleanedPathSegment}?${urlParams.toString()}` // Construct URL from command parts
+
       this.logger.debug(`Connecting to WebSocket URL: ${streamUrl}`)
       this.webSocket = this.webSocketFactory(streamUrl)
 
@@ -182,7 +186,10 @@ export class WebSocketClient {
       // Use potentially overridden base URL in logging
       const baseUrl = this.overrideBaseUrl ?? this.currentCommand?.getWebSocketBaseUrl()
       const pathSegment = this.currentCommand?.getWebSocketPathSegment(this.currentConfig)
-      this.logger.info(`WebSocket connection opened: ${baseUrl}${pathSegment}`)
+      const logUrl = baseUrl && pathSegment
+        ? `${baseUrl.replace(/\/?$/, "/")}${pathSegment.replace(/^\/?/, "")}`
+        : "(unknown URL)"
+      this.logger.info(`WebSocket connection opened: ${logUrl}`)
       this.reconnectInterval = this.options.reconnectInterval
       this.reconnectAttempts = 0
     }
@@ -223,10 +230,12 @@ export class WebSocketClient {
       // Use potentially overridden base URL in logging
       const baseUrl = this.overrideBaseUrl ?? this.currentCommand?.getWebSocketBaseUrl()
       const pathSegment = this.currentCommand?.getWebSocketPathSegment(this.currentConfig)
+      const logUrl = baseUrl && pathSegment
+        ? `${baseUrl.replace(/\/?$/, "/")}${pathSegment.replace(/^\/?/, "")}`
+        : "(unknown URL)"
       this.logger.info(
-        `WebSocket connection closed: ${baseUrl}${pathSegment} Code [${event.code}], Reason: ${
-          event.reason || "No reason given"
-        }. Was open: ${wasOpen}`,
+        `WebSocket connection closed: ${logUrl} Code [${event.code}], Reason: ${event.reason || "No reason given"}
+. Was open: ${wasOpen}`,
       )
       if (wasOpen && event.code !== 1000 && this.currentCommand) { // Only reconnect if command is still set
         this.attemptReconnect()
@@ -242,7 +251,10 @@ export class WebSocketClient {
       // Use potentially overridden base URL in logging
       const baseUrl = this.overrideBaseUrl ?? this.currentCommand?.getWebSocketBaseUrl()
       const pathSegment = this.currentCommand?.getWebSocketPathSegment(this.currentConfig)
-      this.logger.error(`WebSocket encountered an error for stream: ${baseUrl}${pathSegment}.`)
+      const logUrl = baseUrl && pathSegment
+        ? `${baseUrl.replace(/\/?$/, "/")}${pathSegment.replace(/^\/?/, "")}`
+        : "(unknown URL)"
+      this.logger.error(`WebSocket encountered an error for stream: ${logUrl}.`)
       if (
         this.webSocket.readyState !== WebSocket.CLOSED &&
         this.webSocket.readyState !== WebSocket.CLOSING
@@ -272,9 +284,12 @@ export class WebSocketClient {
     // Use potentially overridden base URL
     const baseUrl = this.overrideBaseUrl ?? this.currentCommand.getWebSocketBaseUrl()
     const pathSegment = this.currentCommand.getWebSocketPathSegment(this.currentConfig)
+    const logUrl = baseUrl && pathSegment
+      ? `${baseUrl.replace(/\/?$/, "/")}${pathSegment.replace(/^\/?/, "")}`
+      : "(unknown URL)"
     if (this.options.maxReconnects && this.reconnectAttempts >= this.options.maxReconnects) {
       this.logger.error(
-        `Max reconnect attempts (${this.reconnectAttempts}/${this.options.maxReconnects}) reached. Giving up: ${baseUrl}${pathSegment}`,
+        `Max reconnect attempts (${this.reconnectAttempts}/${this.options.maxReconnects}) reached. Giving up: ${logUrl}`,
       )
       if (!this.internalSubject.closed) this.internalSubject.complete()
       this.currentCommand = null
@@ -289,7 +304,7 @@ export class WebSocketClient {
       `Attempting reconnection ${this.reconnectAttempts}${
         this.options.maxReconnects ? `/${this.options.maxReconnects}` : ""
       }
-         for ${baseUrl}${pathSegment} in ${this.reconnectInterval} ms...`,
+         for ${logUrl} in ${this.reconnectInterval} ms...`,
     )
 
     setTimeout(async () => { // Keep timeout async

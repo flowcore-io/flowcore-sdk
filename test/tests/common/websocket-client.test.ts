@@ -137,7 +137,8 @@ describe("WebSocketClient", () => { // Updated describe block
     assertExists(activeStream)
     assertEquals(mockWebSocketInstances.length, 1)
     const instance = mockWebSocketInstances[0]
-    const expectedUrl = `wss://ai-coordinator.api.flowcore.io/stream/${testConversationId}?token=test-bearer-token`
+    const expectedUrl =
+      `wss://ai-coordinator.api.flowcore.io/api/v1/stream/${testConversationId}?token=test-bearer-token`
     assertEquals(instance.url, expectedUrl)
   })
 
@@ -148,7 +149,7 @@ describe("WebSocketClient", () => { // Updated describe block
     assertEquals(mockWebSocketInstances.length, 1)
     const instance = mockWebSocketInstances[0]
     const expectedUrl =
-      `wss://ai-coordinator.api.flowcore.io/stream/${testConversationId}?api_key=test-api-key&api_key_id=test-api-key-id`
+      `wss://ai-coordinator.api.flowcore.io/api/v1/stream/${testConversationId}?api_key=test-api-key&api_key_id=test-api-key-id`
     assertEquals(instance.url, expectedUrl)
   })
 
