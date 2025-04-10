@@ -41,14 +41,17 @@ export class ConversationStreamCommand
   }
 
   /** Get the WebSocket path segment. */
-  getWebSocketPathSegment(config: ConversationStreamConfig): string {
-    // Updated path segment based on likely API structure
-    return `/api/v1/stream/conversations/${config.conversationId}`
+  getWebSocketPathSegment(): string {
+    // Path includes the conversation ID
+    return `/stream/${this.config.conversationId}`
   }
 
   /** Serializer function for outgoing payloads. */
   serializeSendPayload(payload: ConversationStreamSendPayload): string {
-    // Default JSON serialization
-    return JSON.stringify(payload)
+    // Send a structured message with type and payload
+    return JSON.stringify({
+      type: "message", // Example type, adjust as needed
+      payload: payload, // Send the original payload nested
+    })
   }
 }

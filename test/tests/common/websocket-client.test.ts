@@ -6,14 +6,14 @@ import type { Buffer } from "node:buffer"
 import type { Subscription } from "rxjs"
 
 import {
-  type ActiveStreamInterface,
-  type ClientOptions,
-  ConversationStreamCommand, // Use the concrete command
-  type ConversationStreamConfig,
-  type ConversationStreamSendPayload,
-  type StreamChunk,
-  WebSocketClient, // Renamed client
-  type WebSocketClientOptions,
+    type ActiveStreamInterface,
+    type ClientOptions,
+    ConversationStreamCommand, // Use the concrete command
+    type ConversationStreamConfig,
+    type ConversationStreamSendPayload,
+    type StreamChunk,
+    WebSocketClient, // Renamed client
+    type WebSocketClientOptions,
 } from "../../../src/mod.ts"
 import { defaultLogger } from "../../../src/utils/logger.ts"
 
@@ -138,7 +138,7 @@ describe("WebSocketClient", () => { // Updated describe block
     assertEquals(mockWebSocketInstances.length, 1)
     const instance = mockWebSocketInstances[0]
     const expectedUrl =
-      `wss://ai-coordinator.api.flowcore.io/api/v1/stream/conversations/${testConversationId}?token=test-bearer-token`
+      `wss://ai-coordinator.api.flowcore.io/stream/${testConversationId}?token=test-bearer-token`
     assertEquals(instance.url, expectedUrl)
   })
 
@@ -149,7 +149,7 @@ describe("WebSocketClient", () => { // Updated describe block
     assertEquals(mockWebSocketInstances.length, 1)
     const instance = mockWebSocketInstances[0]
     const expectedUrl =
-      `wss://ai-coordinator.api.flowcore.io/api/v1/stream/conversations/${testConversationId}?api_key=test-api-key&api_key_id=test-api-key-id`
+      `wss://ai-coordinator.api.flowcore.io/stream/${testConversationId}?api_key=test-api-key&api_key_id=test-api-key-id`
     assertEquals(instance.url, expectedUrl)
   })
 
@@ -226,7 +226,11 @@ describe("WebSocketClient", () => { // Updated describe block
 
     assertEquals(success, true)
     assertEquals(sendSpy.calls.length, 1)
-    assertEquals(sendSpy.calls[0].args[0], JSON.stringify(message))
+    const expectedSerializedPayload = JSON.stringify({
+      type: "message",
+      payload: message,
+    })
+    assertEquals(sendSpy.calls[0].args[0], expectedSerializedPayload)
   })
 
   it("output$ should complete on normal close (code 1000)", async () => {
