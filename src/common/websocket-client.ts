@@ -31,17 +31,17 @@ const MAX_RECONNECT_INTERVAL = 30_000
 
 // Define the expected WebSocket interface subset used by the client
 interface MinimalWebSocket {
-    readyState: number;
-    onopen: (() => void) | null;
-    onmessage: ((event: { data: string | ArrayBuffer | Buffer; }) => void) | null;
-    onclose: ((event: { code: number; reason: string; wasClean: boolean; }) => void) | null;
-    onerror: ((event: Event) => void) | null;
-    send(data: string): void;
-    close(code?: number, reason?: string): void;
+  readyState: number
+  onopen: (() => void) | null
+  onmessage: ((event: { data: string | ArrayBuffer | Buffer }) => void) | null
+  onclose: ((event: { code: number; reason: string; wasClean: boolean }) => void) | null
+  onerror: ((event: Event) => void) | null
+  send(data: string): void
+  close(code?: number, reason?: string): void
 }
 
 // WebSocket constructor type
-type WebSocketFactory = (url: string) => MinimalWebSocket;
+type WebSocketFactory = (url: string) => MinimalWebSocket
 
 /**
  * Generic client for managing a single, persistent WebSocket connection based on a command.
@@ -50,8 +50,9 @@ type WebSocketFactory = (url: string) => MinimalWebSocket;
 export class WebSocketClient {
   private overrideBaseUrl: string | undefined // Field to store the override URL
   private webSocket!: MinimalWebSocket
-  private options: Required<Pick<WebSocketClientOptions, "reconnectInterval">> &
-    Pick<WebSocketClientOptions, "maxReconnects" | "logger">
+  private options:
+    & Required<Pick<WebSocketClientOptions, "reconnectInterval">>
+    & Pick<WebSocketClientOptions, "maxReconnects" | "logger">
   private logger: Logger
   private reconnectInterval: number
   private reconnectAttempts = 0
@@ -61,8 +62,8 @@ export class WebSocketClient {
   // Internal subject to push received data
   private internalSubject: Subject<StreamChunk> = new Subject<StreamChunk>()
   // Store the current command and config for reconnects and sending
-  private currentCommand: WebSocketCommand<unknown, unknown> | null = null;
-  private currentConfig: unknown | null = null;
+  private currentCommand: WebSocketCommand<unknown, unknown> | null = null
+  private currentConfig: unknown | null = null
 
   /**
    * Creates a new WebSocketClient instance.
@@ -75,11 +76,11 @@ export class WebSocketClient {
     options?: WebSocketClientOptions,
     webSocketFactory?: WebSocketFactory,
   ) {
-    this.options = { reconnectInterval: 1000, ...options };
-    this.logger = options?.logger ?? defaultLogger;
-    this.reconnectInterval = this.options.reconnectInterval;
-    this.webSocketFactory = webSocketFactory ?? ((url) => new WebSocket(url) as unknown as MinimalWebSocket);
-    this.overrideBaseUrl = undefined; // Initialize override URL
+    this.options = { reconnectInterval: 1000, ...options }
+    this.logger = options?.logger ?? defaultLogger
+    this.reconnectInterval = this.options.reconnectInterval
+    this.webSocketFactory = webSocketFactory ?? ((url) => new WebSocket(url) as unknown as MinimalWebSocket)
+    this.overrideBaseUrl = undefined // Initialize override URL
 
     if ("getBearerToken" in authOptions === false && ("apiKey" in authOptions === false)) {
       throw new Error("Invalid authOptions: Must provide either getBearerToken or apiKey/apiKeyId")
@@ -91,8 +92,8 @@ export class WebSocketClient {
    * @param baseUrl - The new base URL to use (e.g., "wss://staging-server.api.flowcore.io").
    */
   setBaseUrl(baseUrl: string): void {
-    this.logger.info(`WebSocket base URL overridden to: ${baseUrl}`);
-    this.overrideBaseUrl = baseUrl;
+    this.logger.info(`WebSocket base URL overridden to: ${baseUrl}`)
+    this.overrideBaseUrl = baseUrl
   }
 
   /**
@@ -117,24 +118,24 @@ export class WebSocketClient {
    */
   // Using generic types for the command
   async connect<Config, SendPayload>(
-    command: WebSocketCommand<Config, SendPayload>
+    command: WebSocketCommand<Config, SendPayload>,
   ): Promise<ActiveStreamInterface<SendPayload>> {
     if (this._isConnecting || this._isOpen) {
       this.logger.info("Disconnecting existing stream before starting new one.")
-      this.disconnect(); // Ensure clean state
+      this.disconnect() // Ensure clean state
       // Add a small delay to allow disconnect process to settle if needed
-      await new Promise(resolve => setTimeout(resolve, 50));
+      await new Promise((resolve) => setTimeout(resolve, 50))
     }
 
-    this.currentCommand = command as WebSocketCommand<unknown, unknown>; // Store command (cast needed)
-    const config = command.getConfig();
-    this.currentConfig = config; // Store config
+    this.currentCommand = command as WebSocketCommand<unknown, unknown> // Store command (cast needed)
+    const config = command.getConfig()
+    this.currentConfig = config // Store config
 
     this._isConnecting = true
     // Use override URL if set, otherwise use command's base URL
-    const baseUrl = this.overrideBaseUrl ?? command.getWebSocketBaseUrl();
-    const pathSegment = command.getWebSocketPathSegment(config); // Get path segment from command
-    this.logger.info(`Attempting to connect stream: ${baseUrl}${pathSegment}`);
+    const baseUrl = this.overrideBaseUrl ?? command.getWebSocketBaseUrl()
+    const pathSegment = command.getWebSocketPathSegment(config) // Get path segment from command
+    this.logger.info(`Attempting to connect stream: ${baseUrl}${pathSegment}`)
 
     try {
       const urlParams = new URLSearchParams()
@@ -160,15 +161,14 @@ export class WebSocketClient {
         output$: this.internalSubject.asObservable(),
         send: (payload: SendPayload): boolean => this.sendMessage(payload),
         disconnect: (): void => this.disconnect(),
-      };
-
+      }
     } catch (error) {
       this.logger.error(`Failed to initiate connection: ${error}`)
       this._isConnecting = false
-      this.currentCommand = null; // Clear command/config on failure
-      this.currentConfig = null;
+      this.currentCommand = null // Clear command/config on failure
+      this.currentConfig = null
       // Rethrow or handle differently? For now, rethrow.
-      throw error; // Make connect promise reject on failure
+      throw error // Make connect promise reject on failure
     }
   }
 
@@ -180,9 +180,9 @@ export class WebSocketClient {
       this._isOpen = true
       this._isConnecting = false
       // Use potentially overridden base URL in logging
-      const baseUrl = this.overrideBaseUrl ?? this.currentCommand?.getWebSocketBaseUrl();
-      const pathSegment = this.currentCommand?.getWebSocketPathSegment(this.currentConfig);
-      this.logger.info(`WebSocket connection opened: ${baseUrl}${pathSegment}`);
+      const baseUrl = this.overrideBaseUrl ?? this.currentCommand?.getWebSocketBaseUrl()
+      const pathSegment = this.currentCommand?.getWebSocketPathSegment(this.currentConfig)
+      this.logger.info(`WebSocket connection opened: ${baseUrl}${pathSegment}`)
       this.reconnectInterval = this.options.reconnectInterval
       this.reconnectAttempts = 0
     }
@@ -221,26 +221,28 @@ export class WebSocketClient {
       this._isOpen = false
       this._isConnecting = false
       // Use potentially overridden base URL in logging
-      const baseUrl = this.overrideBaseUrl ?? this.currentCommand?.getWebSocketBaseUrl();
-      const pathSegment = this.currentCommand?.getWebSocketPathSegment(this.currentConfig);
+      const baseUrl = this.overrideBaseUrl ?? this.currentCommand?.getWebSocketBaseUrl()
+      const pathSegment = this.currentCommand?.getWebSocketPathSegment(this.currentConfig)
       this.logger.info(
-        `WebSocket connection closed: ${baseUrl}${pathSegment} Code [${event.code}], Reason: ${event.reason || "No reason given"}. Was open: ${wasOpen}`,
+        `WebSocket connection closed: ${baseUrl}${pathSegment} Code [${event.code}], Reason: ${
+          event.reason || "No reason given"
+        }. Was open: ${wasOpen}`,
       )
       if (wasOpen && event.code !== 1000 && this.currentCommand) { // Only reconnect if command is still set
         this.attemptReconnect()
       } else {
-        this.logger.info(`Completing internal subject due to close event.`);
+        this.logger.info(`Completing internal subject due to close event.`)
         this.internalSubject.complete() // Complete subject on final close
-        this.currentCommand = null; // Clear state
-        this.currentConfig = null;
+        this.currentCommand = null // Clear state
+        this.currentConfig = null
       }
     }
 
     this.webSocket.onerror = () => {
       // Use potentially overridden base URL in logging
-      const baseUrl = this.overrideBaseUrl ?? this.currentCommand?.getWebSocketBaseUrl();
-      const pathSegment = this.currentCommand?.getWebSocketPathSegment(this.currentConfig);
-      this.logger.error(`WebSocket encountered an error for stream: ${baseUrl}${pathSegment}.`);
+      const baseUrl = this.overrideBaseUrl ?? this.currentCommand?.getWebSocketBaseUrl()
+      const pathSegment = this.currentCommand?.getWebSocketPathSegment(this.currentConfig)
+      this.logger.error(`WebSocket encountered an error for stream: ${baseUrl}${pathSegment}.`)
       if (
         this.webSocket.readyState !== WebSocket.CLOSED &&
         this.webSocket.readyState !== WebSocket.CLOSING
@@ -249,8 +251,8 @@ export class WebSocketClient {
       }
       // Error event usually followed by onclose, which handles completion/reconnect
       // Emit error on subject *before* close handling potentially completes it
-      this.internalSubject.error(new Error("WebSocket encountered an error"));
-    };
+      this.internalSubject.error(new Error("WebSocket encountered an error"))
+    }
   }
 
   /**
@@ -264,36 +266,38 @@ export class WebSocketClient {
       return
     }
     if (this._isConnecting) {
-      this.logger.debug("Reconnect attempt already in progress.");
-      return;
+      this.logger.debug("Reconnect attempt already in progress.")
+      return
     }
     // Use potentially overridden base URL
-    const baseUrl = this.overrideBaseUrl ?? this.currentCommand.getWebSocketBaseUrl();
-    const pathSegment = this.currentCommand.getWebSocketPathSegment(this.currentConfig);
+    const baseUrl = this.overrideBaseUrl ?? this.currentCommand.getWebSocketBaseUrl()
+    const pathSegment = this.currentCommand.getWebSocketPathSegment(this.currentConfig)
     if (this.options.maxReconnects && this.reconnectAttempts >= this.options.maxReconnects) {
       this.logger.error(
         `Max reconnect attempts (${this.reconnectAttempts}/${this.options.maxReconnects}) reached. Giving up: ${baseUrl}${pathSegment}`,
-      );
-      if (!this.internalSubject.closed) this.internalSubject.complete();
-      this.currentCommand = null;
-      this.currentConfig = null;
-      return;
+      )
+      if (!this.internalSubject.closed) this.internalSubject.complete()
+      this.currentCommand = null
+      this.currentConfig = null
+      return
     }
 
-    this.reconnectAttempts++;
-    this._isConnecting = true;
+    this.reconnectAttempts++
+    this._isConnecting = true
 
     this.logger.info(
-        `Attempting reconnection ${this.reconnectAttempts}${this.options.maxReconnects ? `/${this.options.maxReconnects}` : ""}
+      `Attempting reconnection ${this.reconnectAttempts}${
+        this.options.maxReconnects ? `/${this.options.maxReconnects}` : ""
+      }
          for ${baseUrl}${pathSegment} in ${this.reconnectInterval} ms...`,
-    );
+    )
 
     setTimeout(async () => { // Keep timeout async
       // Check if disconnect was called while waiting
       if (!this.currentCommand || !this.currentConfig) {
         this.logger.info("Reconnect cancelled as disconnect was called.")
         this._isConnecting = false // Ensure flag is reset
-        if (!this.internalSubject.closed) this.internalSubject.complete();
+        if (!this.internalSubject.closed) this.internalSubject.complete()
         return
       }
 
@@ -302,14 +306,14 @@ export class WebSocketClient {
         const urlParams = new URLSearchParams()
         // --- Reuse auth logic from connect() ---
         if ("getBearerToken" in this.authOptions && this.authOptions.getBearerToken) {
-            const token = await this.authOptions.getBearerToken();
-            if (!token) throw new Error("Reconnect failed: Could not get bearer token");
-            urlParams.set("token", token);
+          const token = await this.authOptions.getBearerToken()
+          if (!token) throw new Error("Reconnect failed: Could not get bearer token")
+          urlParams.set("token", token)
         } else if ("apiKey" in this.authOptions && this.authOptions.apiKey && this.authOptions.apiKeyId) {
-            urlParams.set("api_key", this.authOptions.apiKey);
-            urlParams.set("api_key_id", this.authOptions.apiKeyId);
+          urlParams.set("api_key", this.authOptions.apiKey)
+          urlParams.set("api_key_id", this.authOptions.apiKeyId)
         } else {
-            throw new Error("Reconnect failed: Invalid authentication configuration.");
+          throw new Error("Reconnect failed: Invalid authentication configuration.")
         }
         // --- End auth logic ---
 
@@ -320,12 +324,12 @@ export class WebSocketClient {
         // Connecting flag will be reset in onopen/onerror/onclose
         this.setupEventHandlers()
       } catch (error) {
-        this.logger.error(`Reconnect attempt connection failed: ${error}`);
-        this._isConnecting = false; // Reset connection flag on immediate error
+        this.logger.error(`Reconnect attempt connection failed: ${error}`)
+        this._isConnecting = false // Reset connection flag on immediate error
         // Error during reconnect setup, trigger another attempt after backoff
         // We might get stuck here if auth always fails, consider adding specific error handling
         this.reconnectInterval = Math.min(MAX_RECONNECT_INTERVAL, this.reconnectInterval * 2) // Apply backoff before retrying
-        this.attemptReconnect();
+        this.attemptReconnect()
       }
     }, this.reconnectInterval)
 
@@ -338,18 +342,18 @@ export class WebSocketClient {
    * @param message - The message object to send (e.g., { content: "user input" }).
    */
   private sendMessage<SendPayload>(payload: SendPayload): boolean {
-    const openState = 1; // WebSocket.OPEN is typically 1
+    const openState = 1 // WebSocket.OPEN is typically 1
     if (!this._isOpen || this.webSocket.readyState !== openState || !this.currentCommand) {
       this.logger.warn("Cannot send message: WebSocket is not open or command not set.")
       return false
     }
     try {
       // Use command's serializer or default to JSON.stringify
-      const serializer = this.currentCommand.serializeSendPayload ?? JSON.stringify;
-      const dataToSend = serializer(payload);
-      this.webSocket.send(dataToSend);
-      this.logger.debug(`Sent message: ${dataToSend}`);
-      return true;
+      const serializer = this.currentCommand.serializeSendPayload ?? JSON.stringify
+      const dataToSend = serializer(payload)
+      this.webSocket.send(dataToSend)
+      this.logger.debug(`Sent message: ${dataToSend}`)
+      return true
     } catch (error) {
       this.logger.error(`Failed to send message: ${error}`)
       return false
@@ -361,9 +365,9 @@ export class WebSocketClient {
    */
   disconnect() {
     this.logger.info("Disconnect called by user.")
-    const commandToClear = this.currentCommand; // Store ref before clearing
+    const commandToClear = this.currentCommand // Store ref before clearing
     this.currentCommand = null // Prevent reconnects
-    this.currentConfig = null;
+    this.currentConfig = null
 
     if (this.webSocket) {
       if (this._isOpen || this._isConnecting) {
@@ -379,8 +383,8 @@ export class WebSocketClient {
 
     // Complete the subject if it hasn't been completed by onclose
     if (commandToClear && !this.internalSubject.closed) {
-        this.logger.info("Completing internal subject due to disconnect call.");
-        this.internalSubject.complete();
+      this.logger.info("Completing internal subject due to disconnect call.")
+      this.internalSubject.complete()
     }
   }
 

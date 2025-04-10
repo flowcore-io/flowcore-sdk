@@ -19,9 +19,9 @@ export type ConversationListCommandOutput = ConversationMetadata[]
 /**
  * Command to list all conversations accessible by the user.
  */
-export class ConversationListCommand extends BaseCommandClass<ConversationListCommandInput, ConversationListCommandOutput>
-  implements Command<ConversationListCommandInput, ConversationListCommandOutput>
-{
+export class ConversationListCommand
+  extends BaseCommandClass<ConversationListCommandInput, ConversationListCommandOutput>
+  implements Command<ConversationListCommandInput, ConversationListCommandOutput> {
   constructor() {
     super({})
   }
@@ -46,4 +46,4 @@ export class ConversationListCommand extends BaseCommandClass<ConversationListCo
       throw new Error("Invalid response format for ConversationListCommand")
     }
   }
-} 
+}

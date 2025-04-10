@@ -25,8 +25,7 @@ export type ContextRemoveItemCommandOutput = ContextUpdateResponse
  */
 export class ContextRemoveItemCommand
   extends BaseCommandClass<ContextRemoveItemCommandInput, ContextRemoveItemCommandOutput>
-  implements Command<ContextRemoveItemCommandInput, ContextRemoveItemCommandOutput>
-{
+  implements Command<ContextRemoveItemCommandInput, ContextRemoveItemCommandOutput> {
   constructor(input: ContextRemoveItemCommandInput) {
     super(input)
   }
@@ -55,4 +54,4 @@ export class ContextRemoveItemCommand
       throw new Error("Invalid response format for ContextRemoveItemCommand")
     }
   }
-} 
+}

@@ -1,9 +1,6 @@
 import type { Command } from "../../common/command.ts"
 import { Command as BaseCommandClass } from "../../common/command.ts"
-import type {
-  AddContextItem,
-  ContextUpdateResponse
-} from "../../contracts/ai-agent-coordinator.ts"
+import type { AddContextItem, ContextUpdateResponse } from "../../contracts/ai-agent-coordinator.ts"
 
 const service = "ai-coordinator"
 const baseUrl = `https://${service}.api.flowcore.io`
@@ -27,8 +24,7 @@ export type ContextAddItemCommandOutput = ContextUpdateResponse
  * Command to add one or more items to the context of a specific conversation.
  */
 export class ContextAddItemCommand extends BaseCommandClass<ContextAddItemCommandInput, ContextAddItemCommandOutput>
-  implements Command<ContextAddItemCommandInput, ContextAddItemCommandOutput>
-{
+  implements Command<ContextAddItemCommandInput, ContextAddItemCommandOutput> {
   constructor(input: ContextAddItemCommandInput) {
     super(input)
   }
@@ -60,4 +56,4 @@ export class ContextAddItemCommand extends BaseCommandClass<ContextAddItemComman
       throw new Error("Invalid response format for ContextAddItemCommand")
     }
   }
-} 
+}

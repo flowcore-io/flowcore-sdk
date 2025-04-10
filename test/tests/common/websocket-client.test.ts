@@ -13,7 +13,7 @@ import {
   type ConversationStreamSendPayload,
   type StreamChunk,
   WebSocketClient, // Renamed client
-  type WebSocketClientOptions
+  type WebSocketClientOptions,
 } from "../../../src/mod.ts"
 import { defaultLogger } from "../../../src/utils/logger.ts"
 
@@ -137,7 +137,8 @@ describe("WebSocketClient", () => { // Updated describe block
     assertExists(activeStream)
     assertEquals(mockWebSocketInstances.length, 1)
     const instance = mockWebSocketInstances[0]
-    const expectedUrl = `wss://ai-coordinator.api.flowcore.io/api/v1/stream/conversations/${testConversationId}?token=test-bearer-token`
+    const expectedUrl =
+      `wss://ai-coordinator.api.flowcore.io/api/v1/stream/conversations/${testConversationId}?token=test-bearer-token`
     assertEquals(instance.url, expectedUrl)
   })
 
@@ -147,7 +148,8 @@ describe("WebSocketClient", () => { // Updated describe block
     assertExists(activeStream)
     assertEquals(mockWebSocketInstances.length, 1)
     const instance = mockWebSocketInstances[0]
-    const expectedUrl = `wss://ai-coordinator.api.flowcore.io/api/v1/stream/conversations/${testConversationId}?api_key=test-api-key&api_key_id=test-api-key-id`
+    const expectedUrl =
+      `wss://ai-coordinator.api.flowcore.io/api/v1/stream/conversations/${testConversationId}?api_key=test-api-key&api_key_id=test-api-key-id`
     assertEquals(instance.url, expectedUrl)
   })
 
@@ -279,7 +281,10 @@ describe("WebSocketClient", () => { // Updated describe block
 
     let completed = false
     let receivedError: Error | null = null
-    outputSubscription = activeStream.output$.subscribe({ error: (err) => receivedError = err, complete: () => completed = true })
+    outputSubscription = activeStream.output$.subscribe({
+      error: (err) => receivedError = err,
+      complete: () => completed = true,
+    })
 
     instance1._triggerClose(1006, "Close 1")
     await delay(10) // Wait for reconnect attempt 1
@@ -323,50 +328,50 @@ describe("WebSocketClient", () => { // Updated describe block
     assertEquals(completed, true, "Observable should complete on disconnect")
   })
 
-   it("output$ should receive error on WebSocket error", async () => {
-      client = createClient(authOptionsBearer)
-      activeStream = await client.connect(testCommand)
-      assertExists(activeStream, "activeStream should be defined after connect")
-      assertExists(mockWebSocketInstances[0])
-      const instance = mockWebSocketInstances[0]
-      instance._triggerOpen()
-      await delay(0)
+  it("output$ should receive error on WebSocket error", async () => {
+    client = createClient(authOptionsBearer)
+    activeStream = await client.connect(testCommand)
+    assertExists(activeStream, "activeStream should be defined after connect")
+    assertExists(mockWebSocketInstances[0])
+    const instance = mockWebSocketInstances[0]
+    instance._triggerOpen()
+    await delay(0)
 
-      let receivedError: Error | null = null
-      let completed = false
-      outputSubscription = activeStream.output$.subscribe({
-          error: (err: unknown) => {
-              if (err instanceof Error) {
-                  receivedError = err
-              } else {
-                  console.error("Received non-Error object:", err)
-              }
-          },
-          complete: () => completed = true
-      })
-
-      const mockError = new Error("Test WebSocket Error")
-      instance._triggerError(mockError)
-
-      await delay(10)
-
-      if (!receivedError) {
-          fail("Error should have been received by observer and be an instance of Error")
-      } else {
-          assertInstanceOf(receivedError, Error)
-          assertEquals((receivedError as Error).message, "WebSocket encountered an error")
-      }
-      
-      assertEquals(client.isOpen, false)
-      assertEquals(completed, false, "Observer should not complete on error")
+    let receivedError: Error | null = null
+    let completed = false
+    outputSubscription = activeStream.output$.subscribe({
+      error: (err: unknown) => {
+        if (err instanceof Error) {
+          receivedError = err
+        } else {
+          console.error("Received non-Error object:", err)
+        }
+      },
+      complete: () => completed = true,
     })
 
-  it("should connect successfully with bearer token", () => {
-    const testConversationId = "conv-456";
-    const testConfig: ConversationStreamConfig = { conversationId: testConversationId };
-    const command = new ConversationStreamCommand(testConfig);
+    const mockError = new Error("Test WebSocket Error")
+    instance._triggerError(mockError)
 
-    const _connectPromise = client.connect(command);
+    await delay(10)
+
+    if (!receivedError) {
+      fail("Error should have been received by observer and be an instance of Error")
+    } else {
+      assertInstanceOf(receivedError, Error)
+      assertEquals((receivedError as Error).message, "WebSocket encountered an error")
+    }
+
+    assertEquals(client.isOpen, false)
+    assertEquals(completed, false, "Observer should not complete on error")
+  })
+
+  it("should connect successfully with bearer token", () => {
+    const testConversationId = "conv-456"
+    const testConfig: ConversationStreamConfig = { conversationId: testConversationId }
+    const command = new ConversationStreamCommand(testConfig)
+
+    const _connectPromise = client.connect(command)
     // ... rest of the test ...
   })
-}) 
+})

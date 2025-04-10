@@ -1,31 +1,30 @@
-import type {
-    WebSocketCommand,
-} from "../../common/websocket-command.ts";
+import type { WebSocketCommand } from "../../common/websocket-command.ts"
 
 /**
  * Configuration for the Conversation Stream.
  * Only requires the conversationId.
  */
 export interface ConversationStreamConfig {
-    conversationId: string;
+  conversationId: string
 }
 
 /**
  * Payload type for messages sent *to* the Conversation Stream.
  */
 export interface ConversationStreamSendPayload {
-    content: string;
+  content: string
 }
 
 /**
  * Command to stream conversation events for a specific agent.
  */
-export class ConversationStreamCommand implements WebSocketCommand<ConversationStreamConfig, ConversationStreamSendPayload> {
+export class ConversationStreamCommand
+  implements WebSocketCommand<ConversationStreamConfig, ConversationStreamSendPayload> {
   private config: ConversationStreamConfig
 
   constructor(config: ConversationStreamConfig) {
     if (!config.conversationId) {
-        throw new Error("conversationId is required in the config for ConversationStreamCommand");
+      throw new Error("conversationId is required in the config for ConversationStreamCommand")
     }
     this.config = config
   }
@@ -52,4 +51,4 @@ export class ConversationStreamCommand implements WebSocketCommand<ConversationS
     // Default JSON serialization
     return JSON.stringify(payload)
   }
-} 
+}

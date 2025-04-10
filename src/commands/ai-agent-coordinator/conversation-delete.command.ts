@@ -23,8 +23,7 @@ export type ConversationDeleteCommandOutput = ConversationDeleteResponse
  */
 export class ConversationDeleteCommand
   extends BaseCommandClass<ConversationDeleteCommandInput, ConversationDeleteCommandOutput>
-  implements Command<ConversationDeleteCommandInput, ConversationDeleteCommandOutput>
-{
+  implements Command<ConversationDeleteCommandInput, ConversationDeleteCommandOutput> {
   constructor(input: ConversationDeleteCommandInput) {
     super(input)
   }
@@ -53,4 +52,4 @@ export class ConversationDeleteCommand
   }
 
   // No specific error handling needed for DELETE beyond the base implementation (re-throw)
-} 
+}

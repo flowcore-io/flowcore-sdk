@@ -2,10 +2,10 @@ import { assertEquals, assertRejects } from "@std/assert"
 import { afterAll, afterEach, describe, it } from "jsr:@std/testing/bdd"
 import {
   type Conversation,
-  type ConversationMetadata,
   ConversationDeleteCommand,
   ConversationGetCommand,
   ConversationListCommand,
+  type ConversationMetadata,
   FlowcoreClient,
   NotFoundException,
 } from "../../../../src/mod.ts"
@@ -100,4 +100,4 @@ describe("AiAgentCoordinator Conversation Commands", () => {
       assertEquals(response, deleteResponse)
     })
   })
-}) 
+})

@@ -114,4 +114,4 @@ export type StreamChunk =
   | ArtifactDataChunk
   | ArtifactUrlChunk
   | ArtifactEndChunk
-  | ConversationCreatedChunk 
+  | ConversationCreatedChunk

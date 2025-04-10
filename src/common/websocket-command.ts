@@ -1,5 +1,5 @@
-import type { Observable } from "rxjs";
-import type { StreamChunk } from "../contracts/ai-agent-coordinator-stream.ts"; // Placeholder, make this generic later if needed
+import type { Observable } from "rxjs"
+import type { StreamChunk } from "../contracts/ai-agent-coordinator-stream.ts" // Placeholder, make this generic later if needed
 
 /**
  * Interface for a command that configures a WebSocket stream connection.
@@ -10,13 +10,13 @@ export interface WebSocketCommand<Config, SendPayload> {
   /**
    * Gets the configuration data needed to establish the connection.
    */
-  getConfig(): Config;
+  getConfig(): Config
 
   /**
    * Gets the base WebSocket URL (e.g., wss://server.api.flowcore.io).
    * @returns The base WebSocket URL string.
    */
-  getWebSocketBaseUrl(): string;
+  getWebSocketBaseUrl(): string
 
   /**
    * Gets the specific path segment for the WebSocket URL based on the config
@@ -24,7 +24,7 @@ export interface WebSocketCommand<Config, SendPayload> {
    * @param config - The configuration object.
    * @returns The path segment string.
    */
-  getWebSocketPathSegment(config: Config): string;
+  getWebSocketPathSegment(config: Config): string
 
   /**
    * Serializes the payload to be sent over the WebSocket.
@@ -32,7 +32,7 @@ export interface WebSocketCommand<Config, SendPayload> {
    * @param payload - The payload object to send.
    * @returns The serialized string representation.
    */
-  serializeSendPayload?(payload: SendPayload): string;
+  serializeSendPayload?(payload: SendPayload): string
 }
 
 /**
@@ -44,17 +44,17 @@ export interface ActiveStreamInterface<SendPayload> {
    * An Observable emitting the raw data chunks received from the WebSocket.
    * Consumers should filter/map this observable based on the specific stream protocol.
    */
-  output$: Observable<StreamChunk>; // Initially tied to AiStream chunks, can be made generic
+  output$: Observable<StreamChunk> // Initially tied to AiStream chunks, can be made generic
 
   /**
    * Sends a payload to the WebSocket stream.
    * @param payload - The data to send, conforming to the SendPayload type.
    * @returns True if the message was queued to be sent, false otherwise (e.g., socket not open).
    */
-  send(payload: SendPayload): boolean;
+  send(payload: SendPayload): boolean
 
   /**
    * Disconnects the WebSocket stream gracefully.
    */
-  disconnect(): void;
-} 
+  disconnect(): void
+}

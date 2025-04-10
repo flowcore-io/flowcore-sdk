@@ -2,8 +2,8 @@ import { assertEquals } from "@std/assert"
 import { afterAll, afterEach, describe, it } from "jsr:@std/testing/bdd"
 import {
   type AddContextItem,
-  type ContextItem,
   ContextAddItemCommand,
+  type ContextItem,
   ContextRemoveItemCommand,
   FlowcoreClient,
 } from "../../../../src/mod.ts"
@@ -67,4 +67,4 @@ describe("AiAgentCoordinator Context Commands", () => {
       assertEquals(response, responsePayload)
     })
   })
-}) 
+})
