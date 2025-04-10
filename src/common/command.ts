@@ -1,4 +1,4 @@
-import { TenantFetchCommand } from "../commands/tenant/tenant.fetch.ts"
+import type { Tenant } from "../contracts/tenant.ts"
 import { ClientError } from "../exceptions/client-error.ts"
 import { CommandError } from "../exceptions/command-error.ts"
 import type { FlowcoreClient } from "./flowcore-client.ts"
@@ -53,13 +53,16 @@ export abstract class Command<Input, Output> {
     let tenant = tenantCache.get(inputTenant)
 
     if (!tenant) {
+      // Dynamically import TenantFetchCommand only when needed
+      const { TenantFetchCommand } = await import("../commands/tenant/tenant.fetch.ts")
+
       tenant = await client.execute(new TenantFetchCommand({ tenant: inputTenant }))
         .catch((error) => {
           if (error instanceof ClientError && error.status === 403) {
             return {
               isDedicated: false,
               dedicated: null,
-            }
+            } as unknown as Tenant // Cast needed as we are not returning the full Tenant shape
           }
           throw error
         })
