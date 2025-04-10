@@ -338,8 +338,7 @@ export class WebSocketClient {
    * @param message - The message object to send (e.g., { content: "user input" }).
    */
   private sendMessage<SendPayload>(payload: SendPayload): boolean {
-    const ws = this.webSocket as any;
-    const openState = ws.OPEN ?? 1;
+    const openState = 1; // WebSocket.OPEN is typically 1
     if (!this._isOpen || this.webSocket.readyState !== openState || !this.currentCommand) {
       this.logger.warn("Cannot send message: WebSocket is not open or command not set.")
       return false

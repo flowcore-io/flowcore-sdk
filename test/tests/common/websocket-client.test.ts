@@ -361,12 +361,12 @@ describe("WebSocketClient", () => { // Updated describe block
       assertEquals(completed, false, "Observer should not complete on error")
     })
 
-  it("should connect successfully with bearer token", async () => {
+  it("should connect successfully with bearer token", () => {
     const testConversationId = "conv-456";
     const testConfig: ConversationStreamConfig = { conversationId: testConversationId };
     const command = new ConversationStreamCommand(testConfig);
 
-    const connectPromise = client.connect(command);
+    const _connectPromise = client.connect(command);
     // ... rest of the test ...
   })
 }) 
