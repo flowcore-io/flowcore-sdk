@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.25.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.24.4...v1.25.0) (2025-04-10)
+
+
+### Features
+
+* **ai-agent-coordinator:** :sparkles: add AI Agent Coordinator operations and conversation management commands ([fea2033](https://github.com/flowcore-io/flowcore-sdk/commit/fea203321efcd1a99191f93c987087484afae535))
+* **ai-agent-coordinator:** :sparkles: add commands for managing conversation context and metadata ([68b003c](https://github.com/flowcore-io/flowcore-sdk/commit/68b003c651467b742e81a3106a3206bfd9b45e8e))
+* **ai-agent-coordinator:** :sparkles: implement WebSocket client and conversation stream command ([63d9595](https://github.com/flowcore-io/flowcore-sdk/commit/63d95956622f30f36f731418c71384f9b2e00c9d))
+
+
+### Bug Fixes
+
+* **ai-agent-coordinator:** :art: clean up command class implementations and formatting ([875106a](https://github.com/flowcore-io/flowcore-sdk/commit/875106a38543dedc7ed6bd2c3dedc3a9b09dbe3a))
+* **ai-agent-coordinator:** :art: enhance WebSocket command structure and improve error handling ([b7f9bff](https://github.com/flowcore-io/flowcore-sdk/commit/b7f9bffba95dc28f077d2565940b3f21b0ea4e55))
+* **websocket-client:** :bug: simplify WebSocket open state handling ([6fe00ae](https://github.com/flowcore-io/flowcore-sdk/commit/6fe00ae5d07becc7d4d96cbc1fa5c02a0e76f06a))
+
 ## [1.24.4](https://github.com/flowcore-io/flowcore-sdk/compare/v1.24.3...v1.24.4) (2025-04-02)
 
 
