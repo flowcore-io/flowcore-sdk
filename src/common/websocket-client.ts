@@ -24,15 +24,10 @@ export type WebSocketClientOptions = {
   maxReconnects?: number
   /** Optional logger instance. */
   logger?: Logger
-  /** Base URL for the WebSocket endpoint (e.g., wss://server.com). Path segment from command will be appended. */
-  baseUrl?: string
-  /** Optional static path prefix before the command's path segment (e.g., /api/v1/stream). */
-  pathPrefix?: string
 }
 
 // Maximum reconnection interval in milliseconds
 const MAX_RECONNECT_INTERVAL = 30_000
-const DEFAULT_PATH_PREFIX = "/api/v1/stream" // Example default prefix
 
 // Define the expected WebSocket interface subset used by the client
 interface MinimalWebSocket {
@@ -53,8 +48,7 @@ type WebSocketFactory = (url: string) => MinimalWebSocket;
  * Handles connection lifecycle, authentication, reconnection, and message sending/receiving.
  */
 export class WebSocketClient {
-  private baseUrl: string
-  private pathPrefix: string
+  private overrideBaseUrl: string | undefined // Field to store the override URL
   private webSocket!: MinimalWebSocket
   private options: Required<Pick<WebSocketClientOptions, "reconnectInterval">> &
     Pick<WebSocketClientOptions, "maxReconnects" | "logger">
@@ -77,25 +71,28 @@ export class WebSocketClient {
    * @param webSocketFactory - Optional WebSocket factory for testing.
    */
   constructor(
-    // Removed observer from constructor - created internally
     private readonly authOptions: ClientOptions,
     options?: WebSocketClientOptions,
     webSocketFactory?: WebSocketFactory,
   ) {
     this.options = { reconnectInterval: 1000, ...options };
     this.logger = options?.logger ?? defaultLogger;
-    // Use provided baseUrl or throw error if needed, assuming AI Coordinator for default
-    this.baseUrl = options?.baseUrl ?? "wss://ai-coordinator.api.flowcore.io";
-    this.pathPrefix = options?.pathPrefix ?? DEFAULT_PATH_PREFIX;
     this.reconnectInterval = this.options.reconnectInterval;
     this.webSocketFactory = webSocketFactory ?? ((url) => new WebSocket(url) as unknown as MinimalWebSocket);
+    this.overrideBaseUrl = undefined; // Initialize override URL
 
-    if (!this.baseUrl) {
-        throw new Error("WebSocketClient requires a baseUrl in options.")
-    }
     if ("getBearerToken" in authOptions === false && ("apiKey" in authOptions === false)) {
       throw new Error("Invalid authOptions: Must provide either getBearerToken or apiKey/apiKeyId")
     }
+  }
+
+  /**
+   * Override the base URL provided by commands.
+   * @param baseUrl - The new base URL to use (e.g., "wss://staging-server.api.flowcore.io").
+   */
+  setBaseUrl(baseUrl: string): void {
+    this.logger.info(`WebSocket base URL overridden to: ${baseUrl}`);
+    this.overrideBaseUrl = baseUrl;
   }
 
   /**
@@ -134,8 +131,10 @@ export class WebSocketClient {
     this.currentConfig = config; // Store config
 
     this._isConnecting = true
-    const pathSegment = command.getStreamPathSegment(config);
-    this.logger.info(`Attempting to connect stream: ${this.pathPrefix}/${pathSegment}`);
+    // Use override URL if set, otherwise use command's base URL
+    const baseUrl = this.overrideBaseUrl ?? command.getWebSocketBaseUrl();
+    const pathSegment = command.getWebSocketPathSegment(config); // Get path segment from command
+    this.logger.info(`Attempting to connect stream: ${baseUrl}${pathSegment}`);
 
     try {
       const urlParams = new URLSearchParams()
@@ -150,7 +149,7 @@ export class WebSocketClient {
         throw new Error("Invalid authentication configuration.")
       }
 
-      const streamUrl = `${this.baseUrl}${this.pathPrefix}/${pathSegment}?${urlParams.toString()}`
+      const streamUrl = `${baseUrl}${pathSegment}?${urlParams.toString()}` // Construct URL from command parts
       this.logger.debug(`Connecting to WebSocket URL: ${streamUrl}`)
       this.webSocket = this.webSocketFactory(streamUrl)
 
@@ -180,9 +179,10 @@ export class WebSocketClient {
     this.webSocket.onopen = () => {
       this._isOpen = true
       this._isConnecting = false
-      // Use currentConfig for logging
-      const pathSegment = this.currentCommand?.getStreamPathSegment(this.currentConfig);
-      this.logger.info(`WebSocket connection opened: ${this.pathPrefix}/${pathSegment}`);
+      // Use potentially overridden base URL in logging
+      const baseUrl = this.overrideBaseUrl ?? this.currentCommand?.getWebSocketBaseUrl();
+      const pathSegment = this.currentCommand?.getWebSocketPathSegment(this.currentConfig);
+      this.logger.info(`WebSocket connection opened: ${baseUrl}${pathSegment}`);
       this.reconnectInterval = this.options.reconnectInterval
       this.reconnectAttempts = 0
     }
@@ -220,9 +220,11 @@ export class WebSocketClient {
       const wasOpen = this._isOpen
       this._isOpen = false
       this._isConnecting = false
-      const pathSegment = this.currentCommand?.getStreamPathSegment(this.currentConfig);
+      // Use potentially overridden base URL in logging
+      const baseUrl = this.overrideBaseUrl ?? this.currentCommand?.getWebSocketBaseUrl();
+      const pathSegment = this.currentCommand?.getWebSocketPathSegment(this.currentConfig);
       this.logger.info(
-        `WebSocket connection closed: ${this.pathPrefix}/${pathSegment} Code [${event.code}], Reason: ${event.reason || "No reason given"}. Was open: ${wasOpen}`,
+        `WebSocket connection closed: ${baseUrl}${pathSegment} Code [${event.code}], Reason: ${event.reason || "No reason given"}. Was open: ${wasOpen}`,
       )
       if (wasOpen && event.code !== 1000 && this.currentCommand) { // Only reconnect if command is still set
         this.attemptReconnect()
@@ -235,7 +237,10 @@ export class WebSocketClient {
     }
 
     this.webSocket.onerror = () => {
-      this.logger.error("WebSocket encountered an error.")
+      // Use potentially overridden base URL in logging
+      const baseUrl = this.overrideBaseUrl ?? this.currentCommand?.getWebSocketBaseUrl();
+      const pathSegment = this.currentCommand?.getWebSocketPathSegment(this.currentConfig);
+      this.logger.error(`WebSocket encountered an error for stream: ${baseUrl}${pathSegment}.`);
       if (
         this.webSocket.readyState !== WebSocket.CLOSED &&
         this.webSocket.readyState !== WebSocket.CLOSING
@@ -262,24 +267,25 @@ export class WebSocketClient {
       this.logger.debug("Reconnect attempt already in progress.");
       return;
     }
+    // Use potentially overridden base URL
+    const baseUrl = this.overrideBaseUrl ?? this.currentCommand.getWebSocketBaseUrl();
+    const pathSegment = this.currentCommand.getWebSocketPathSegment(this.currentConfig);
     if (this.options.maxReconnects && this.reconnectAttempts >= this.options.maxReconnects) {
-      const pathSegment = this.currentCommand.getStreamPathSegment(this.currentConfig);
       this.logger.error(
-        `Max reconnect attempts (${this.reconnectAttempts}/${this.options.maxReconnects}) reached. Giving up: ${this.pathPrefix}/${pathSegment}`,
+        `Max reconnect attempts (${this.reconnectAttempts}/${this.options.maxReconnects}) reached. Giving up: ${baseUrl}${pathSegment}`,
       );
       if (!this.internalSubject.closed) this.internalSubject.complete();
-      this.currentCommand = null; 
+      this.currentCommand = null;
       this.currentConfig = null;
       return;
     }
 
     this.reconnectAttempts++;
     this._isConnecting = true;
-    const pathSegment = this.currentCommand.getStreamPathSegment(this.currentConfig);
 
     this.logger.info(
         `Attempting reconnection ${this.reconnectAttempts}${this.options.maxReconnects ? `/${this.options.maxReconnects}` : ""}
-         for ${this.pathPrefix}/${pathSegment} in ${this.reconnectInterval} ms...`,
+         for ${baseUrl}${pathSegment} in ${this.reconnectInterval} ms...`,
     );
 
     setTimeout(async () => { // Keep timeout async
@@ -294,7 +300,7 @@ export class WebSocketClient {
       // Directly attempt to establish connection *without* calling this.connect()
       try {
         const urlParams = new URLSearchParams()
-        // --- Reuse auth logic from connect() --- 
+        // --- Reuse auth logic from connect() ---
         if ("getBearerToken" in this.authOptions && this.authOptions.getBearerToken) {
             const token = await this.authOptions.getBearerToken();
             if (!token) throw new Error("Reconnect failed: Could not get bearer token");
@@ -305,9 +311,10 @@ export class WebSocketClient {
         } else {
             throw new Error("Reconnect failed: Invalid authentication configuration.");
         }
-        // --- End auth logic --- 
+        // --- End auth logic ---
 
-        const streamUrl = `${this.baseUrl}${this.pathPrefix}/${pathSegment}?${urlParams.toString()}`
+        // Use potentially overridden base URL for reconnect URL
+        const streamUrl = `${baseUrl}${pathSegment}?${urlParams.toString()}`
         this.logger.debug(`Reconnecting to WebSocket URL: ${streamUrl}`)
         this.webSocket = this.webSocketFactory(streamUrl)
         // Connecting flag will be reset in onopen/onerror/onclose
@@ -318,7 +325,7 @@ export class WebSocketClient {
         // Error during reconnect setup, trigger another attempt after backoff
         // We might get stuck here if auth always fails, consider adding specific error handling
         this.reconnectInterval = Math.min(MAX_RECONNECT_INTERVAL, this.reconnectInterval * 2) // Apply backoff before retrying
-        this.attemptReconnect(); 
+        this.attemptReconnect();
       }
     }, this.reconnectInterval)
 
@@ -384,4 +391,4 @@ export class WebSocketClient {
   [Symbol.dispose](): void {
     this.disconnect()
   }
-} 
+}

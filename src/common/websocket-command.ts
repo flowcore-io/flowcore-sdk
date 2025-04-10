@@ -13,12 +13,18 @@ export interface WebSocketCommand<Config, SendPayload> {
   getConfig(): Config;
 
   /**
-   * Gets the specific path segment for the WebSocket URL based on the config.
-   * Example: For ws://server/stream/{id}, this would return the {id}.
+   * Gets the base WebSocket URL (e.g., wss://server.api.flowcore.io).
+   * @returns The base WebSocket URL string.
+   */
+  getWebSocketBaseUrl(): string;
+
+  /**
+   * Gets the specific path segment for the WebSocket URL based on the config
+   * (e.g., /api/v1/stream/entity/{id}).
    * @param config - The configuration object.
    * @returns The path segment string.
    */
-  getStreamPathSegment(config: Config): string;
+  getWebSocketPathSegment(config: Config): string;
 
   /**
    * Serializes the payload to be sent over the WebSocket.

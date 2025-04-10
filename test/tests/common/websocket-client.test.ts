@@ -104,7 +104,7 @@ describe("WebSocketClient", () => { // Updated describe block
     clientOptions = { logger: defaultLogger, reconnectInterval: 10 }
     authOptionsBearer = { getBearerToken: () => Promise.resolve("test-bearer-token") }
     authOptionsApiKey = { apiKey: "test-api-key", apiKeyId: "test-api-key-id" }
-    testCommand = new ConversationStreamCommand(testConfig) // Create command instance
+    testCommand = new ConversationStreamCommand(testConfig)
     activeStream = null
     outputSubscription = null
     sendSpy = undefined
@@ -137,7 +137,7 @@ describe("WebSocketClient", () => { // Updated describe block
     assertExists(activeStream)
     assertEquals(mockWebSocketInstances.length, 1)
     const instance = mockWebSocketInstances[0]
-    const expectedUrl = `wss://ai-coordinator.api.flowcore.io/api/v1/stream/${testConversationId}?token=test-bearer-token`
+    const expectedUrl = `wss://ai-coordinator.api.flowcore.io/api/v1/stream/conversations/${testConversationId}?token=test-bearer-token`
     assertEquals(instance.url, expectedUrl)
   })
 
@@ -147,7 +147,7 @@ describe("WebSocketClient", () => { // Updated describe block
     assertExists(activeStream)
     assertEquals(mockWebSocketInstances.length, 1)
     const instance = mockWebSocketInstances[0]
-    const expectedUrl = `wss://ai-coordinator.api.flowcore.io/api/v1/stream/${testConversationId}?api_key=test-api-key&api_key_id=test-api-key-id`
+    const expectedUrl = `wss://ai-coordinator.api.flowcore.io/api/v1/stream/conversations/${testConversationId}?api_key=test-api-key&api_key_id=test-api-key-id`
     assertEquals(instance.url, expectedUrl)
   })
 
@@ -360,4 +360,13 @@ describe("WebSocketClient", () => { // Updated describe block
       assertEquals(client.isOpen, false)
       assertEquals(completed, false, "Observer should not complete on error")
     })
+
+  it("should connect successfully with bearer token", async () => {
+    const testConversationId = "conv-456";
+    const testConfig: ConversationStreamConfig = { conversationId: testConversationId };
+    const command = new ConversationStreamCommand(testConfig);
+
+    const connectPromise = client.connect(command);
+    // ... rest of the test ...
+  })
 }) 

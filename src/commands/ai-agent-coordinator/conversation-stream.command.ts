@@ -1,7 +1,10 @@
-import type { WebSocketCommand } from "../../common/websocket-command.ts";
+import type {
+    WebSocketCommand,
+} from "../../common/websocket-command.ts";
 
 /**
  * Configuration for the Conversation Stream.
+ * Only requires the conversationId.
  */
 export interface ConversationStreamConfig {
     conversationId: string;
@@ -15,21 +18,38 @@ export interface ConversationStreamSendPayload {
 }
 
 /**
- * Command to configure and represent a connection to the AI Agent Coordinator conversation stream.
+ * Command to stream conversation events for a specific agent.
  */
 export class ConversationStreamCommand implements WebSocketCommand<ConversationStreamConfig, ConversationStreamSendPayload> {
-    constructor(private readonly config: ConversationStreamConfig) {}
+  private config: ConversationStreamConfig
 
-    getConfig(): ConversationStreamConfig {
-        return this.config;
+  constructor(config: ConversationStreamConfig) {
+    if (!config.conversationId) {
+        throw new Error("conversationId is required in the config for ConversationStreamCommand");
     }
+    this.config = config
+  }
 
-    getStreamPathSegment(config: ConversationStreamConfig): string {
-        return config.conversationId;
-    }
+  /** Get the configuration object for the command. */
+  getConfig(): ConversationStreamConfig {
+    return this.config
+  }
 
-    // Use default JSON serialization for sending payloads
-    // serializeSendPayload(payload: ConversationStreamSendPayload): string {
-    //     return JSON.stringify(payload);
-    // }
+  /** Get the base WebSocket URL. */
+  getWebSocketBaseUrl(): string {
+    // Specific base URL for AI Coordinator streams
+    return "wss://ai-coordinator.api.flowcore.io"
+  }
+
+  /** Get the WebSocket path segment. */
+  getWebSocketPathSegment(config: ConversationStreamConfig): string {
+    // Updated path segment based on likely API structure
+    return `/api/v1/stream/conversations/${config.conversationId}`
+  }
+
+  /** Serializer function for outgoing payloads. */
+  serializeSendPayload(payload: ConversationStreamSendPayload): string {
+    // Default JSON serialization
+    return JSON.stringify(payload)
+  }
 } 
