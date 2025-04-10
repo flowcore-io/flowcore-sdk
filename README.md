@@ -613,6 +613,214 @@ const result = await client.execute(command)
 > **Note**: If `waitForDelete` or `waitForTruncate` is set to `true`, the command will wait up to 25 seconds for the operation to complete.
 > **Important**: Event Type deletion and truncation operations require bearer token authentication.
 
+### AI Agent Coordinator Operations
+
+These commands allow interaction with the AI Agent Coordinator service for managing conversational AI agents.
+
+> **Important**: AI Agent Coordinator operations require bearer token authentication (OAuth2) and cannot be performed using API key authentication.
+
+#### List Conversations
+
+Retrieves metadata for all conversations accessible by the user.
+
+```typescript
+import { ConversationListCommand, FlowcoreClient } from "@flowcore/sdk"
+
+const command = new ConversationListCommand()
+
+const conversations = await client.execute(command)
+// Returns an array of conversation metadata:
+// {
+//   id: string;
+//   title: string;
+//   lastUpdated: string; // ISO Date string
+// }[]
+```
+
+#### Get a Specific Conversation
+
+Retrieves the full details, including messages and context, for a specific conversation.
+
+```typescript
+import { ConversationGetCommand, FlowcoreClient } from "@flowcore/sdk"
+
+const command = new ConversationGetCommand({ conversationId: "your-conversation-id" })
+
+try {
+  const conversation = await client.execute(command)
+  // Returns the full Conversation object:
+  // {
+  //   id: string;
+  //   title: string;
+  //   lastUpdated: string;
+  //   context: ContextItem[]; // Array of items in the conversation's context
+  //   messages: Message[];   // Array of messages in the conversation
+  // }
+} catch (error) {
+  if (error instanceof NotFoundException) {
+    console.error("Conversation not found:", error.details);
+  } else {
+    console.error("Failed to get conversation:", error);
+  }
+}
+```
+
+#### Delete a Conversation
+
+Permanently deletes a specific conversation and its associated data.
+
+```typescript
+import { ConversationDeleteCommand, FlowcoreClient } from "@flowcore/sdk"
+
+const command = new ConversationDeleteCommand({ conversationId: "conversation-id-to-delete" })
+
+try {
+  const result = await client.execute(command)
+  // Returns: { message: "Conversation deleted successfully." }
+  console.log(result.message);
+} catch (error) {
+  console.error("Failed to delete conversation:", error);
+}
+```
+
+#### Add Items to Conversation Context
+
+Adds one or more resources (like tenants, data cores) to the context of a specific conversation.
+
+```typescript
+import { ContextAddItemCommand, FlowcoreClient } from "@flowcore/sdk"
+
+const command = new ContextAddItemCommand({
+  conversationId: "your-conversation-id",
+  items: [
+    { type: "tenant", id: "tenant-id-to-add" },
+    { type: "dataCore", id: "data-core-id-to-add" }
+  ]
+})
+
+try {
+  const result = await client.execute(command)
+  // Returns the updated context array for the conversation:
+  // { context: ContextItem[] }
+  console.log("Updated context:", result.context);
+} catch (error) {
+  console.error("Failed to add context items:", error);
+}
+```
+
+#### Remove Item from Conversation Context
+
+Removes a specific item instance from the context of a conversation.
+
+```typescript
+import { ContextRemoveItemCommand, FlowcoreClient } from "@flowcore/sdk"
+
+const command = new ContextRemoveItemCommand({
+  conversationId: "your-conversation-id",
+  itemId: "context-item-id-to-remove" // The ID of the item in the context array
+})
+
+try {
+  const result = await client.execute(command)
+  // Returns the updated context array for the conversation:
+  // { context: ContextItem[] }
+  console.log("Updated context after removal:", result.context);
+} catch (error) {
+  console.error("Failed to remove context item:", error);
+}
+```
+
+#### Stream Conversation Events
+
+The `WebSocketClient` is used to establish a persistent connection for streaming conversation events (like AI responses, tool usage, etc.) for a specific conversation.
+
+```typescript
+import {
+  WebSocketClient,
+  ConversationStreamCommand,
+  type ConversationStreamConfig,
+  type ConversationStreamSendPayload,
+  type StreamChunk
+} from "@flowcore/sdk";
+import { Subject } from "rxjs";
+
+// 1. Authentication (using bearer token provider)
+const authOptions = {
+  getBearerToken: async (): Promise<string | null> => {
+    // Replace with your actual token retrieval logic
+    return "your-bearer-token";
+  }
+};
+
+// 2. Create the WebSocket Client
+const wsClient = new WebSocketClient(authOptions, {
+  // Optional configuration
+  reconnectInterval: 2000, // milliseconds
+  maxReconnects: 5
+});
+
+// 3. Define the command for the specific conversation stream
+const conversationConfig: ConversationStreamConfig = {
+  conversationId: "your-conversation-id"
+};
+const streamCommand = new ConversationStreamCommand(conversationConfig);
+
+// 4. Connect and handle the stream
+async function startStreaming() {
+  try {
+    console.log(`Connecting to conversation stream: ${conversationConfig.conversationId}...`);
+    const activeStream = await wsClient.connect(streamCommand);
+    console.log("Stream connected!");
+
+    // Subscribe to incoming chunks
+    const subscription = activeStream.output$.subscribe({
+      next: (chunk: StreamChunk) => {
+        console.log("Received chunk:", chunk.type, chunk);
+        // Process different chunk types (markdown_delta, tool_start, etc.)
+      },
+      error: (error) => {
+        console.error("Stream error:", error);
+        // Handle stream errors (e.g., attempt reconnect or notify user)
+      },
+      complete: () => {
+        console.log("Stream completed.");
+        // Handle stream completion (e.g., connection closed by server or maxReconnects reached)
+      }
+    });
+
+    // Example: Sending a message to the conversation
+    const messageToSend: ConversationStreamSendPayload = { content: "Hello Agent!" };
+    const sent = activeStream.send(messageToSend);
+    if (sent) {
+      console.log("Sent message to agent.");
+    } else {
+      console.warn("Failed to send message (socket likely not open).");
+    }
+
+    // Keep the connection open until explicitly disconnected or an error occurs
+    // In a real application, you might have UI events trigger disconnect
+    // Example: Disconnect after 60 seconds
+    setTimeout(() => {
+      console.log("Disconnecting stream...");
+      activeStream.disconnect();
+      subscription.unsubscribe();
+    }, 60000);
+
+  } catch (error) {
+    console.error("Failed to connect to WebSocket stream:", error);
+  }
+}
+
+startStreaming();
+
+// Remember to handle graceful shutdown by calling disconnect
+// e.g., wsClient.disconnect() or activeStream.disconnect()
+```
+
+**Stream Chunks (`StreamChunk`)**
+
+The `output$` observable emits objects conforming to the `StreamChunk` type (or subtypes). Refer to the API specification or SDK types for details on the different chunk types like `markdown_delta`, `tool_start`, `context_add_item`, etc., and their specific properties.
+
 ### Notifications
 
 The NotificationClient allows you to receive real-time notifications when events are ingested into an event type. The notifications follow the hierarchical structure: Data Core → Flow Type → Event Type.
