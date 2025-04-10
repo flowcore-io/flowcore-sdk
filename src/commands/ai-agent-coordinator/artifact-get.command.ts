@@ -1,4 +1,4 @@
-import { Type, type TObject } from "@sinclair/typebox"
+import { type TObject, Type } from "@sinclair/typebox"
 import { Command } from "../../common/command.ts"
 import type { ClientError } from "../../exceptions/client-error.ts"
 import { NotFoundException } from "../../exceptions/not-found.ts"
