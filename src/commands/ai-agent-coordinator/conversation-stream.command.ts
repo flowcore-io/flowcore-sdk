@@ -43,7 +43,7 @@ export class ConversationStreamCommand
   /** Get the WebSocket path segment. */
   getWebSocketPathSegment(): string {
     // Path includes the conversation ID
-    return `/stream/${this.config.conversationId}`
+    return `api/v1/stream/${this.config.conversationId}`
   }
 
   /** Serializer function for outgoing payloads. */
