@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.26.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.25.0...v1.26.0) (2025-04-10)
+
+
+### Features
+
+* **ai-agent-coordinator:** :sparkles: add ArtifactGetCommand for fetching artifacts by ID ([1955ed9](https://github.com/flowcore-io/flowcore-sdk/commit/1955ed97102c5f6cbdd7a551f8d18fb0cb706e2f))
+
+
+### Bug Fixes
+
+* **ai-agent-coordinator:** :art: clean up import formatting in conversation test ([cb8a258](https://github.com/flowcore-io/flowcore-sdk/commit/cb8a258027409baa501a77141aef6a51009db2ec))
+* **ai-agent-coordinator:** :art: ensure artifactId is a string in ArtifactGetCommand ([4e88025](https://github.com/flowcore-io/flowcore-sdk/commit/4e880251dddbb9ee068a4cc195cfc7e71d371d03))
+* **ai-agent-coordinator:** :art: reorder import statements in artifact-get command ([54e4b8d](https://github.com/flowcore-io/flowcore-sdk/commit/54e4b8ddf88af4a755a62036e938dbe86c91ac72))
+* **ai-agent-coordinator:** :art: update artifact schema type and clean up imports ([c195c27](https://github.com/flowcore-io/flowcore-sdk/commit/c195c27ca5cde6d529cbc62492e0daa848837b8d))
+* **readme:** :memo: add documentation for retrieving specific artifacts by ID ([26a49a3](https://github.com/flowcore-io/flowcore-sdk/commit/26a49a363a4c490dbbb5b02199ccfc2738ccedc7))
+
 ## [1.25.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.24.4...v1.25.0) (2025-04-10)
 
 
