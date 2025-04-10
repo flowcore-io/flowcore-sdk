@@ -730,6 +730,36 @@ try {
 }
 ```
 
+#### Get a Specific Artifact
+
+Retrieves the details (content, data, or url) for a specific artifact by its ID.
+
+```typescript
+import { ArtifactGetCommand, FlowcoreClient, NotFoundException } from "@flowcore/sdk"
+
+const command = new ArtifactGetCommand({ artifactId: "your-artifact-id" });
+
+try {
+  const artifact = await client.execute(command);
+  // Returns the Artifact object:
+  // {
+  //   artifactId: string;
+  //   artifactType: "code" | "markdown" | "table" | "visualization" | "html" | "mermaid";
+  //   title: string;
+  //   content?: string; // For text-based artifacts
+  //   data?: unknown;   // For JSON-based artifacts
+  //   url?: string;     // For URL-based artifacts
+  // }
+  console.log("Artifact details:", artifact);
+} catch (error) {
+  if (error instanceof NotFoundException) {
+    console.error("Artifact not found:", error.details);
+  } else {
+    console.error("Failed to get artifact:", error);
+  }
+}
+```
+
 #### Stream Conversation Events
 
 The `WebSocketClient` is used to establish a persistent connection for streaming conversation events (like AI responses, tool usage, etc.) for a specific conversation.
