@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.26.2](https://github.com/flowcore-io/flowcore-sdk/compare/v1.26.1...v1.26.2) (2025-04-10)
+
+
+### Bug Fixes
+
+* **ai-agent-coordinator:** :art: clean up import formatting in websocket-client test ([9a8c2ff](https://github.com/flowcore-io/flowcore-sdk/commit/9a8c2ffa61ac4aec47ca387cafece5525a1812f0))
+* **ai-agent-coordinator:** :art: update WebSocket path and improve payload serialization ([60c8f80](https://github.com/flowcore-io/flowcore-sdk/commit/60c8f803f104bc77848617eb90482b3544d416c1))
+
 ## [1.26.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.26.0...v1.26.1) (2025-04-10)
 
 
