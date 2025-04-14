@@ -19,6 +19,18 @@ export interface MarkdownDeltaChunk {
   content: string
 }
 
+export interface InfoChunk {
+  type: "info"
+  /** An informational message. */
+  message: string
+}
+
+export interface ErrorChunk {
+  type: "error"
+  /** An error message. */
+  message: string
+}
+
 export interface ToolStartChunk {
   type: "tool_start"
   /** The name of the tool being executed. */
@@ -73,6 +85,13 @@ export interface ArtifactContentDeltaChunk {
   content: string
 }
 
+export interface ArtifactContentChunk {
+  type: "artifact_content"
+  artifactId: string
+  /** The complete artifact text content. */
+  content: string
+}
+
 export interface ArtifactDataChunk {
   type: "artifact_data"
   artifactId: string
@@ -103,6 +122,8 @@ export interface ConversationCreatedChunk {
  */
 export type StreamChunk =
   | MarkdownDeltaChunk
+  | InfoChunk
+  | ErrorChunk
   | ToolStartChunk
   | ToolInputChunk
   | ToolOutputChunk
@@ -111,6 +132,7 @@ export type StreamChunk =
   | TitleUpdateChunk
   | ArtifactStartChunk
   | ArtifactContentDeltaChunk
+  | ArtifactContentChunk
   | ArtifactDataChunk
   | ArtifactUrlChunk
   | ArtifactEndChunk

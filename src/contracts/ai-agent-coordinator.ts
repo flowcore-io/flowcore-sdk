@@ -7,7 +7,7 @@ export interface ContextItem {
 
 export interface Message {
   id: string
-  role: "user" | "ai"
+  role: "system" | "user" | "assistant"
   content: string
   timestamp: string // ISO 8601 format
 }
