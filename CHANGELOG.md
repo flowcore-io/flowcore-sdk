@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.27.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.26.4...v1.27.0) (2025-04-14)
+
+
+### Features
+
+* **ai-agent-coordinator:** :sparkles: add InfoChunk and ErrorChunk interfaces ([ae5ad9c](https://github.com/flowcore-io/flowcore-sdk/commit/ae5ad9c840655042db5495dc03db017662b5fd76))
+
 ## [1.26.4](https://github.com/flowcore-io/flowcore-sdk/compare/v1.26.3...v1.26.4) (2025-04-14)
 
 
