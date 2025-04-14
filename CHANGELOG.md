@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.26.4](https://github.com/flowcore-io/flowcore-sdk/compare/v1.26.3...v1.26.4) (2025-04-14)
+
+
+### Bug Fixes
+
+* **ai-agent-coordinator:** :art: make conversationId optional in ConversationStreamConfig ([c0ea7dc](https://github.com/flowcore-io/flowcore-sdk/commit/c0ea7dce6137a957bc2f972ea38709d7f378fa40))
+
 ## [1.26.3](https://github.com/flowcore-io/flowcore-sdk/compare/v1.26.2...v1.26.3) (2025-04-10)
 
 
