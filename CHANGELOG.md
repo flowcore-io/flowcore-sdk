@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.28.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.27.0...v1.28.0) (2025-04-15)
+
+
+### Features
+
+* **data-core:** :sparkles: add isFlowcoreManaged, createdAt, and updatedAt fields to DataCore schema ([f4c1acb](https://github.com/flowcore-io/flowcore-sdk/commit/f4c1acbb0794459a3292b6c44fe7ffe250fb1fe0))
+
 ## [1.27.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.26.4...v1.27.0) (2025-04-14)
 
 
