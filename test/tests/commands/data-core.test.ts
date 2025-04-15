@@ -1,5 +1,7 @@
-import { afterAll, afterEach, describe, it } from "jsr:@std/testing/bdd"
 import { assertEquals, assertRejects } from "@std/assert"
+import { afterAll, afterEach, describe, it } from "jsr:@std/testing/bdd"
+import { tenantCache } from "../../../src/common/tenant.cache.ts"
+import type { Tenant } from "../../../src/contracts/tenant.ts"
 import {
   type DataCore,
   DataCoreFetchCommand,
@@ -8,8 +10,6 @@ import {
   NotFoundException,
 } from "../../../src/mod.ts"
 import { FetchMocker } from "../../fixtures/fetch.fixture.ts"
-import { tenantCache } from "../../../src/common/tenant.cache.ts"
-import type { Tenant } from "../../../src/contracts/tenant.ts"
 
 describe("DataCore", () => {
   const fetchMocker = new FetchMocker()
@@ -37,6 +37,9 @@ describe("DataCore", () => {
       accessControl: "public",
       deleteProtection: false,
       isDeleting: false,
+      isFlowcoreManaged: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     }
 
     fetchMockerBuilder.get(`/api/v1/data-cores/${dataCore.id}`)
@@ -61,6 +64,9 @@ describe("DataCore", () => {
       accessControl: "public",
       deleteProtection: false,
       isDeleting: false,
+      isFlowcoreManaged: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     }
 
     fetchMockerBuilder.get(`/api/v1/data-cores`)
@@ -89,6 +95,9 @@ describe("DataCore", () => {
       accessControl: "public",
       deleteProtection: false,
       isDeleting: false,
+      isFlowcoreManaged: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     }
 
     fetchMockerBuilder.get(`/api/v1/data-cores`)
@@ -183,6 +192,9 @@ describe("DataCore", () => {
       accessControl: "public",
       deleteProtection: false,
       isDeleting: false,
+      isFlowcoreManaged: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     }
 
     fetchMockerBuilderTenant.get(`/api/v1/tenants/by-name/${dataCore.tenant}`)
@@ -231,6 +243,9 @@ describe("DataCore", () => {
       accessControl: "public",
       deleteProtection: false,
       isDeleting: false,
+      isFlowcoreManaged: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     }
 
     fetchMockerBuilderTenant.get(`/api/v1/tenants/by-name/${dataCore.tenant}`)

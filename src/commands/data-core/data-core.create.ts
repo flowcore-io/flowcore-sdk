@@ -16,6 +16,8 @@ export interface DataCoreCreateInput {
   accessControl: "public" | "private"
   /** Whether the data core is delete protected */
   deleteProtection: boolean
+  /** Whether the data core is managed by Flowcore */
+  isFlowcoreManaged: boolean
 }
 
 /**

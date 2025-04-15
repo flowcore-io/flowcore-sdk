@@ -311,8 +311,10 @@ const result = await client.execute(command)
 //   description: string;
 //   accessControl: "public" | "private";
 //   deleteProtection: boolean;
-//   createdAt: string;
-//   updatedAt: string;
+//   isDeleting: boolean;         // Indicates if the data core is being deleted
+//   isFlowcoreManaged: boolean;  // Indicates if the data core is managed by Flowcore
+//   createdAt: string;          // ISO timestamp of creation
+//   updatedAt: string;          // ISO timestamp of last update
 // }
 ```
 

@@ -21,15 +21,32 @@ export const DataCoreSchema: TObject<{
   accessControl: TUnion<[TLiteral<"public">, TLiteral<"private">]>
   deleteProtection: TBoolean
   isDeleting: TBoolean
+  isFlowcoreManaged: TBoolean
+  createdAt: TString
+  updatedAt: TString
 }> = Type.Object({
+  /** Unique identifier for the data core */
   id: Type.String(),
+  /** ID of the tenant that owns this data core */
   tenantId: Type.String(),
+  /** Name of the tenant that owns this data core */
   tenant: Type.String(),
+  /** Name of the data core */
   name: Type.String(),
+  /** Description of the data core's purpose and contents */
   description: Type.String(),
+  /** Access control setting - determines if the data core is public or private */
   accessControl: Type.Union([Type.Literal("public"), Type.Literal("private")]),
+  /** Protection against accidental deletion */
   deleteProtection: Type.Boolean(),
+  /** Indicates if the data core is currently being deleted */
   isDeleting: Type.Boolean(),
+  /** Indicates if the data core is managed by Flowcore platform */
+  isFlowcoreManaged: Type.Boolean(),
+  /** ISO timestamp of when the data core was created */
+  createdAt: Type.String(),
+  /** ISO timestamp of when the data core was last updated */
+  updatedAt: Type.String(),
 })
 
 /**
@@ -44,6 +61,9 @@ export const DataCoreWithAccessSchema: TObject<{
   accessControl: TUnion<[TLiteral<"public">, TLiteral<"private">]>
   deleteProtection: TBoolean
   isDeleting: TBoolean
+  isFlowcoreManaged: TBoolean
+  createdAt: TString
+  updatedAt: TString
   access: TArray<TUnion<[TLiteral<"read">, TLiteral<"write">, TLiteral<"fetch">, TLiteral<"ingest">]>>
 }> = Type.Object({
   ...DataCoreSchema.properties,
