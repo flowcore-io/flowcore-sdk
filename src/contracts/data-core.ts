@@ -40,7 +40,7 @@ export const DataCoreSchema: TObject<{
   /** Indicates if the data core is currently being deleted */
   isDeleting: Type.Boolean(),
   /** Indicates if the data core is managed by Flowcore platform */
-  isFlowcoreManaged: Type.Boolean()
+  isFlowcoreManaged: Type.Boolean(),
 })
 
 /**
