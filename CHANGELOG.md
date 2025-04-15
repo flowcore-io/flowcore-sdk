@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.28.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.28.0...v1.28.1) (2025-04-15)
+
+
+### Bug Fixes
+
+* **data-core:** :art: add missing comma in DataCoreSchema definition ([49bd60e](https://github.com/flowcore-io/flowcore-sdk/commit/49bd60e74e537bd4797e15abdd1b708e28211f67))
+* **data-core:** :art: make isFlowcoreManaged optional and remove createdAt/updatedAt fields from DataCore schema ([5eb27e2](https://github.com/flowcore-io/flowcore-sdk/commit/5eb27e24426f35563e2a5e9e5861fd1bf6d56cb8))
+
 ## [1.28.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.27.0...v1.28.0) (2025-04-15)
 
 
