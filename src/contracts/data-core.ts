@@ -22,8 +22,6 @@ export const DataCoreSchema: TObject<{
   deleteProtection: TBoolean
   isDeleting: TBoolean
   isFlowcoreManaged: TBoolean
-  createdAt: TString
-  updatedAt: TString
 }> = Type.Object({
   /** Unique identifier for the data core */
   id: Type.String(),
@@ -42,11 +40,7 @@ export const DataCoreSchema: TObject<{
   /** Indicates if the data core is currently being deleted */
   isDeleting: Type.Boolean(),
   /** Indicates if the data core is managed by Flowcore platform */
-  isFlowcoreManaged: Type.Boolean(),
-  /** ISO timestamp of when the data core was created */
-  createdAt: Type.String(),
-  /** ISO timestamp of when the data core was last updated */
-  updatedAt: Type.String(),
+  isFlowcoreManaged: Type.Boolean()
 })
 
 /**
@@ -62,8 +56,6 @@ export const DataCoreWithAccessSchema: TObject<{
   deleteProtection: TBoolean
   isDeleting: TBoolean
   isFlowcoreManaged: TBoolean
-  createdAt: TString
-  updatedAt: TString
   access: TArray<TUnion<[TLiteral<"read">, TLiteral<"write">, TLiteral<"fetch">, TLiteral<"ingest">]>>
 }> = Type.Object({
   ...DataCoreSchema.properties,

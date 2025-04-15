@@ -38,8 +38,6 @@ describe("DataCore", () => {
       deleteProtection: false,
       isDeleting: false,
       isFlowcoreManaged: false,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
     }
 
     fetchMockerBuilder.get(`/api/v1/data-cores/${dataCore.id}`)
@@ -65,8 +63,6 @@ describe("DataCore", () => {
       deleteProtection: false,
       isDeleting: false,
       isFlowcoreManaged: false,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
     }
 
     fetchMockerBuilder.get(`/api/v1/data-cores`)
@@ -96,8 +92,6 @@ describe("DataCore", () => {
       deleteProtection: false,
       isDeleting: false,
       isFlowcoreManaged: false,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
     }
 
     fetchMockerBuilder.get(`/api/v1/data-cores`)
@@ -193,8 +187,6 @@ describe("DataCore", () => {
       deleteProtection: false,
       isDeleting: false,
       isFlowcoreManaged: false,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
     }
 
     fetchMockerBuilderTenant.get(`/api/v1/tenants/by-name/${dataCore.tenant}`)
@@ -244,8 +236,6 @@ describe("DataCore", () => {
       deleteProtection: false,
       isDeleting: false,
       isFlowcoreManaged: false,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
     }
 
     fetchMockerBuilderTenant.get(`/api/v1/tenants/by-name/${dataCore.tenant}`)
