@@ -4,7 +4,7 @@ import {
   type TLiteral,
   type TNull,
   type TObject,
-  TOptional,
+  type TOptional,
   type TString,
   type TUnion,
   Type,
