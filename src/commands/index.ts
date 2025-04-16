@@ -75,4 +75,3 @@ export * from "./security/pat.exchange.ts"
 export * from "./security/pat.get.ts"
 export * from "./security/pat.list.ts"
 export * from "./security/permissions.list.ts"
-
