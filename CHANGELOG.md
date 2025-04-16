@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.29.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.28.1...v1.29.0) (2025-04-16)
+
+
+### Features
+
+* **tenant:** :sparkles: add commands to enable and disable PII for tenants ([7772e21](https://github.com/flowcore-io/flowcore-sdk/commit/7772e212ee75fe526eeb0044677014d4b43935a0))
+
+
+### Bug Fixes
+
+* **commands:** :fire: remove unnecessary blank line in index.ts ([4aa12ee](https://github.com/flowcore-io/flowcore-sdk/commit/4aa12eecd9ea6e5a444dd23490feb1cbded2918d))
+
 ## [1.28.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.28.0...v1.28.1) (2025-04-15)
 
 
