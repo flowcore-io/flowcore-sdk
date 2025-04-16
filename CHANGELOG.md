@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.30.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.29.0...v1.30.0) (2025-04-16)
+
+
+### Features
+
+* **tenant:** :sparkles: add optional PII enabled field to TenantSchema ([c36d269](https://github.com/flowcore-io/flowcore-sdk/commit/c36d26921b221dce2411701ed7d0f32326c8ea01))
+
+
+### Bug Fixes
+
+* **tenant:** :art: change TOptional import to type import ([8f0c139](https://github.com/flowcore-io/flowcore-sdk/commit/8f0c139bed38283af763badd8238071759759337))
+
 ## [1.29.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.28.1...v1.29.0) (2025-04-16)
 
 
