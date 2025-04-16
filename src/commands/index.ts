@@ -1,4 +1,6 @@
 // Tenant
+export * from "./tenant/tenant.disable-pii.ts"
+export * from "./tenant/tenant.enable-pii.ts"
 export * from "./tenant/tenant.fetch.ts"
 export * from "./tenant/tenant.list.ts"
 export * from "./tenant/tenant.translate-name-to-id.ts"
@@ -38,25 +40,25 @@ export * from "./flow-type/flow-type.update.ts"
 export * from "./event-type/event-type.create.ts"
 export * from "./event-type/event-type.exists.ts"
 export * from "./event-type/event-type.fetch.ts"
+export * from "./event-type/event-type.info.ts"
 export * from "./event-type/event-type.list.ts"
 export * from "./event-type/event-type.request-delete.ts"
 export * from "./event-type/event-type.request-truncate.ts"
 export * from "./event-type/event-type.update.ts"
-export * from "./event-type/event-type.info.ts"
 
 // IAM
 export * from "./iam/api-key-role-association.create.ts"
 export * from "./iam/api-key-role-association.delete.ts"
 export * from "./iam/api-key-role-association.list.ts"
+export * from "./iam/role.list.ts"
 export * from "./iam/user-role-association.create.ts"
 export * from "./iam/user-role-association.delete.ts"
 export * from "./iam/user-role-association.list.ts"
-export * from "./iam/role.list.ts"
 
 // Events
+export * from "./events/event.list.ts"
 export * from "./events/events.fetch-time-buckets-by-names.ts"
 export * from "./events/events.fetch.ts"
-export * from "./events/event.list.ts"
 export * from "./events/time-bucket.list.ts"
 
 // Container
@@ -73,3 +75,4 @@ export * from "./security/pat.exchange.ts"
 export * from "./security/pat.get.ts"
 export * from "./security/pat.list.ts"
 export * from "./security/permissions.list.ts"
+
