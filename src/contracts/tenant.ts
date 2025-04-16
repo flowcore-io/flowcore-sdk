@@ -4,6 +4,7 @@ import {
   type TLiteral,
   type TNull,
   type TObject,
+  TOptional,
   type TString,
   type TUnion,
   Type,
@@ -46,6 +47,7 @@ export const TenantSchema: TObject<{
       }>
     }>,
   ]>
+  piiEnabled: TOptional<TBoolean>
 }> = Type.Object({
   id: Type.String(),
   name: Type.String(),
@@ -68,6 +70,7 @@ export const TenantSchema: TObject<{
       }),
     }),
   ]),
+  piiEnabled: Type.Optional(Type.Boolean()),
 })
 
 /**
