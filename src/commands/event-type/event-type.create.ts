@@ -12,6 +12,18 @@ export interface EventTypeCreateInput {
   name: string
   /** The description of the event type */
   description: string
+  /** The pii mask of the event type */
+  piiMask?: {
+    /** The json path to the key where the entitiy id for the PII mask is located */
+    key: string
+    /** The paths to the fields that should be masked */
+    paths: {
+      /** The json path to the field that should be masked */
+      path: string
+      /** The type of the field that should be masked */
+      type: "string" | "number" | "boolean"
+    }[]
+  }
 }
 
 /**

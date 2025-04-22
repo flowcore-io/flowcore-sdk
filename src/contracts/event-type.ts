@@ -1,4 +1,21 @@
-import { type Static, type TBoolean, type TObject, type TString, Type } from "@sinclair/typebox"
+import { type Static, type TArray, type TBoolean, type TLiteral, type TObject, type TOptional, type TString, type TUnion, Type } from "@sinclair/typebox"
+
+export const EventTypePiiMaskTypeSchema: TObject<{
+  path: TString
+  type: TUnion<[TLiteral<"string">, TLiteral<"number">, TLiteral<"boolean">]>
+}> = Type.Object({
+  path: Type.String(),
+  type: Type.Union([Type.Literal("string"), Type.Literal("number"), Type.Literal("boolean")]),
+})
+
+
+export const EventTypePiiMaskSchema: TObject<{
+  key: TString
+  paths: TArray<typeof EventTypePiiMaskTypeSchema>
+}> = Type.Object({
+  key: Type.String(),
+  paths: Type.Array(EventTypePiiMaskTypeSchema),
+})
 
 /**
  * The schema for an event type
@@ -12,6 +29,7 @@ export const EventTypeSchema: TObject<{
   description: TString
   isTruncating: TBoolean
   isDeleting: TBoolean
+  piiMask: TOptional<TArray<typeof EventTypePiiMaskSchema>>
 }> = Type.Object({
   id: Type.String(),
   tenantId: Type.String(),
@@ -21,6 +39,7 @@ export const EventTypeSchema: TObject<{
   description: Type.String(),
   isTruncating: Type.Boolean(),
   isDeleting: Type.Boolean(),
+  piiMask: Type.Optional(Type.Array(EventTypePiiMaskSchema)),
 })
 
 /**
