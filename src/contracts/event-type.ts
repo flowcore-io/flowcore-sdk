@@ -4,7 +4,6 @@ import {
   type TBoolean,
   type TLiteral,
   type TObject,
-  type TOptional,
   type TString,
   type TUnion,
   Type,
@@ -38,7 +37,7 @@ export const EventTypeSchema: TObject<{
   description: TString
   isTruncating: TBoolean
   isDeleting: TBoolean
-  piiMask: TOptional<TArray<typeof EventTypePiiMaskSchema>>
+  piiMask: TArray<typeof EventTypePiiMaskSchema>
 }> = Type.Object({
   id: Type.String(),
   tenantId: Type.String(),
@@ -48,7 +47,7 @@ export const EventTypeSchema: TObject<{
   description: Type.String(),
   isTruncating: Type.Boolean(),
   isDeleting: Type.Boolean(),
-  piiMask: Type.Optional(Type.Array(EventTypePiiMaskSchema)),
+  piiMask: Type.Array(EventTypePiiMaskSchema),
 })
 
 /**
