@@ -509,7 +509,13 @@ import { EventTypeCreateCommand, FlowcoreClient } from "@flowcore/sdk"
 const command = new EventTypeCreateCommand({
   flowTypeId: "your-flow-type-id",
   name: "my-event-type",
-  description: "My awesome event type"
+  description: "My awesome event type",
+  piiMask: {
+    key: "entityId",
+    paths: [
+      { path: "$.entityId", type: "string" }
+    ]
+  }
 })
 
 const result = await client.execute(command)
