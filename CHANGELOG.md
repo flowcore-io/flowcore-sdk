@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.31.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.30.0...v1.31.0) (2025-04-22)
+
+
+### Features
+
+* **event-type:** :sparkles: add optional PII mask field to EventTypeCreateInput and EventTypeUpdateInput ([7e7b5e0](https://github.com/flowcore-io/flowcore-sdk/commit/7e7b5e0e1c295282241cfb0f9a5bf6de4d1c82ee))
+
 ## [1.30.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.29.0...v1.30.0) (2025-04-16)
 
 
