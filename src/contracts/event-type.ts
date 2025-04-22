@@ -1,4 +1,14 @@
-import { type Static, type TArray, type TBoolean, type TLiteral, type TObject, type TOptional, type TString, type TUnion, Type } from "@sinclair/typebox"
+import {
+  type Static,
+  type TArray,
+  type TBoolean,
+  type TLiteral,
+  type TObject,
+  type TOptional,
+  type TString,
+  type TUnion,
+  Type,
+} from "@sinclair/typebox"
 
 export const EventTypePiiMaskTypeSchema: TObject<{
   path: TString
@@ -7,7 +17,6 @@ export const EventTypePiiMaskTypeSchema: TObject<{
   path: Type.String(),
   type: Type.Union([Type.Literal("string"), Type.Literal("number"), Type.Literal("boolean")]),
 })
-
 
 export const EventTypePiiMaskSchema: TObject<{
   key: TString
