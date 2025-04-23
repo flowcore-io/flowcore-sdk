@@ -23,6 +23,7 @@ describe("EventType", () => {
       isDeleting: false,
       isTruncating: false,
       piiMask: [],
+      piiEnabled: true,
     }
 
     fetchMockerBuilder.get(`/api/v1/event-types/${eventType.id}`)
@@ -48,6 +49,7 @@ describe("EventType", () => {
       isDeleting: false,
       isTruncating: false,
       piiMask: [],
+      piiEnabled: true,
     }
 
     fetchMockerBuilder.get(`/api/v1/event-types`)
