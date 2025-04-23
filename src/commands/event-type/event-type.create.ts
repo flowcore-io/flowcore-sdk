@@ -25,7 +25,7 @@ export interface EventTypeCreateInput {
     }[]
   }
   /** Whether the event type is active */
-  piiEnabled: boolean
+  piiEnabled?: boolean
 }
 
 /**
