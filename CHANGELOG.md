@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.33.2](https://github.com/flowcore-io/flowcore-sdk/compare/v1.33.1...v1.33.2) (2025-04-23)
+
+
+### Bug Fixes
+
+* **event-type:** :bug: update piiMask type to allow null values ([13b9ca0](https://github.com/flowcore-io/flowcore-sdk/commit/13b9ca02b7fbee48482704b4758a8b34aed58ed7))
+
 ## [1.33.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.33.0...v1.33.1) (2025-04-23)
 
 
