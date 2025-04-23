@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.33.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.32.0...v1.33.0) (2025-04-23)
+
+
+### Features
+
+* **event-type:** :sparkles: add piiEnabled field to EventTypeCreateInput and EventTypeUpdateInput ([4c25258](https://github.com/flowcore-io/flowcore-sdk/commit/4c252584dfd66d9c420de2412d0e408283038e41))
+
+
+### Bug Fixes
+
+* **event-type:** :art: remove isActive field from EventTypeSchema ([624877a](https://github.com/flowcore-io/flowcore-sdk/commit/624877a58f4f310280c41f96033b066721c81eb8))
+
 ## [1.32.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.31.0...v1.32.0) (2025-04-22)
 
 
