@@ -22,7 +22,7 @@ describe("EventType", () => {
       description: "test",
       isDeleting: false,
       isTruncating: false,
-      piiMask: [],
+      piiMask: null,
       piiEnabled: true,
     }
 
@@ -48,7 +48,7 @@ describe("EventType", () => {
       description: "test",
       isDeleting: false,
       isTruncating: false,
-      piiMask: [],
+      piiMask: null,
       piiEnabled: true,
     }
 

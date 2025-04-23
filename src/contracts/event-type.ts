@@ -3,6 +3,7 @@ import {
   type TArray,
   type TBoolean,
   type TLiteral,
+  type TNull,
   type TObject,
   type TString,
   type TUnion,
@@ -37,7 +38,7 @@ export const EventTypeSchema: TObject<{
   description: TString
   isTruncating: TBoolean
   isDeleting: TBoolean
-  piiMask: TArray<typeof EventTypePiiMaskSchema>
+  piiMask: TUnion<[typeof EventTypePiiMaskSchema, TNull]>
   piiEnabled: TBoolean
 }> = Type.Object({
   id: Type.String(),
@@ -48,7 +49,7 @@ export const EventTypeSchema: TObject<{
   description: Type.String(),
   isTruncating: Type.Boolean(),
   isDeleting: Type.Boolean(),
-  piiMask: Type.Array(EventTypePiiMaskSchema),
+  piiMask: Type.Union([EventTypePiiMaskSchema, Type.Null()]),
   piiEnabled: Type.Boolean(),
 })
 
