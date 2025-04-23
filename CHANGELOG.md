@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.33.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.33.0...v1.33.1) (2025-04-23)
+
+
+### Bug Fixes
+
+* **event-type:** :art: make piiEnabled field optional in EventTypeCreateInput and EventTypeUpdateInput ([b59031d](https://github.com/flowcore-io/flowcore-sdk/commit/b59031d2b122f9ac87232024b1dc070722298d04))
+
 ## [1.33.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.32.0...v1.33.0) (2025-04-23)
 
 
