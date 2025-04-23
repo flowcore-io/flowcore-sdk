@@ -37,7 +37,9 @@ export const EventTypeSchema: TObject<{
   description: TString
   isTruncating: TBoolean
   isDeleting: TBoolean
+  isActive: TBoolean
   piiMask: TArray<typeof EventTypePiiMaskSchema>
+  piiEnabled: TBoolean
 }> = Type.Object({
   id: Type.String(),
   tenantId: Type.String(),
@@ -47,7 +49,9 @@ export const EventTypeSchema: TObject<{
   description: Type.String(),
   isTruncating: Type.Boolean(),
   isDeleting: Type.Boolean(),
+  isActive: Type.Boolean(),
   piiMask: Type.Array(EventTypePiiMaskSchema),
+  piiEnabled: Type.Boolean(),
 })
 
 /**

@@ -24,6 +24,8 @@ export interface EventTypeCreateInput {
       type: "string" | "number" | "boolean"
     }[]
   }
+  /** Whether the event type is active */
+  piiEnabled: boolean
 }
 
 /**

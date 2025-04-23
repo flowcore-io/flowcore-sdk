@@ -22,6 +22,8 @@ export type EventTypeUpdateInput = {
       type: "string" | "number" | "boolean"
     }[]
   }
+  /** Whether the event type is active */
+  piiEnabled: boolean
 }
 
 /**
