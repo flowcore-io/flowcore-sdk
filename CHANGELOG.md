@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.32.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.31.0...v1.32.0) (2025-04-22)
+
+
+### Features
+
+* **event-type:** :sparkles: add PII mask configuration to EventTypeCreateCommand ([3a1ccc2](https://github.com/flowcore-io/flowcore-sdk/commit/3a1ccc239bbfeb164f4537c28275df4f07751239))
+
+
+### Bug Fixes
+
+* **event-type:** :sparkles: add piiMask initialization in EventType tests ([9666cc5](https://github.com/flowcore-io/flowcore-sdk/commit/9666cc5dcace9cb4db7c180c2fd2ac24b86ff21a))
+
 ## [1.31.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.30.0...v1.31.0) (2025-04-22)
 
 
