@@ -515,7 +515,8 @@ const command = new EventTypeCreateCommand({
     paths: [
       { path: "$.entityId", type: "string" }
     ]
-  }
+  },
+  piiEnabled: true
 })
 
 const result = await client.execute(command)
