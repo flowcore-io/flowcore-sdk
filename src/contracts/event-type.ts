@@ -1,10 +1,4 @@
-import {
-  type Static,
-  type TArray,
-  type TObject,
-  type TUnion,
-  Type
-} from "@sinclair/typebox"
+import { type Static, type TArray, type TObject, type TUnion, Type } from "@sinclair/typebox"
 
 // Using a different approach to avoid circular references
 export type SimplePiiType = boolean | "string" | "number" | "boolean"
@@ -28,7 +22,10 @@ export type DetailedPiiField = {
 }
 
 // The full PiiDefinition type
-export type PiiDefinition = SimplePiiType | DetailedPiiField | Record<string, SimplePiiType | DetailedPiiField | Record<string, unknown>>
+export type PiiDefinition =
+  | SimplePiiType
+  | DetailedPiiField
+  | Record<string, SimplePiiType | DetailedPiiField | Record<string, unknown>>
 
 export const DetailedPiiFieldSchema: TObject = Type.Object({
   type: Type.Union([
@@ -46,7 +43,7 @@ export const DetailedPiiFieldSchema: TObject = Type.Object({
     Type.Object({
       char: Type.String({ minLength: 1, maxLength: 1 }),
       length: Type.Number({ minimum: 1 }),
-    })
+    }),
   ),
   min: Type.Optional(Type.Number()),
   max: Type.Optional(Type.Number()),
@@ -56,8 +53,8 @@ export const DetailedPiiFieldSchema: TObject = Type.Object({
   properties: Type.Optional(
     Type.Record(
       Type.String(),
-      Type.Unknown()
-    )
+      Type.Unknown(),
+    ),
   ),
 })
 
@@ -98,10 +95,10 @@ export const EventTypePiiMaskParsedSchema: TArray<TObject> = Type.Array(
         Type.Object({
           char: Type.String(),
           length: Type.Number(),
-        })
+        }),
       ),
     }),
-  })
+  }),
 )
 
 /**
