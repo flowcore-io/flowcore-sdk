@@ -1,5 +1,5 @@
 import { Command } from "../../common/command.ts"
-import { type EventType, EventTypeSchema } from "../../contracts/event-type.ts"
+import { type EventType, EventTypeSchema, type PiiDefinition } from "../../contracts/event-type.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 
 /**
@@ -14,17 +14,12 @@ export interface EventTypeCreateInput {
   description: string
   /** The pii mask of the event type */
   piiMask?: {
-    /** The json path to the key where the entitiy id for the PII mask is located */
+    /** The json path to the key where the entity id for the PII mask is located */
     key: string
-    /** The paths to the fields that should be masked */
-    paths: {
-      /** The json path to the field that should be masked */
-      path: string
-      /** The type of the field that should be masked */
-      type: "string" | "number" | "boolean"
-    }[]
+    /** Schema defining the fields that should be masked and how they should be masked */
+    schema: Record<string, PiiDefinition>
   }
-  /** Whether the event type is active */
+  /** Whether PII masking is enabled for this event type */
   piiEnabled?: boolean
 }
 

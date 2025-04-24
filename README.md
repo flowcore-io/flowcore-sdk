@@ -512,9 +512,42 @@ const command = new EventTypeCreateCommand({
   description: "My awesome event type",
   piiMask: {
     key: "entityId",
-    paths: [
-      { path: "$.entityId", type: "string" }
-    ]
+    schema: {
+      // Simple fields
+      name: true,               // Will be masked completely
+      email: "string",          // Will be masked as a string
+      age: "number",            // Will be masked as a number
+      isActive: "boolean",      // Will be masked as a boolean
+      
+      // Complex nested objects
+      address: {
+        street: {
+          type: "string",
+          faker: "address.streetAddress" // Uses faker.js for realistic values
+        },
+        city: "string",
+        zipCode: {
+          type: "string",
+          pattern: "\\d{5}"    // Will generate a 5-digit zip code
+        }
+      },
+      
+      // Arrays
+      phoneNumbers: {
+        type: "array",
+        count: 2,              // Will generate 2 items
+        items: "string"        // Each item will be a masked string
+      },
+      
+      // Objects with properties
+      preferences: {
+        type: "object",
+        properties: {
+          theme: "string",
+          notifications: "boolean"
+        }
+      }
+    }
   },
   piiEnabled: true
 })
