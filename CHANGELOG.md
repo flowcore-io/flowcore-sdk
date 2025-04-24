@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.35.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.34.0...v1.35.0) (2025-04-24)
+
+
+### Features
+
+* **event-type:** :sparkles: enhance PII masking schema with detailed field definitions ([955ec28](https://github.com/flowcore-io/flowcore-sdk/commit/955ec281f5d026cb4cf564a25d0cc0d977df70b6))
+
+
+### Bug Fixes
+
+* **event-type:** :art: simplify import statements and improve PII definition formatting ([8f8af77](https://github.com/flowcore-io/flowcore-sdk/commit/8f8af77d114e912b4b76e7f92559b50a6e56b0af))
+* **event-type:** :art: update PII types for improved clarity and consistency ([b8f632a](https://github.com/flowcore-io/flowcore-sdk/commit/b8f632aeff64b5b438f45cc171eb56d2bb09745b))
+
 ## [1.34.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.33.2...v1.34.0) (2025-04-23)
 
 
