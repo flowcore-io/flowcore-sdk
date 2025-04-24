@@ -6,12 +6,13 @@ import {
   Type
 } from "@sinclair/typebox"
 
-// Forward declaration for recursive types
-export type PiiDefinition = boolean | string | DetailedPiiField | Record<string, any>
+// Using a different approach to avoid circular references
+export type SimplePiiType = boolean | "string" | "number" | "boolean"
+
 export type DetailedPiiField = {
   type: "string" | "number" | "boolean" | "object" | "array"
   faker?: string
-  args?: any[]
+  args?: unknown[]
   length?: number
   pattern?: string
   redact?: {
@@ -22,9 +23,12 @@ export type DetailedPiiField = {
   max?: number
   precision?: number
   count?: number
-  items?: PiiDefinition
-  properties?: Record<string, PiiDefinition>
+  items?: SimplePiiType | DetailedPiiField | Record<string, unknown>
+  properties?: Record<string, SimplePiiType | DetailedPiiField | Record<string, unknown>>
 }
+
+// The full PiiDefinition type
+export type PiiDefinition = SimplePiiType | DetailedPiiField | Record<string, SimplePiiType | DetailedPiiField | Record<string, unknown>>
 
 export const DetailedPiiFieldSchema: TObject = Type.Object({
   type: Type.Union([
@@ -35,7 +39,7 @@ export const DetailedPiiFieldSchema: TObject = Type.Object({
     Type.Literal("array"),
   ]),
   faker: Type.Optional(Type.String()),
-  args: Type.Optional(Type.Array(Type.Any())),
+  args: Type.Optional(Type.Array(Type.Unknown())),
   length: Type.Optional(Type.Number()),
   pattern: Type.Optional(Type.String()),
   redact: Type.Optional(
@@ -48,11 +52,11 @@ export const DetailedPiiFieldSchema: TObject = Type.Object({
   max: Type.Optional(Type.Number()),
   precision: Type.Optional(Type.Number()),
   count: Type.Optional(Type.Number()),
-  items: Type.Optional(Type.Any()),
+  items: Type.Optional(Type.Unknown()),
   properties: Type.Optional(
     Type.Record(
       Type.String(),
-      Type.Any()
+      Type.Unknown()
     )
   ),
 })
@@ -61,7 +65,7 @@ export const PiiDefinitionSchema: TUnion = Type.Union([
   Type.Literal(true),
   Type.Union([Type.Literal("string"), Type.Literal("number"), Type.Literal("boolean")]),
   DetailedPiiFieldSchema,
-  Type.Record(Type.String(), Type.Any()),
+  Type.Record(Type.String(), Type.Unknown()),
 ])
 
 export const EventTypePiiMaskSchema: TObject = Type.Object({
@@ -81,15 +85,15 @@ export const EventTypePiiMaskParsedSchema: TArray<TObject> = Type.Array(
         Type.Literal("array"),
       ]),
       faker: Type.Optional(Type.String()),
-      args: Type.Array(Type.Any()),
+      args: Type.Array(Type.Unknown()),
       length: Type.Optional(Type.Number()),
       pattern: Type.Optional(Type.String()),
       min: Type.Optional(Type.Number()),
       max: Type.Optional(Type.Number()),
       precision: Type.Optional(Type.Number()),
       count: Type.Optional(Type.Number()),
-      items: Type.Optional(Type.Any()),
-      properties: Type.Optional(Type.Record(Type.String(), Type.Any())),
+      items: Type.Optional(Type.Unknown()),
+      properties: Type.Optional(Type.Record(Type.String(), Type.Unknown())),
       redact: Type.Optional(
         Type.Object({
           char: Type.String(),

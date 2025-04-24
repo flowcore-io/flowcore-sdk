@@ -66,9 +66,9 @@ describe("EventType", () => {
       .respondWith(200, [eventType])
 
     // act
-    const command = new EventTypeFetchCommand({ 
-      eventType: eventType.name as string, 
-      flowTypeId: eventType.flowTypeId as string 
+    const command = new EventTypeFetchCommand({
+      eventType: eventType.name as string,
+      flowTypeId: eventType.flowTypeId as string,
     })
     const response = await flowcoreClient.execute(command)
 
@@ -95,14 +95,14 @@ describe("EventType", () => {
           name: true,
           email: "string",
           age: "number",
-          active: "boolean"
-        }
+          active: "boolean",
+        },
       },
       piiMaskParsed: [
         { path: "$.name", definition: { type: "string", args: [] } },
         { path: "$.email", definition: { type: "string", args: [] } },
         { path: "$.age", definition: { type: "number", args: [] } },
-        { path: "$.active", definition: { type: "boolean", args: [] } }
+        { path: "$.active", definition: { type: "boolean", args: [] } },
       ],
       piiEnabled: true,
     }
@@ -139,59 +139,59 @@ describe("EventType", () => {
           address: {
             street: {
               type: "string",
-              faker: "address.streetAddress"
+              faker: "address.streetAddress",
             },
             city: "string",
             zipCode: {
               type: "string",
-              pattern: "\\d{5}"
-            }
+              pattern: "\\d{5}",
+            },
           },
           phoneNumbers: {
             type: "array",
             count: 2,
-            items: "string"
+            items: "string",
           },
           preferences: {
             type: "object",
             properties: {
               theme: "string",
-              notifications: "boolean"
-            }
-          }
-        }
+              notifications: "boolean",
+            },
+          },
+        },
       },
       piiMaskParsed: [
         { path: "$.name", definition: { type: "string", args: [] } },
         { path: "$.email", definition: { type: "string", args: [] } },
-        { 
-          path: "$.address.street", 
-          definition: { 
-            type: "string", 
-            faker: "address.streetAddress", 
-            args: [] 
-          } 
+        {
+          path: "$.address.street",
+          definition: {
+            type: "string",
+            faker: "address.streetAddress",
+            args: [],
+          },
         },
         { path: "$.address.city", definition: { type: "string", args: [] } },
-        { 
-          path: "$.address.zipCode", 
-          definition: { 
-            type: "string", 
-            pattern: "\\d{5}", 
-            args: [] 
-          } 
+        {
+          path: "$.address.zipCode",
+          definition: {
+            type: "string",
+            pattern: "\\d{5}",
+            args: [],
+          },
         },
-        { 
-          path: "$.phoneNumbers", 
-          definition: { 
-            type: "array", 
-            count: 2, 
-            items: "string", 
-            args: [] 
-          } 
+        {
+          path: "$.phoneNumbers",
+          definition: {
+            type: "array",
+            count: 2,
+            items: "string",
+            args: [],
+          },
         },
         { path: "$.preferences.theme", definition: { type: "string", args: [] } },
-        { path: "$.preferences.notifications", definition: { type: "boolean", args: [] } }
+        { path: "$.preferences.notifications", definition: { type: "boolean", args: [] } },
       ],
       piiEnabled: true,
     }
