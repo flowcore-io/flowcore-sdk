@@ -50,7 +50,7 @@ export class EventTypeInfoCommand extends CustomCommand<EventTypeInfoInput, Even
       tenant: this.input.tenant,
       eventTypeId: this.input.eventTypeId,
       order: "desc",
-      pageSize: lastEventsLimit,
+      pageSize: Math.max(lastEventsLimit, 100),
     })
     const [firstTimeBucketResponse, lastTimeBucketResponse] = await Promise.all([
       client.execute(firstTimeBucketCommand),
