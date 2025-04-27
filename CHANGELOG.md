@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.35.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.35.0...v1.35.1) (2025-04-27)
+
+
+### Bug Fixes
+
+* **event-type:** :bug: ensure pageSize does not exceed 100 ([90f868a](https://github.com/flowcore-io/flowcore-sdk/commit/90f868a761371bafcad1a6b20c931f1d2f89eb53))
+
 ## [1.35.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.34.0...v1.35.0) (2025-04-24)
 
 
