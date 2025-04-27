@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.35.2](https://github.com/flowcore-io/flowcore-sdk/compare/v1.35.1...v1.35.2) (2025-04-27)
+
+
+### Bug Fixes
+
+* **event-type:** :art: enhance type definitions and add detailed schema documentation ([8da86d3](https://github.com/flowcore-io/flowcore-sdk/commit/8da86d3ab98b0de4e76c1f01ef8666cc8485caf5))
+
 ## [1.35.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.35.0...v1.35.1) (2025-04-27)
 
 
