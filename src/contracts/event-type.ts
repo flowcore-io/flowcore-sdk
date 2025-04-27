@@ -1,4 +1,18 @@
-import { type Static, type TArray, type TObject, type TUnion, Type } from "@sinclair/typebox"
+import {
+  type Static,
+  type TArray,
+  type TBoolean,
+  type TLiteral,
+  type TNull,
+  type TNumber,
+  type TObject,
+  type TOptional,
+  type TRecord,
+  type TString,
+  type TUnion,
+  type TUnknown,
+  Type,
+} from "@sinclair/typebox"
 
 // Using a different approach to avoid circular references
 export type SimplePiiType = boolean | "string" | "number" | "boolean"
@@ -27,7 +41,28 @@ export type PiiDefinition =
   | DetailedPiiField
   | Record<string, SimplePiiType | DetailedPiiField | Record<string, unknown>>
 
-export const DetailedPiiFieldSchema: TObject = Type.Object({
+/**
+ * The schema for a detailed PII field
+ */
+export const DetailedPiiFieldSchema: TObject<{
+  type: TUnion<[TLiteral<"string">, TLiteral<"number">, TLiteral<"boolean">, TLiteral<"object">, TLiteral<"array">]>
+  faker: TOptional<TString>
+  args: TOptional<TArray<TUnknown>>
+  length: TOptional<TNumber>
+  pattern: TOptional<TString>
+  redact: TOptional<
+    TObject<{
+      char: TString
+      length: TNumber
+    }>
+  >
+  min: TOptional<TNumber>
+  max: TOptional<TNumber>
+  precision: TOptional<TNumber>
+  count: TOptional<TNumber>
+  items: TOptional<TUnknown>
+  properties: TOptional<TRecord<TString, TUnknown>>
+}> = Type.Object({
   type: Type.Union([
     Type.Literal("string"),
     Type.Literal("number"),
@@ -58,19 +93,61 @@ export const DetailedPiiFieldSchema: TObject = Type.Object({
   ),
 })
 
-export const PiiDefinitionSchema: TUnion = Type.Union([
+/**
+ * The schema for a PII definition
+ */
+export const PiiDefinitionSchema: TUnion<
+  [
+    TLiteral<true>,
+    TUnion<[TLiteral<"string">, TLiteral<"number">, TLiteral<"boolean">]>,
+    typeof DetailedPiiFieldSchema,
+    TRecord<TString, TUnknown>,
+  ]
+> = Type.Union([
   Type.Literal(true),
   Type.Union([Type.Literal("string"), Type.Literal("number"), Type.Literal("boolean")]),
   DetailedPiiFieldSchema,
   Type.Record(Type.String(), Type.Unknown()),
 ])
 
-export const EventTypePiiMaskSchema: TObject = Type.Object({
+/**
+ * The schema for an event type PII mask
+ */
+export const EventTypePiiMaskSchema: TObject<{
+  key: TString
+  schema: TRecord<TString, typeof PiiDefinitionSchema>
+}> = Type.Object({
   key: Type.String(),
   schema: Type.Record(Type.String(), PiiDefinitionSchema),
 })
 
-export const EventTypePiiMaskParsedSchema: TArray<TObject> = Type.Array(
+/**
+ * The schema for an event type PII mask parsed
+ */
+export const EventTypePiiMaskParsedSchema: TArray<
+  TObject<{
+    path: TString
+    definition: TObject<{
+      type: TUnion<[TLiteral<"string">, TLiteral<"number">, TLiteral<"boolean">, TLiteral<"object">, TLiteral<"array">]>
+      faker: TOptional<TString>
+      args: TArray<TUnknown>
+      length: TOptional<TNumber>
+      pattern: TOptional<TString>
+      min: TOptional<TNumber>
+      max: TOptional<TNumber>
+      precision: TOptional<TNumber>
+      count: TOptional<TNumber>
+      items: TOptional<TUnknown>
+      properties: TOptional<TRecord<TString, TUnknown>>
+      redact: TOptional<
+        TObject<{
+          char: TString
+          length: TNumber
+        }>
+      >
+    }>
+  }>
+> = Type.Array(
   Type.Object({
     path: Type.String(),
     definition: Type.Object({
@@ -104,19 +181,46 @@ export const EventTypePiiMaskParsedSchema: TArray<TObject> = Type.Array(
 /**
  * The schema for an event type
  */
-export const EventTypeSchema: TObject = Type.Object({
+export const EventTypeSchema: TObject<{
+  id: TString
+  tenantId: TString
+  dataCoreId: TString
+  flowTypeId: TString
+  name: TString
+  description: TString
+  isTruncating: TBoolean
+  isDeleting: TBoolean
+  createdAt: TString
+  updatedAt: TUnion<[TString, TNull]>
+  piiMask: TUnion<[typeof EventTypePiiMaskSchema, TNull]>
+  piiMaskParsed: TUnion<[typeof EventTypePiiMaskParsedSchema, TNull]>
+  piiEnabled: TBoolean
+}> = Type.Object({
+  /** Unique identifier for the event type */
   id: Type.String(),
+  /** ID of the tenant that owns this event type */
   tenantId: Type.String(),
+  /** ID of the data core this event type belongs to */
   dataCoreId: Type.String(),
+  /** ID of the flow type this event type belongs to */
   flowTypeId: Type.String(),
+  /** Name of the event type */
   name: Type.String(),
+  /** Description of the event type */
   description: Type.String(),
+  /** Indicates if the event type is currently being truncated */
   isTruncating: Type.Boolean(),
+  /** Indicates if the event type is currently being deleted */
   isDeleting: Type.Boolean(),
+  /** Creation timestamp */
   createdAt: Type.String(),
+  /** Last update timestamp */
   updatedAt: Type.Union([Type.String(), Type.Null()]),
+  /** PII mask configuration */
   piiMask: Type.Union([EventTypePiiMaskSchema, Type.Null()]),
+  /** Parsed PII mask configuration */
   piiMaskParsed: Type.Union([EventTypePiiMaskParsedSchema, Type.Null()]),
+  /** Indicates if PII handling is enabled */
   piiEnabled: Type.Boolean(),
 })
 
