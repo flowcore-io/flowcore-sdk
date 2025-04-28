@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.35.3](https://github.com/flowcore-io/flowcore-sdk/compare/v1.35.2...v1.35.3) (2025-04-28)
+
+
+### Bug Fixes
+
+* **mod:** :art: improve import formatting and enhance type exports ([6ff8ebd](https://github.com/flowcore-io/flowcore-sdk/commit/6ff8ebda1542c5cf3545d84bc3124cee37345566))
+* **mod:** :art: simplify import statements and enhance type exports ([672f4dd](https://github.com/flowcore-io/flowcore-sdk/commit/672f4dd80473b89156b75b420d9fe4d12a7fd7a9))
+
 ## [1.35.2](https://github.com/flowcore-io/flowcore-sdk/compare/v1.35.1...v1.35.2) (2025-04-27)
 
 
