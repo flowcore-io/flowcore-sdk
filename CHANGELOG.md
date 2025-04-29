@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.36.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.35.3...v1.36.0) (2025-04-29)
+
+
+### Features
+
+* **contracts:** :sparkles: add PiiDefinition and PiiDefinitionSchema types ([3d616ec](https://github.com/flowcore-io/flowcore-sdk/commit/3d616ec63a1a5d2ceb2c1a271e660170fae811df))
+
 ## [1.35.3](https://github.com/flowcore-io/flowcore-sdk/compare/v1.35.2...v1.35.3) (2025-04-28)
 
 
