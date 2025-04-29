@@ -8,6 +8,8 @@ export type {
   EventTypePiiMaskParsedSchema,
   EventTypePiiMaskSchema,
   EventTypeSchema,
+  PiiDefinition,
+  PiiDefinitionSchema,
 } from "./event-type.ts"
 export type { FlowType } from "./flow-type.ts"
 export type { FlowcoreEvent } from "./event.ts"
