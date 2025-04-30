@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.36.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.36.0...v1.36.1) (2025-04-30)
+
+
+### Bug Fixes
+
+* **contracts:** :art: format PermissionSchema for consistency ([9f86f0b](https://github.com/flowcore-io/flowcore-sdk/commit/9f86f0be4e36905bf9f6a94bc20dd0cad27e17c1))
+* **contracts:** :art: update PermissionSchema to include string type ([cf5e8a3](https://github.com/flowcore-io/flowcore-sdk/commit/cf5e8a34494e1e5cc1b19afb8c0a356610bcc61f))
+
 ## [1.36.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.35.3...v1.36.0) (2025-04-29)
 
 
