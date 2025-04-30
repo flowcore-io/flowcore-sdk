@@ -18,9 +18,10 @@ export const PermissionSchema: TObject<{
   action: TArray<
     TUnion<[
       TLiteral<"read">,
-      TLiteral<"write">,
+      TLiteral<"write">, 
       TLiteral<"ingest">,
       TLiteral<"fetch">,
+      TString
     ]>
   >
 }> = Type.Object({
@@ -31,8 +32,9 @@ export const PermissionSchema: TObject<{
     Type.Union([
       Type.Literal("read"),
       Type.Literal("write"),
-      Type.Literal("ingest"),
+      Type.Literal("ingest"), 
       Type.Literal("fetch"),
+      Type.String()
     ]),
   ),
 })
