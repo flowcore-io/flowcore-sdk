@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.38.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.37.0...v1.38.0) (2025-05-01)
+
+
+### Features
+
+* **events:** :sparkles: add includeSensitiveData option to event list and fetch commands ([960e7e0](https://github.com/flowcore-io/flowcore-sdk/commit/960e7e0bb58f6351a14fd1d516e5409a60cd02c9))
+
 ## [1.37.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.36.1...v1.37.0) (2025-05-01)
 
 
