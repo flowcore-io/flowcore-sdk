@@ -27,6 +27,8 @@ export interface EventsFetchEventsInput {
   afterEventId?: string
   /** end at this event id */
   toEventId?: string
+  /** include sensitive data */
+  includeSensitiveData?: boolean
 }
 
 /**
@@ -72,6 +74,7 @@ export class EventsFetchCommand extends Command<EventsFetchEventsInput, EventsFe
       ...(this.input.fromEventId ? { fromEventId: this.input.fromEventId } : {}),
       ...(this.input.afterEventId ? { afterEventId: this.input.afterEventId } : {}),
       ...(this.input.toEventId ? { toEventId: this.input.toEventId } : {}),
+      ...(this.input.includeSensitiveData ? { includeSensitiveData: this.input.includeSensitiveData.toString() } : {}),
     }
     return `/api/v1/events?${new URLSearchParams(query).toString()}`
   }

@@ -33,6 +33,8 @@ export interface EventListInput {
    * ⚠️ When using `desc` order, pagination and filters are not possible.
    */
   order?: "asc" | "desc"
+  /** include sensitive data */
+  includeSensitiveData?: boolean
 }
 
 /**
@@ -92,7 +94,7 @@ export class EventListCommand extends Command<EventListInput, EventListOutput> {
     this.input.afterEventId && query.set("afterEventId", this.input.afterEventId)
     this.input.toEventId && query.set("toEventId", this.input.toEventId)
     this.input.order && query.set("order", this.input.order)
-
+    this.input.includeSensitiveData && query.set("includeSensitiveData", this.input.includeSensitiveData.toString())
     return `/api/v1/events?${query.toString()}`
   }
   /**
