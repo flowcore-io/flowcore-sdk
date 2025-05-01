@@ -26,7 +26,8 @@ const responseSchema = Type.Object({
 /**
  * Disable Sensitive Data Feature for a tenant
  */
-export class TenantDisableSensitiveDataCommand extends Command<TenantDisableSensitiveDataInput, TenantDisableSensitiveDataResponse> {
+export class TenantDisableSensitiveDataCommand
+  extends Command<TenantDisableSensitiveDataInput, TenantDisableSensitiveDataResponse> {
   /**
    * Get the method
    */

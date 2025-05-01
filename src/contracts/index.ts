@@ -3,11 +3,11 @@ export * from "./ai-agent-coordinator.ts"
 export type { DataCore } from "./data-core.ts"
 export type {
   EventType,
+  EventTypeSchema,
   EventTypeSensitiveDataMask,
   EventTypeSensitiveDataMaskParsed,
   EventTypeSensitiveDataMaskParsedSchema,
   EventTypeSensitiveDataMaskSchema,
-  EventTypeSchema,
   SensitiveDataDefinition,
   SensitiveDataDefinitionSchema,
 } from "./event-type.ts"
