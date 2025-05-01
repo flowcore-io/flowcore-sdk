@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.37.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.36.1...v1.37.0) (2025-05-01)
+
+
+### Features
+
+* **event-type:** :sparkles: update PII to sensitive data terminology and add related commands ([3c85375](https://github.com/flowcore-io/flowcore-sdk/commit/3c85375f293b733d2bc1075ef396951532d91ba2))
+
+
+### Bug Fixes
+
+* **tenant:** :art: format class declarations for TenantDisableSensitiveDataCommand and TenantEnableSensitiveDataCommand ([facdca2](https://github.com/flowcore-io/flowcore-sdk/commit/facdca2385e392b152235a10b3d15c94f9f8f551))
+
 ## [1.36.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.36.0...v1.36.1) (2025-04-30)
 
 
