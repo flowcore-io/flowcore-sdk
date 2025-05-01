@@ -47,7 +47,7 @@ export const TenantSchema: TObject<{
       }>
     }>,
   ]>
-  piiEnabled: TOptional<TBoolean>
+  sensitiveDataEnabled: TOptional<TBoolean>
 }> = Type.Object({
   id: Type.String(),
   name: Type.String(),
@@ -70,7 +70,7 @@ export const TenantSchema: TObject<{
       }),
     }),
   ]),
-  piiEnabled: Type.Optional(Type.Boolean()),
+  sensitiveDataEnabled: Type.Optional(Type.Boolean()),
 })
 
 /**

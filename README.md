@@ -510,7 +510,7 @@ const command = new EventTypeCreateCommand({
   flowTypeId: "your-flow-type-id",
   name: "my-event-type",
   description: "My awesome event type",
-  piiMask: {
+  sensitiveDataMask: {
     key: "entityId",
     schema: {
       // Simple fields
@@ -549,7 +549,7 @@ const command = new EventTypeCreateCommand({
       }
     }
   },
-  piiEnabled: true
+  sensitiveDataEnabled: true
 })
 
 const result = await client.execute(command)

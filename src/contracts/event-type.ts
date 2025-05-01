@@ -15,9 +15,9 @@ import {
 } from "@sinclair/typebox"
 
 // Using a different approach to avoid circular references
-export type SimplePiiType = boolean | "string" | "number" | "boolean"
+export type SimpleSensitiveDataType = boolean | "string" | "number" | "boolean"
 
-export type DetailedPiiField = {
+export type DetailedSensitiveDataField = {
   type: "string" | "number" | "boolean" | "object" | "array"
   faker?: string
   args?: unknown[]
@@ -31,20 +31,20 @@ export type DetailedPiiField = {
   max?: number
   precision?: number
   count?: number
-  items?: SimplePiiType | DetailedPiiField | Record<string, unknown>
-  properties?: Record<string, SimplePiiType | DetailedPiiField | Record<string, unknown>>
+  items?: SimpleSensitiveDataType | DetailedSensitiveDataField | Record<string, unknown>
+  properties?: Record<string, SimpleSensitiveDataType | DetailedSensitiveDataField | Record<string, unknown>>
 }
 
-// The full PiiDefinition type
-export type PiiDefinition =
-  | SimplePiiType
-  | DetailedPiiField
-  | Record<string, SimplePiiType | DetailedPiiField | Record<string, unknown>>
+// The full SensitiveDataDefinition type
+export type SensitiveDataDefinition =
+  | SimpleSensitiveDataType
+  | DetailedSensitiveDataField
+  | Record<string, SimpleSensitiveDataType | DetailedSensitiveDataField | Record<string, unknown>>
 
 /**
- * The schema for a detailed PII field
+ * The schema for a detailed SensitiveData field
  */
-export const DetailedPiiFieldSchema: TObject<{
+export const DetailedSensitiveDataFieldSchema: TObject<{
   type: TUnion<[TLiteral<"string">, TLiteral<"number">, TLiteral<"boolean">, TLiteral<"object">, TLiteral<"array">]>
   faker: TOptional<TString>
   args: TOptional<TArray<TUnknown>>
@@ -94,37 +94,37 @@ export const DetailedPiiFieldSchema: TObject<{
 })
 
 /**
- * The schema for a PII definition
+ * The schema for a SensitiveData definition
  */
-export const PiiDefinitionSchema: TUnion<
+export const SensitiveDataDefinitionSchema: TUnion<
   [
     TLiteral<true>,
     TUnion<[TLiteral<"string">, TLiteral<"number">, TLiteral<"boolean">]>,
-    typeof DetailedPiiFieldSchema,
+    typeof DetailedSensitiveDataFieldSchema,
     TRecord<TString, TUnknown>,
   ]
 > = Type.Union([
   Type.Literal(true),
   Type.Union([Type.Literal("string"), Type.Literal("number"), Type.Literal("boolean")]),
-  DetailedPiiFieldSchema,
+  DetailedSensitiveDataFieldSchema,
   Type.Record(Type.String(), Type.Unknown()),
 ])
 
 /**
- * The schema for an event type PII mask
+ * The schema for an event type SensitiveData mask
  */
-export const EventTypePiiMaskSchema: TObject<{
+export const EventTypeSensitiveDataMaskSchema: TObject<{
   key: TString
-  schema: TRecord<TString, typeof PiiDefinitionSchema>
+  schema: TRecord<TString, typeof SensitiveDataDefinitionSchema>
 }> = Type.Object({
   key: Type.String(),
-  schema: Type.Record(Type.String(), PiiDefinitionSchema),
+  schema: Type.Record(Type.String(), SensitiveDataDefinitionSchema),
 })
 
 /**
- * The schema for an event type PII mask parsed
+ * The schema for an event type SensitiveData mask parsed
  */
-export const EventTypePiiMaskParsedSchema: TArray<
+export const EventTypeSensitiveDataMaskParsedSchema: TArray<
   TObject<{
     path: TString
     definition: TObject<{
@@ -192,9 +192,8 @@ export const EventTypeSchema: TObject<{
   isDeleting: TBoolean
   createdAt: TString
   updatedAt: TUnion<[TString, TNull]>
-  piiMask: TUnion<[typeof EventTypePiiMaskSchema, TNull]>
-  piiMaskParsed: TUnion<[typeof EventTypePiiMaskParsedSchema, TNull]>
-  piiEnabled: TBoolean
+  sensitiveDataMask: TOptional<TUnion<[typeof EventTypeSensitiveDataMaskSchema, TNull]>>
+  sensitiveDataEnabled: TOptional<TBoolean>
 }> = Type.Object({
   /** Unique identifier for the event type */
   id: Type.String(),
@@ -216,12 +215,10 @@ export const EventTypeSchema: TObject<{
   createdAt: Type.String(),
   /** Last update timestamp */
   updatedAt: Type.Union([Type.String(), Type.Null()]),
-  /** PII mask configuration */
-  piiMask: Type.Union([EventTypePiiMaskSchema, Type.Null()]),
-  /** Parsed PII mask configuration */
-  piiMaskParsed: Type.Union([EventTypePiiMaskParsedSchema, Type.Null()]),
-  /** Indicates if PII handling is enabled */
-  piiEnabled: Type.Boolean(),
+  /** SensitiveData mask configuration */
+  sensitiveDataMask: Type.Optional(Type.Union([EventTypeSensitiveDataMaskSchema, Type.Null()])),
+  /** Indicates if SensitiveData handling is enabled */
+  sensitiveDataEnabled: Type.Optional(Type.Boolean()),
 })
 
 /**
@@ -230,11 +227,11 @@ export const EventTypeSchema: TObject<{
 export type EventType = Static<typeof EventTypeSchema>
 
 /**
- * Type for PII mask
+ * Type for SensitiveData mask
  */
-export type EventTypePiiMask = Static<typeof EventTypePiiMaskSchema>
+export type EventTypeSensitiveDataMask = Static<typeof EventTypeSensitiveDataMaskSchema>
 
 /**
- * Type for parsed PII mask
+ * Type for parsed SensitiveData mask
  */
-export type EventTypePiiMaskParsed = Static<typeof EventTypePiiMaskParsedSchema>
+export type EventTypeSensitiveDataMaskParsed = Static<typeof EventTypeSensitiveDataMaskParsedSchema>

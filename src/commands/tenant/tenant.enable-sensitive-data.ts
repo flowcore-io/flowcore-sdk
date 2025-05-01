@@ -5,28 +5,28 @@ import { NotFoundException } from "../../exceptions/not-found.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 
 /**
- * The input for the tenant disable pii command
+ * The input for the tenant enable sensitive data command
  */
-export interface TenantDisablePiiInput {
+export interface TenantEnableSensitiveDataInput {
   /** The id of the tenant */
   tenantId: string
 }
 
-export interface TenantDisablePiiResponse {
-  piiEnabled: boolean
+export interface TenantEnableSensitiveDataResponse {
+  sensitiveDataEnabled: boolean
 }
 
 /**
- * The response schema for the tenant disable pii command
+ * The response schema for the tenant enable sensitive data command
  */
 const responseSchema = Type.Object({
-  piiEnabled: Type.Boolean(),
+  sensitiveDataEnabled: Type.Boolean(),
 })
 
 /**
- * Disable Personal Identifiable Information (PII) Feature for a tenant
+ * Enable Sensitive Data Feature for a tenant
  */
-export class TenantDisablePiiCommand extends Command<TenantDisablePiiInput, TenantDisablePiiResponse> {
+export class TenantEnableSensitiveDataCommand extends Command<TenantEnableSensitiveDataInput, TenantEnableSensitiveDataResponse> {
   /**
    * Get the method
    */
@@ -45,13 +45,13 @@ export class TenantDisablePiiCommand extends Command<TenantDisablePiiInput, Tena
    * Get the path
    */
   protected override getPath(): string {
-    return `/api/v1/tenants/${this.input.tenantId}/disable-pii`
+    return `/api/v1/tenants/${this.input.tenantId}/enable-sensitive-data`
   }
 
   /**
    * Parse the response
    */
-  protected override parseResponse(rawResponse: unknown): TenantDisablePiiResponse {
+  protected override parseResponse(rawResponse: unknown): TenantEnableSensitiveDataResponse {
     const response = parseResponseHelper(responseSchema, rawResponse)
     return response
   }

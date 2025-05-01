@@ -1,5 +1,5 @@
 import { Command } from "../../common/command.ts"
-import { type EventType, EventTypeSchema, type PiiDefinition } from "../../contracts/event-type.ts"
+import { type EventType, EventTypeSchema, type SensitiveDataDefinition } from "../../contracts/event-type.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 
 /**
@@ -12,15 +12,15 @@ export interface EventTypeCreateInput {
   name: string
   /** The description of the event type */
   description: string
-  /** The pii mask of the event type */
-  piiMask?: {
-    /** The json path to the key where the entity id for the PII mask is located */
+  /** The sensitive data mask of the event type */
+  sensitiveDataMask?: {
+    /** The json path to the key where the entity id for the sensitive data mask is located */
     key: string
     /** Schema defining the fields that should be masked and how they should be masked */
-    schema: Record<string, PiiDefinition>
+    schema: Record<string, SensitiveDataDefinition>
   }
-  /** Whether PII masking is enabled for this event type */
-  piiEnabled?: boolean
+  /** Whether sensitive data masking is enabled for this event type */
+  sensitiveDataEnabled?: boolean
 }
 
 /**

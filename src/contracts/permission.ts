@@ -21,6 +21,7 @@ export const PermissionSchema: TObject<{
       TLiteral<"write">,
       TLiteral<"ingest">,
       TLiteral<"fetch">,
+      TLiteral<"sensitive-data-fetch">,
       TString,
     ]>
   >
@@ -34,6 +35,7 @@ export const PermissionSchema: TObject<{
       Type.Literal("write"),
       Type.Literal("ingest"),
       Type.Literal("fetch"),
+      Type.Literal("sensitive-data-fetch"),
       Type.String(),
     ]),
   ),

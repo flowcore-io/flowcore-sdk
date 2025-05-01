@@ -24,9 +24,8 @@ describe("EventType", () => {
       isTruncating: false,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      piiMask: null,
-      piiMaskParsed: null,
-      piiEnabled: true,
+      sensitiveDataMask: null,
+      sensitiveDataEnabled: true,
     }
 
     fetchMockerBuilder.get(`/api/v1/event-types/${eventType.id}`)
@@ -53,9 +52,8 @@ describe("EventType", () => {
       isTruncating: false,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      piiMask: null,
-      piiMaskParsed: null,
-      piiEnabled: true,
+      sensitiveDataMask: null,
+      sensitiveDataEnabled: true,
     }
 
     fetchMockerBuilder.get(`/api/v1/event-types`)
@@ -76,7 +74,7 @@ describe("EventType", () => {
     assertEquals(response, eventType)
   })
 
-  it("should handle event type with simple PII masking", async () => {
+  it("should handle event type with simple sensitive data masking", async () => {
     // arrange
     const eventType: EventType = {
       id: crypto.randomUUID(),
@@ -84,12 +82,12 @@ describe("EventType", () => {
       dataCoreId: crypto.randomUUID(),
       flowTypeId: crypto.randomUUID(),
       name: "customer-data",
-      description: "Customer data with PII masking",
+      description: "Customer data with sensitive data masking",
       isDeleting: false,
       isTruncating: false,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      piiMask: {
+      sensitiveDataMask: {
         key: "customerId",
         schema: {
           name: true,
@@ -98,13 +96,7 @@ describe("EventType", () => {
           active: "boolean",
         },
       },
-      piiMaskParsed: [
-        { path: "$.name", definition: { type: "string", args: [] } },
-        { path: "$.email", definition: { type: "string", args: [] } },
-        { path: "$.age", definition: { type: "number", args: [] } },
-        { path: "$.active", definition: { type: "boolean", args: [] } },
-      ],
-      piiEnabled: true,
+      sensitiveDataEnabled: true,
     }
 
     fetchMockerBuilder.get(`/api/v1/event-types/${eventType.id}`)
@@ -118,7 +110,7 @@ describe("EventType", () => {
     assertEquals(response, eventType)
   })
 
-  it("should handle event type with complex PII masking", async () => {
+  it("should handle event type with complex sensitive data masking", async () => {
     // arrange
     const eventType: EventType = {
       id: crypto.randomUUID(),
@@ -126,12 +118,12 @@ describe("EventType", () => {
       dataCoreId: crypto.randomUUID(),
       flowTypeId: crypto.randomUUID(),
       name: "advanced-data",
-      description: "Advanced data with complex PII masking",
+      description: "Advanced data with complex sensitive data masking",
       isDeleting: false,
       isTruncating: false,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      piiMask: {
+      sensitiveDataMask: {
         key: "userId",
         schema: {
           name: true,
@@ -161,39 +153,7 @@ describe("EventType", () => {
           },
         },
       },
-      piiMaskParsed: [
-        { path: "$.name", definition: { type: "string", args: [] } },
-        { path: "$.email", definition: { type: "string", args: [] } },
-        {
-          path: "$.address.street",
-          definition: {
-            type: "string",
-            faker: "address.streetAddress",
-            args: [],
-          },
-        },
-        { path: "$.address.city", definition: { type: "string", args: [] } },
-        {
-          path: "$.address.zipCode",
-          definition: {
-            type: "string",
-            pattern: "\\d{5}",
-            args: [],
-          },
-        },
-        {
-          path: "$.phoneNumbers",
-          definition: {
-            type: "array",
-            count: 2,
-            items: "string",
-            args: [],
-          },
-        },
-        { path: "$.preferences.theme", definition: { type: "string", args: [] } },
-        { path: "$.preferences.notifications", definition: { type: "boolean", args: [] } },
-      ],
-      piiEnabled: true,
+      sensitiveDataEnabled: true,
     }
 
     fetchMockerBuilder.get(`/api/v1/event-types/${eventType.id}`)

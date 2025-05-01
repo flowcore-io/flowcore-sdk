@@ -3,13 +3,13 @@ export * from "./ai-agent-coordinator.ts"
 export type { DataCore } from "./data-core.ts"
 export type {
   EventType,
-  EventTypePiiMask,
-  EventTypePiiMaskParsed,
-  EventTypePiiMaskParsedSchema,
-  EventTypePiiMaskSchema,
+  EventTypeSensitiveDataMask,
+  EventTypeSensitiveDataMaskParsed,
+  EventTypeSensitiveDataMaskParsedSchema,
+  EventTypeSensitiveDataMaskSchema,
   EventTypeSchema,
-  PiiDefinition,
-  PiiDefinitionSchema,
+  SensitiveDataDefinition,
+  SensitiveDataDefinitionSchema,
 } from "./event-type.ts"
 export type { FlowType } from "./flow-type.ts"
 export type { FlowcoreEvent } from "./event.ts"
