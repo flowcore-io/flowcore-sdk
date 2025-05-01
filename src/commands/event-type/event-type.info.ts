@@ -14,6 +14,8 @@ export interface EventTypeInfoInput {
   eventTypeId: [string, ...string[]] | string
   /** the limit for the number of last events to fetch (default is 5) */
   limit?: number
+  /** include sensitive data */
+  includeSensitiveData?: boolean
 }
 
 /**
@@ -77,6 +79,7 @@ export class EventTypeInfoCommand extends CustomCommand<EventTypeInfoInput, Even
         pageSize: lastEventsLimit - lastEvents.length,
         order: "desc",
         tenant: this.input.tenant,
+        ...(this.input.includeSensitiveData && { includeSensitiveData: true }),
       })
       const eventListResponse = await client.execute(eventListCommand)
       lastEvents.push(...eventListResponse.events)
