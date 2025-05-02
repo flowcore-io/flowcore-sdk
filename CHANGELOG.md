@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.41.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.40.0...v1.41.0) (2025-05-02)
+
+
+### Features
+
+* **event-type:** :sparkles: add commands for listing and removing sensitive data ([09b9ce7](https://github.com/flowcore-io/flowcore-sdk/commit/09b9ce72a2b3cc77970c123a9fd61e4497ebcdbe))
+
+
+### Bug Fixes
+
+* **commands:** :fire: remove unnecessary blank line in index.ts ([1e894c8](https://github.com/flowcore-io/flowcore-sdk/commit/1e894c8a39f771640924ca00de8c7eaa3a284194))
+
 ## [1.40.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.39.0...v1.40.0) (2025-05-02)
 
 
