@@ -222,6 +222,44 @@ export const EventTypeSchema: TObject<{
 })
 
 /**
+ * The schema for an event type removed sensitive data
+ */
+export const EventTypeRemovedSensitiveDataSchema: TObject<{
+  id: TString
+  tenantId: TString
+  dataCoreId: TString
+  flowTypeId: TString
+  eventTypeId: TString
+  parentKey: TString
+  key: TString
+  type: TString
+  application: TString
+  createdAt: TString
+}> = Type.Object({
+  id: Type.String(),
+  tenantId: Type.String(),
+  dataCoreId: Type.String(),
+  flowTypeId: Type.String(),
+  eventTypeId: Type.String(),
+  parentKey: Type.String(),
+  key: Type.String(),
+  type: Type.String(),
+  application: Type.String(),
+  createdAt: Type.String(),
+})
+
+/**
+ * The schema for an event type remove sensitive data
+ */
+export const EventTypeRemoveSensitiveDataSchema: TObject<{
+  success: TBoolean
+  id: TString
+}> = Type.Object({
+  success: Type.Boolean(),
+  id: Type.String(),
+})
+
+/**
  * The type for an event type
  */
 export type EventType = Static<typeof EventTypeSchema>
@@ -235,3 +273,13 @@ export type EventTypeSensitiveDataMask = Static<typeof EventTypeSensitiveDataMas
  * Type for parsed SensitiveData mask
  */
 export type EventTypeSensitiveDataMaskParsed = Static<typeof EventTypeSensitiveDataMaskParsedSchema>
+
+/**
+ * Type for an event type removed sensitive data
+ */
+export type EventTypeRemovedSensitiveData = Static<typeof EventTypeRemovedSensitiveDataSchema>
+
+/**
+ * Type for an event type remove sensitive data
+ */
+export type EventTypeRemoveSensitiveData = Static<typeof EventTypeRemoveSensitiveDataSchema>
