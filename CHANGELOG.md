@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.41.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.41.0...v1.41.1) (2025-05-02)
+
+
+### Bug Fixes
+
+* **event-type:** :art: rename applicationId to application in sensitive data commands ([7a778cd](https://github.com/flowcore-io/flowcore-sdk/commit/7a778cd9609b3fd81463f5cd5741e4b455237ab6))
+
 ## [1.41.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.40.0...v1.41.0) (2025-05-02)
 
 
