@@ -1,6 +1,8 @@
-import { Type } from "@sinclair/typebox"
 import { Command } from "../../common/command.ts"
-import { type EventTypeRemovedSensitiveData, EventTypeRemovedSensitiveDataSchema } from "../../contracts/event-type.ts"
+import {
+  type EventTypeListRemovedSensitiveDataResponse,
+  EventTypeListRemovedSensitiveDataResponseSchema,
+} from "../../contracts/event-type.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 
 /**
@@ -19,17 +21,21 @@ export interface EventTypeListRemovedSensitiveDataInput {
   application?: string
   /** The parent key of the event type */
   parentKey?: string
-  /** The cursor to start the list from */
-  cursor?: string
-  /** The limit of the number of items to return */
-  limit?: number
+  /** The page to fetch (minimum: 1, default: 1) */
+  page?: number
+  /** The page size (minimum: 1, maximum: 5000, default: 20) */
+  pageSize?: number
+  /** The type of removal */
+  type?: string
+  /** The sort order */
+  sort?: string
 }
 
 /**
  * Fetch an event type
  */
 export class EventTypeListRemovedSensitiveDataCommand
-  extends Command<EventTypeListRemovedSensitiveDataInput, EventTypeRemovedSensitiveData[]> {
+  extends Command<EventTypeListRemovedSensitiveDataInput, EventTypeListRemovedSensitiveDataResponse> {
   /**
    * Get the method
    */
@@ -54,15 +60,17 @@ export class EventTypeListRemovedSensitiveDataCommand
     this.input.eventTypeId && queryParams.set("eventTypeId", this.input.eventTypeId)
     this.input.parentKey && queryParams.set("parentKey", this.input.parentKey)
     this.input.application && queryParams.set("application", this.input.application)
-    this.input.cursor && queryParams.set("cursor", this.input.cursor)
-    this.input.limit && queryParams.set("limit", this.input.limit.toString())
+    this.input.page && queryParams.set("page", this.input.page.toString())
+    this.input.pageSize && queryParams.set("pageSize", this.input.pageSize.toString())
+    this.input.type && queryParams.set("type", this.input.type)
+    this.input.sort && queryParams.set("sort", this.input.sort)
     return `/api/v1/event-types/sensitive-data/${this.input.tenantId}?${queryParams.toString()}`
   }
 
   /**
    * Parse the response
    */
-  protected override parseResponse(rawResponse: unknown): EventTypeRemovedSensitiveData[] {
-    return parseResponseHelper(Type.Array(EventTypeRemovedSensitiveDataSchema), rawResponse)
+  protected override parseResponse(rawResponse: unknown): EventTypeListRemovedSensitiveDataResponse {
+    return parseResponseHelper(EventTypeListRemovedSensitiveDataResponseSchema, rawResponse)
   }
 }

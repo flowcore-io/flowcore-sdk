@@ -2,6 +2,7 @@ import {
   type Static,
   type TArray,
   type TBoolean,
+  type TDate,
   type TLiteral,
   type TNull,
   type TNumber,
@@ -260,6 +261,54 @@ export const EventTypeRemoveSensitiveDataSchema: TObject<{
 })
 
 /**
+ * The schema for an event type list removed sensitive data item
+ */
+export const EventTypeListRemovedSensitiveDataItemSchema: TObject<{
+  id: TString
+  tenantId: TString
+  dataCoreId: TString
+  flowTypeId: TString
+  eventTypeId: TString
+  application: TString
+  parentKey: TString
+  key: TString
+  type: TString
+  createdAt: TDate
+}> = Type.Object({
+  id: Type.String(),
+  tenantId: Type.String(),
+  dataCoreId: Type.String(),
+  flowTypeId: Type.String(),
+  eventTypeId: Type.String(),
+  application: Type.String(),
+  parentKey: Type.String(),
+  key: Type.String(),
+  type: Type.String(),
+  createdAt: Type.Date(),
+})
+
+/**
+ * The schema for an event type list removed sensitive data response
+ */
+export const EventTypeListRemovedSensitiveDataResponseSchema: TObject<{
+  data: TArray<typeof EventTypeListRemovedSensitiveDataItemSchema>
+  pagination: TObject<{
+    page: TNumber
+    pageSize: TNumber
+    hasNextPage: TBoolean
+    hasPreviousPage: TBoolean
+  }>
+}> = Type.Object({
+  data: Type.Array(EventTypeListRemovedSensitiveDataItemSchema),
+  pagination: Type.Object({
+    page: Type.Number(),
+    pageSize: Type.Number(),
+    hasNextPage: Type.Boolean(),
+    hasPreviousPage: Type.Boolean(),
+  }),
+})
+
+/**
  * The type for an event type
  */
 export type EventType = Static<typeof EventTypeSchema>
@@ -278,6 +327,16 @@ export type EventTypeSensitiveDataMaskParsed = Static<typeof EventTypeSensitiveD
  * Type for an event type removed sensitive data
  */
 export type EventTypeRemovedSensitiveData = Static<typeof EventTypeRemovedSensitiveDataSchema>
+
+/**
+ * Type for an event type list removed sensitive data item
+ */
+export type EventTypeListRemovedSensitiveDataItem = Static<typeof EventTypeListRemovedSensitiveDataItemSchema>
+
+/**
+ * Type for an event type list removed sensitive data response
+ */
+export type EventTypeListRemovedSensitiveDataResponse = Static<typeof EventTypeListRemovedSensitiveDataResponseSchema>
 
 /**
  * Type for an event type remove sensitive data
