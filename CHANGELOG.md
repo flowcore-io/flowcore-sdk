@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.42.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.42.0...v1.42.1) (2025-05-02)
+
+
+### Bug Fixes
+
+* **event-type:** :art: add missing comma in import statement ([859a7ea](https://github.com/flowcore-io/flowcore-sdk/commit/859a7ea3113fc9510dd1fe3d006e6fcb447847f8))
+* **event-type:** :bug: change createdAt type from TDate to TString ([ffb7f43](https://github.com/flowcore-io/flowcore-sdk/commit/ffb7f43cbd7b19443916d82742e1cea986fadc0d))
+
 ## [1.42.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.41.1...v1.42.0) (2025-05-02)
 
 
