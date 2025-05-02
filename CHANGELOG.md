@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.42.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.41.1...v1.42.0) (2025-05-02)
+
+
+### Features
+
+* **event-type:** :sparkles: add type parameter for removal options in sensitive data command ([fc5fd0b](https://github.com/flowcore-io/flowcore-sdk/commit/fc5fd0b92478c3c498d4fd50bbce78552ca7fda0))
+
 ## [1.41.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.41.0...v1.41.1) (2025-05-02)
 
 
