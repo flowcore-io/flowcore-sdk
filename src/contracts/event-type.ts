@@ -11,7 +11,7 @@ import {
   type TString,
   type TUnion,
   type TUnknown,
-  Type
+  Type,
 } from "@sinclair/typebox"
 
 // Using a different approach to avoid circular references
