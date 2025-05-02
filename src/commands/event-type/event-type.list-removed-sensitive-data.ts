@@ -16,7 +16,7 @@ export interface EventTypeListRemovedSensitiveDataInput {
   /** The id of the event type */
   eventTypeId?: string
   /** The identifier of the application that is trying to remove sensitive data */
-  applicationId?: string
+  application?: string
   /** The parent key of the event type */
   parentKey?: string
   /** The cursor to start the list from */
@@ -53,7 +53,7 @@ export class EventTypeListRemovedSensitiveDataCommand
     this.input.flowTypeId && queryParams.set("flowTypeId", this.input.flowTypeId)
     this.input.eventTypeId && queryParams.set("eventTypeId", this.input.eventTypeId)
     this.input.parentKey && queryParams.set("parentKey", this.input.parentKey)
-    this.input.applicationId && queryParams.set("applicationId", this.input.applicationId)
+    this.input.application && queryParams.set("application", this.input.application)
     this.input.cursor && queryParams.set("cursor", this.input.cursor)
     this.input.limit && queryParams.set("limit", this.input.limit.toString())
     return `/api/v1/event-types/sensitive-data/${this.input.tenantId}?${queryParams.toString()}`

@@ -9,7 +9,7 @@ export interface EventTypeRemoveSensitiveDataInput {
   /** The id of the event type */
   eventTypeId: string
   /** The identifier of the application that is trying to remove sensitive data */
-  applicationId: string
+  application: string
   /** The parent key of sensitive data point */
   parentKey: string
   /** The key of sensitive data point */
