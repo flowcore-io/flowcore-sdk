@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.40.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.39.0...v1.40.0) (2025-05-02)
+
+
+### Features
+
+* **event-type:** :sparkles: add commands for listing and removing sensitive data ([5ac30c1](https://github.com/flowcore-io/flowcore-sdk/commit/5ac30c1ac98d10464260da5a38953dc577bdda8a))
+
+
+### Bug Fixes
+
+* **event-type:** :art: format class declarations for better readability ([20509fa](https://github.com/flowcore-io/flowcore-sdk/commit/20509fac0eea9bdc0a1cf8cb7c8192e1592b89a2))
+
 ## [1.39.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.38.0...v1.39.0) (2025-05-01)
 
 
