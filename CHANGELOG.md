@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.39.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.38.0...v1.39.0) (2025-05-01)
+
+
+### Features
+
+* **event-type:** :sparkles: add includeSensitiveData option to EventTypeInfoInput ([74d9fba](https://github.com/flowcore-io/flowcore-sdk/commit/74d9fba69f85eb20a4f1bebd8d06d5a48ee84a3f))
+
 ## [1.38.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.37.0...v1.38.0) (2025-05-01)
 
 
