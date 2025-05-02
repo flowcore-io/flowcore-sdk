@@ -28,7 +28,8 @@ export interface EventTypeListRemovedSensitiveDataInput {
 /**
  * Fetch an event type
  */
-export class EventTypeListRemovedSensitiveDataCommand extends Command<EventTypeListRemovedSensitiveDataInput, EventTypeRemovedSensitiveData[]> {
+export class EventTypeListRemovedSensitiveDataCommand
+  extends Command<EventTypeListRemovedSensitiveDataInput, EventTypeRemovedSensitiveData[]> {
   /**
    * Get the method
    */

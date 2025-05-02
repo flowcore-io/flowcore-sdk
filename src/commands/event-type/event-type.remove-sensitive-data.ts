@@ -2,7 +2,6 @@ import { Command } from "../../common/command.ts"
 import { type EventTypeRemoveSensitiveData, EventTypeRemoveSensitiveDataSchema } from "../../contracts/event-type.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 
-
 /**
  * The input for the event type list removed sensitive data command
  */
@@ -22,7 +21,8 @@ export interface EventTypeRemoveSensitiveDataInput {
 /**
  * Fetch an event type
  */
-export class EventTypeRemoveSensitiveDataCommand extends Command<EventTypeRemoveSensitiveDataInput, EventTypeRemoveSensitiveData> {
+export class EventTypeRemoveSensitiveDataCommand
+  extends Command<EventTypeRemoveSensitiveDataInput, EventTypeRemoveSensitiveData> {
   /**
    * Get the method
    */
