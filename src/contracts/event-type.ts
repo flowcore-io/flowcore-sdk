@@ -2,7 +2,6 @@ import {
   type Static,
   type TArray,
   type TBoolean,
-  type TDate,
   type TLiteral,
   type TNull,
   type TNumber,
@@ -12,7 +11,7 @@ import {
   type TString,
   type TUnion,
   type TUnknown,
-  Type,
+  Type
 } from "@sinclair/typebox"
 
 // Using a different approach to avoid circular references
@@ -273,7 +272,7 @@ export const EventTypeListRemovedSensitiveDataItemSchema: TObject<{
   parentKey: TString
   key: TString
   type: TString
-  createdAt: TDate
+  createdAt: TString
 }> = Type.Object({
   id: Type.String(),
   tenantId: Type.String(),
@@ -284,7 +283,7 @@ export const EventTypeListRemovedSensitiveDataItemSchema: TObject<{
   parentKey: Type.String(),
   key: Type.String(),
   type: Type.String(),
-  createdAt: Type.Date(),
+  createdAt: Type.String(),
 })
 
 /**
