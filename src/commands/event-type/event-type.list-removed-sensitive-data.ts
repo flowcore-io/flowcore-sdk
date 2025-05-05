@@ -17,9 +17,9 @@ export interface EventTypeListRemovedSensitiveDataInput {
   flowTypeId?: string
   /** The id of the event type */
   eventTypeId?: string
-  /** The identifier of the application that is trying to remove sensitive data */
+  /** The identifier of the application that is trying to remove sensitive data (iLike operation) */
   application?: string
-  /** The parent key of the event type */
+  /** The parent key of the event type (iLike operation) */
   parentKey?: string
   /** The page to fetch (minimum: 1, default: 1) */
   page?: number
@@ -29,6 +29,10 @@ export interface EventTypeListRemovedSensitiveDataInput {
   type?: string
   /** The sort order */
   sort?: string
+  /** Filter by creation date from (format: date-time) */
+  createdAtFrom?: string
+  /** Filter by creation date to (format: date-time) */
+  createdAtTo?: string
 }
 
 /**
@@ -64,6 +68,8 @@ export class EventTypeListRemovedSensitiveDataCommand
     this.input.pageSize && queryParams.set("pageSize", this.input.pageSize.toString())
     this.input.type && queryParams.set("type", this.input.type)
     this.input.sort && queryParams.set("sort", this.input.sort)
+    this.input.createdAtFrom && queryParams.set("createdAtFrom", this.input.createdAtFrom)
+    this.input.createdAtTo && queryParams.set("createdAtTo", this.input.createdAtTo)
     return `/api/v1/event-types/sensitive-data/${this.input.tenantId}?${queryParams.toString()}`
   }
 
