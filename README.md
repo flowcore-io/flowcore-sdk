@@ -655,6 +655,118 @@ const result = await client.execute(command)
 > **Note**: If `waitForDelete` or `waitForTruncate` is set to `true`, the command will wait up to 25 seconds for the operation to complete.
 > **Important**: Event Type deletion and truncation operations require bearer token authentication.
 
+### Event Ingestion Operations
+
+The SDK provides commands for ingesting events into Flowcore event types.
+
+> **Important**: Ingestion operations require API key authentication.
+
+#### Ingest a Single Event
+
+```typescript
+import { IngestEventCommand, FlowcoreClient } from "@flowcore/sdk"
+
+// Define your event data type
+interface MyEventData {
+  userId: string;
+  action: string;
+  timestamp: number;
+  // ... any other fields
+}
+
+// Create the ingestion command
+const command = new IngestEventCommand<MyEventData>({
+  tenantName: "your-tenant-name",
+  dataCoreId: "your-data-core-id",
+  flowTypeName: "your-flow-type-name",
+  eventTypeName: "your-event-type-name",
+  eventData: {
+    userId: "user-123",
+    action: "login",
+    timestamp: Date.now()
+  },
+  // Optional parameters
+  metadata: {
+    source: "web-app",
+    version: "1.0.0"
+  },
+  eventTime: new Date().toISOString(), // When the event occurred
+  validTime: new Date().toISOString(),  // When the event becomes valid
+  ttl: true,                           // Set time-to-live flag
+  isEphemeral: false                   // Whether to archive the event
+})
+
+const result = await client.execute(command)
+// Returns:
+// {
+//   eventId: string;  // The ID of the ingested event
+//   success: boolean; // Whether ingestion was successful
+// }
+```
+
+#### Ingest Multiple Events (Batch)
+
+```typescript
+import { IngestBatchCommand, FlowcoreClient } from "@flowcore/sdk"
+
+// Define your event data type
+interface MyEventData {
+  userId: string;
+  action: string;
+  timestamp: number;
+}
+
+// Create the batch ingestion command
+const command = new IngestBatchCommand<MyEventData>({
+  tenantName: "your-tenant-name",
+  dataCoreId: "your-data-core-id",
+  flowTypeName: "your-flow-type-name",
+  eventTypeName: "your-event-type-name",
+  events: [
+    {
+      userId: "user-123",
+      action: "login",
+      timestamp: Date.now()
+    },
+    {
+      userId: "user-456",
+      action: "view_profile",
+      timestamp: Date.now()
+    },
+    // Add more events as needed (maximum 25 events per batch)
+  ],
+  // Optional parameters (applied to all events in the batch)
+  metadata: {
+    source: "web-app",
+    version: "1.0.0"
+  },
+  eventTime: new Date().toISOString(),
+  validTime: new Date().toISOString(),
+  ttl: true,
+  isEphemeral: false
+})
+
+const result = await client.execute(command)
+// Returns:
+// {
+//   eventIds: string[];  // Array of IDs for the ingested events
+//   success: boolean;    // Whether the batch ingestion was successful
+// }
+```
+
+#### Ingestion Options
+
+Both single and batch ingestion support these options:
+
+- **metadata**: Key-value pairs sent as `x-flowcore-metadata-json` header
+- **eventTime**: When the event occurred (`x-flowcore-event-time` header)
+- **validTime**: When the event becomes valid (`x-flowcore-valid-time` header)
+- **ttl**: Enables time-to-live for events (adds `ttl-on/stored-event: true` to metadata)
+- **isEphemeral**: Prevents archiving (adds `do-not-archive-on/stored-event: true` to metadata)
+
+> **Note**: Batch ingestion is more efficient for inserting multiple events at once, as it requires only a single API call.
+> **Important**: Batch ingestion has a maximum limit of 25 events per request. For larger volumes, split your events into multiple batches.
+
 ### AI Agent Coordinator Operations
 
 These commands allow interaction with the AI Agent Coordinator service for managing conversational AI agents.
