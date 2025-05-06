@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.44.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.43.0...v1.44.0) (2025-05-06)
+
+
+### Features
+
+* **ingestion:** :sparkles: add batch and event ingestion commands ([5252440](https://github.com/flowcore-io/flowcore-sdk/commit/52524404e3a5908d3d0a441ababe93897fac564b))
+
+
+### Bug Fixes
+
+* **ingestion:** :art: add missing comma in authorization header ([1fd0bd7](https://github.com/flowcore-io/flowcore-sdk/commit/1fd0bd7f824005a7d90f70fe96d33542a028a54d))
+* **README:** :memo: add event ingestion operations and examples ([2c740ea](https://github.com/flowcore-io/flowcore-sdk/commit/2c740ea42875d41d51e2ea03d5fed75bfb1a62d6))
+
 ## [1.43.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.42.1...v1.43.0) (2025-05-05)
 
 
