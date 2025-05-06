@@ -65,7 +65,7 @@ export class IngestEventCommand<T extends Record<string, unknown>>
       ...(metadata && { "x-flowcore-metadata-json": JSON.stringify(metadata) }),
       ...(this.input.eventTime && { "x-flowcore-event-time": this.input.eventTime }),
       ...(this.input.validTime && { "x-flowcore-valid-time": this.input.validTime }),
-      ...(this.clientAuthOptions.apiKey && { "Authorization": this.clientAuthOptions.apiKey })
+      ...(this.clientAuthOptions.apiKey && { "Authorization": this.clientAuthOptions.apiKey }),
     }
   }
 
