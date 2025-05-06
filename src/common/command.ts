@@ -28,6 +28,15 @@ export abstract class Command<Input, Output> {
    */
   protected readonly input: Input
 
+  /**
+   * The client auth options
+   */
+  protected readonly clientAuthOptions: {
+    token?: string
+    apiKeyId?: string
+    apiKey?: string
+  } = {}
+
   constructor(input: Input) {
     /**
      * The input for the command

@@ -48,6 +48,10 @@ export * from "./event-type/event-type.request-delete.ts"
 export * from "./event-type/event-type.request-truncate.ts"
 export * from "./event-type/event-type.update.ts"
 
+// Ingestion
+export * from "./ingestion/ingest.batch.ts"
+export * from "./ingestion/ingest.event.ts"
+
 // IAM
 export * from "./iam/api-key-role-association.create.ts"
 export * from "./iam/api-key-role-association.delete.ts"

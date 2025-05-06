@@ -104,8 +104,8 @@ export class FlowcoreClient {
       })
     }
     const headers: Record<string, string> = {
-      ...request.headers,
       ...(authHeader ? { Authorization: authHeader } : {}),
+      ...request.headers,
     }
 
     let response: Response

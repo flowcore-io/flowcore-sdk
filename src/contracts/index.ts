@@ -12,6 +12,6 @@ export type {
   SensitiveDataDefinitionSchema,
 } from "./event-type.ts"
 export type { FlowType } from "./flow-type.ts"
-export type { FlowcoreEvent } from "./event.ts"
+export type { FlowcoreEvent, IngestEventInput } from "./event.ts"
 export type { Tenant } from "./tenant.ts"
 export type { Permission } from "./permission.ts"
