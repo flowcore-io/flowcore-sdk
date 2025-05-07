@@ -28,8 +28,7 @@ const responseSchema = Type.Object({
 /**
  * Ingest a batch of events
  */
-export class IngestBatchCommand<T extends unknown>
-  extends Command<IngestBatchInput<T>, IngestBatchOutput> {
+export class IngestBatchCommand<T extends unknown> extends Command<IngestBatchInput<T>, IngestBatchOutput> {
   /**
    * The dedicated subdomain for the command
    */

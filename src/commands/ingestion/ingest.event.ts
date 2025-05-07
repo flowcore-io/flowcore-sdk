@@ -24,8 +24,7 @@ const responseSchema = Type.Object({
 /**
  * Ingest an event
  */
-export class IngestEventCommand<T extends unknown>
-  extends Command<IngestEventInput<T>, IngestEventOutput> {
+export class IngestEventCommand<T extends unknown> extends Command<IngestEventInput<T>, IngestEventOutput> {
   /**
    * The dedicated subdomain for the command
    */
