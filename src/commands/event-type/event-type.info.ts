@@ -71,6 +71,7 @@ export class EventTypeInfoCommand extends CustomCommand<EventTypeInfoInput, Even
     }
 
     const lastEvents: FlowcoreEvent[] = []
+    const minLastEventLimit = Math.max(lastEventsLimit, 100)
 
     for (const timeBucket of lastTimeBucketResponse.timeBuckets) {
       let cursor: string | undefined = undefined
@@ -80,7 +81,7 @@ export class EventTypeInfoCommand extends CustomCommand<EventTypeInfoInput, Even
           new EventListCommand({
             eventTypeId: this.input.eventTypeId,
             timeBucket,
-            pageSize: lastEventsLimit - lastEvents.length,
+            pageSize: minLastEventLimit - lastEvents.length,
             order: "desc",
             tenant: this.input.tenant,
             ...(cursor && { cursor }),
