@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.46.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.46.0...v1.46.1) (2025-05-07)
+
+
+### Bug Fixes
+
+* **ingestion:** :art: remove unused Buffer import from ingest.event.ts ([be523af](https://github.com/flowcore-io/flowcore-sdk/commit/be523aff5613f6a209403ae14f29998a9e418075))
+* **ingestion:** :bug: encode metadata as base64 in ingestion commands and tests ([4e1937e](https://github.com/flowcore-io/flowcore-sdk/commit/4e1937e414f6c424d4cf65aae1b1b54f76522992))
+
 ## [1.46.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.45.0...v1.46.0) (2025-05-07)
 
 
