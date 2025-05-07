@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.47.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.47.0...v1.47.1) (2025-05-07)
+
+
+### Bug Fixes
+
+* **deno.lock:** :sparkles: update Deno version to 5 and add latest sdk-oidc-client ([e9e97d4](https://github.com/flowcore-io/flowcore-sdk/commit/e9e97d43d8520ea5f4168613df15daade6bc2d0b))
+* **event-type:** :art: improve formatting of minimum last event limit calculation ([f1d95fa](https://github.com/flowcore-io/flowcore-sdk/commit/f1d95fa77d4a7624121f6ace79902f7246d99993))
+* **event-type:** :bug: adjust minimum last event limit calculation ([5b46856](https://github.com/flowcore-io/flowcore-sdk/commit/5b46856b6f7ae5104f219ee95bd5c0f97a17e6ec))
+
 ## [1.47.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.46.1...v1.47.0) (2025-05-07)
 
 
