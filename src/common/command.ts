@@ -45,6 +45,14 @@ export abstract class Command<Input, Output> {
   }
 
   /**
+   * Set the client auth options - this is called by the FlowcoreClient
+   * before executing the command
+   */
+  public setClientAuthOptions(options: { token?: string; apiKeyId?: string; apiKey?: string }): void {
+    Object.assign(this.clientAuthOptions, options);
+  }
+
+  /**
    * Get the dedicated base URL
    */
   protected async getDedicatedBaseUrl(client: FlowcoreClient): Promise<string | null> {

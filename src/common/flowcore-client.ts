@@ -1,7 +1,7 @@
 import { ClientError } from "../exceptions/client-error.ts"
 import { CommandError } from "../exceptions/command-error.ts"
-import type { Command } from "./command.ts"
 import { tryCatch } from "../utils/try-catch.ts"
+import type { Command } from "./command.ts"
 import { tenantCache } from "./tenant.cache.ts"
 
 const RETRYABLE_ERROR_CODES = [408, 429, 500, 502, 503, 504]
@@ -86,6 +86,19 @@ export class FlowcoreClient {
     retryCount: number = 0,
     direct?: boolean,
   ): Promise<Output> {
+    // Set the client auth options on the command
+    if (typeof (command as any).setClientAuthOptions === 'function') {
+      if ((this.options as ClientOptionsBearer).getBearerToken) {
+        const bearerToken = await (this.options as ClientOptionsBearer).getBearerToken();
+        (command as any).setClientAuthOptions({ token: bearerToken });
+      } else if ((this.options as ClientOptionsApiKey).apiKeyId && (this.options as ClientOptionsApiKey).apiKey) {
+        (command as any).setClientAuthOptions({ 
+          apiKeyId: (this.options as ClientOptionsApiKey).apiKeyId, 
+          apiKey: (this.options as ClientOptionsApiKey).apiKey 
+        });
+      }
+    }
+
     const request = await command.getRequest(this, direct)
 
     if (request.customExecute) {

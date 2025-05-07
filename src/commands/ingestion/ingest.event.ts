@@ -59,12 +59,15 @@ export class IngestEventCommand<T extends unknown> extends Command<IngestEventIn
       metadata["do-not-archive-on/stored-event"] = "true"
     }
 
+    // For legacy ingestion endpoints, use just the API key instead of the "ApiKey {apiKeyId}:{apiKey}" format
+    const authHeader = this.clientAuthOptions.apiKey || null;
+
     return {
       "Content-Type": "application/json",
       ...(metadata && { "x-flowcore-metadata-json": JSON.stringify(metadata) }),
       ...(this.input.eventTime && { "x-flowcore-event-time": this.input.eventTime }),
       ...(this.input.validTime && { "x-flowcore-valid-time": this.input.validTime }),
-      ...(this.clientAuthOptions.apiKey && { "Authorization": this.clientAuthOptions.apiKey }),
+      ...(authHeader && { "Authorization": authHeader }),
     }
   }
 
