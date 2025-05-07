@@ -1,7 +1,7 @@
 import { CustomCommand } from "../../common/command-custom.ts"
 import type { FlowcoreClient } from "../../common/flowcore-client.ts"
 import type { FlowcoreEvent } from "../../contracts/event.ts"
-import { EventListCommand } from "../events/event.list.ts"
+import { EventListCommand, EventListOutput } from "../events/event.list.ts"
 import { TimeBucketListCommand } from "../events/time-bucket.list.ts"
 
 /**
@@ -73,19 +73,30 @@ export class EventTypeInfoCommand extends CustomCommand<EventTypeInfoInput, Even
     const lastEvents: FlowcoreEvent[] = []
 
     for (const timeBucket of lastTimeBucketResponse.timeBuckets) {
-      const eventListCommand = new EventListCommand({
-        eventTypeId: this.input.eventTypeId,
-        timeBucket,
-        pageSize: lastEventsLimit - lastEvents.length,
-        order: "desc",
-        tenant: this.input.tenant,
-        ...(this.input.includeSensitiveData && { includeSensitiveData: true }),
-      })
-      const eventListResponse = await client.execute(eventListCommand)
-      lastEvents.push(...eventListResponse.events)
+      let cursor: string | undefined = undefined;
+      
+      do {
+        const eventListResponse: EventListOutput = await client.execute(new EventListCommand({
+          eventTypeId: this.input.eventTypeId,
+          timeBucket,
+          pageSize: lastEventsLimit - lastEvents.length,
+          order: "desc",
+          tenant: this.input.tenant,
+          ...(cursor && { cursor }),
+          ...(this.input.includeSensitiveData && { includeSensitiveData: true }),
+        }))
+        lastEvents.push(...eventListResponse.events)
+        cursor = eventListResponse.nextCursor
+      } while (cursor && lastEvents.length < lastEventsLimit)
+
       if (lastEvents.length >= lastEventsLimit) {
         break
       }
+    }
+
+    // Trim to max limit if we went over
+    if (lastEvents.length > lastEventsLimit) {
+      lastEvents.length = lastEventsLimit
     }
 
     return {
