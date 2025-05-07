@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.45.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.44.1...v1.45.0) (2025-05-07)
+
+
+### Features
+
+* **ingestion:** :sparkles: enhance ingestion commands with client auth options and tests ([5e084a6](https://github.com/flowcore-io/flowcore-sdk/commit/5e084a69628292042b756b30fa3c0696af60dd63))
+
+
+### Bug Fixes
+
+* **ingestion:** :art: correct formatting issues in ingestion commands and tests ([7f67b75](https://github.com/flowcore-io/flowcore-sdk/commit/7f67b75784395278025bb245bb3dccb19be419d0))
+
 ## [1.44.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.44.0...v1.44.1) (2025-05-07)
 
 
