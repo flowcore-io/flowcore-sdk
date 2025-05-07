@@ -655,6 +655,31 @@ const result = await client.execute(command)
 > **Note**: If `waitForDelete` or `waitForTruncate` is set to `true`, the command will wait up to 25 seconds for the operation to complete.
 > **Important**: Event Type deletion and truncation operations require bearer token authentication.
 
+#### Remove Sensitive Data from an Event Type
+
+```typescript
+import { EventTypeRemoveSensitiveDataCommand, FlowcoreClient } from "@flowcore/sdk"
+
+const command = new EventTypeRemoveSensitiveDataCommand({
+  eventTypeId: "your-event-type-id",
+  application: "my-application-name",
+  parentKey: "user",
+  key: "email",
+  type: "scramble" // or "remove"
+})
+
+const result = await client.execute(command)
+// Returns:
+// {
+//   success: boolean; // Whether the operation was successful
+//   id: string;       // ID of the sensitive data removal record
+// }
+```
+
+> **Note**: The `type` parameter determines how sensitive data is handled. Use `scramble` to replace the data with a masked version, or `remove` to completely delete it.
+> **Important**: Sensitive data removal operations require bearer token authentication.
+> **WARNING**: This operation is NON-REVERSIBLE. Once sensitive data has been removed or scrambled, it cannot be recovered. Make sure you have backups before proceeding, as this action permanently alters your data.
+
 ### Event Ingestion Operations
 
 The SDK provides commands for ingesting events into Flowcore event types.
