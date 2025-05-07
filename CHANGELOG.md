@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.46.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.45.0...v1.46.0) (2025-05-07)
+
+
+### Features
+
+* **ingestion:** :sparkles: add flowcoreManaged option to ingestion commands ([20c957e](https://github.com/flowcore-io/flowcore-sdk/commit/20c957e0d3e39054d82992e926d1173194551e84))
+
 ## [1.45.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.44.1...v1.45.0) (2025-05-07)
 
 
