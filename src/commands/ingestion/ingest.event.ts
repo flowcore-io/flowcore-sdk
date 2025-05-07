@@ -2,6 +2,7 @@ import { Type } from "@sinclair/typebox"
 import { Command } from "../../common/command.ts"
 import type { IngestEventInput } from "../../contracts/event.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
+import { Buffer } from "node:buffer"
 
 /**
  * The output for the ingest event command
@@ -65,7 +66,7 @@ export class IngestEventCommand<T extends unknown> extends Command<IngestEventIn
     return {
       "Content-Type": "application/json",
       ...(this.input.flowcoreManaged && { "X-Flowcore-Managed": "true" }),
-      ...(metadata && { "x-flowcore-metadata-json": JSON.stringify(metadata) }),
+      ...(metadata && { "x-flowcore-metadata-json": btoa(JSON.stringify(metadata)) }),
       ...(this.input.eventTime && { "x-flowcore-event-time": this.input.eventTime }),
       ...(this.input.validTime && { "x-flowcore-valid-time": this.input.validTime }),
       ...(authHeader && { "Authorization": authHeader }),

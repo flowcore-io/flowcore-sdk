@@ -104,7 +104,7 @@ describe("Ingestion", () => {
         .matchHeaders({
           "Content-Type": "application/json",
           "Authorization": expectedAuthHeader,
-          "x-flowcore-metadata-json": JSON.stringify(metadata),
+          "x-flowcore-metadata-json": btoa(JSON.stringify(metadata)),
           "x-flowcore-event-time": eventTime,
           "x-flowcore-valid-time": validTime,
         })
@@ -151,7 +151,7 @@ describe("Ingestion", () => {
         .matchHeaders({
           "Content-Type": "application/json",
           "Authorization": expectedAuthHeader,
-          "x-flowcore-metadata-json": JSON.stringify(expectedMetadata),
+          "x-flowcore-metadata-json": btoa(JSON.stringify(expectedMetadata)),
         })
         .respondWith(200, { eventId: "test-event-id", success: true })
 
@@ -195,7 +195,7 @@ describe("Ingestion", () => {
         .matchHeaders({
           "Content-Type": "application/json",
           "Authorization": expectedAuthHeader,
-          "x-flowcore-metadata-json": JSON.stringify(expectedMetadata),
+          "x-flowcore-metadata-json": btoa(JSON.stringify(expectedMetadata)),
         })
         .respondWith(200, { eventId: "test-event-id", success: true })
 
@@ -273,7 +273,7 @@ describe("Ingestion", () => {
         .matchHeaders({
           "Content-Type": "application/json",
           "Authorization": expectedAuthHeader,
-          "x-flowcore-metadata-json": JSON.stringify(metadata),
+          "x-flowcore-metadata-json": btoa(JSON.stringify(metadata)),
           "x-flowcore-event-time": eventTime,
           "x-flowcore-valid-time": validTime,
         })
@@ -322,7 +322,7 @@ describe("Ingestion", () => {
         .matchHeaders({
           "Content-Type": "application/json",
           "Authorization": expectedAuthHeader,
-          "x-flowcore-metadata-json": JSON.stringify(expectedMetadata),
+          "x-flowcore-metadata-json": btoa(JSON.stringify(expectedMetadata)),
         })
         .respondWith(200, { eventIds: ["id-1", "id-2"], success: true })
 
