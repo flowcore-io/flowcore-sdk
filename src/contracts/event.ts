@@ -33,7 +33,7 @@ export type FlowcoreEvent = Static<typeof FlowcoreEventSchema>
 /**
  * The input for the ingest event command
  */
-export interface IngestEventInput<T extends Record<string, unknown>> {
+export interface IngestEventInput<T extends unknown> {
   /** the tenant name */
   tenantName: string
   /** the data core id */

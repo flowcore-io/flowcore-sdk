@@ -3,7 +3,7 @@ import { Command } from "../../common/command.ts"
 import type { IngestEventInput } from "../../contracts/event.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 
-export interface IngestBatchInput<T extends Record<string, unknown>> extends Omit<IngestEventInput<T>, "eventData"> {
+export interface IngestBatchInput<T extends unknown> extends Omit<IngestEventInput<T>, "eventData"> {
   events: IngestEventInput<T>["eventData"][]
 }
 
@@ -28,7 +28,7 @@ const responseSchema = Type.Object({
 /**
  * Ingest a batch of events
  */
-export class IngestBatchCommand<T extends Record<string, unknown>>
+export class IngestBatchCommand<T extends unknown>
   extends Command<IngestBatchInput<T>, IngestBatchOutput> {
   /**
    * The dedicated subdomain for the command
@@ -90,7 +90,7 @@ export class IngestBatchCommand<T extends Record<string, unknown>>
   /**
    * Get the body for the request
    */
-  protected override getBody(): Record<string, unknown>[] {
+  protected override getBody(): unknown[] {
     return this.input.events
   }
 }

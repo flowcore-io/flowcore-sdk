@@ -24,7 +24,7 @@ const responseSchema = Type.Object({
 /**
  * Ingest an event
  */
-export class IngestEventCommand<T extends Record<string, unknown>>
+export class IngestEventCommand<T extends unknown>
   extends Command<IngestEventInput<T>, IngestEventOutput> {
   /**
    * The dedicated subdomain for the command
@@ -73,7 +73,7 @@ export class IngestEventCommand<T extends Record<string, unknown>>
    * Get the path for the request
    */
   protected override getPath(): string {
-    return `/events/${this.input.tenantName}/${this.input.dataCoreId}/${this.input.flowTypeName}/${this.input.eventTypeName}`
+    return `/event/${this.input.tenantName}/${this.input.dataCoreId}/${this.input.flowTypeName}/${this.input.eventTypeName}`
   }
   /**
    * Parse the response
@@ -87,8 +87,6 @@ export class IngestEventCommand<T extends Record<string, unknown>>
    * Get the body for the request
    */
   protected override getBody(): Record<string, unknown> {
-    return {
-      ...this.input.eventData,
-    }
+    return this.input.eventData as Record<string, unknown>
   }
 }
