@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.47.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.46.1...v1.47.0) (2025-05-07)
+
+
+### Features
+
+* **event-type:** :sparkles: implement pagination for event list retrieval ([21f9800](https://github.com/flowcore-io/flowcore-sdk/commit/21f9800cc4b3c6202496932bab110f1c20c31394))
+
+
+### Bug Fixes
+
+* **event-type:** :art: improve formatting and type imports in event-type.info.ts ([665a28f](https://github.com/flowcore-io/flowcore-sdk/commit/665a28f0bc1181cdeb0204e63145ae9219dd41ea))
+
 ## [1.46.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.46.0...v1.46.1) (2025-05-07)
 
 
