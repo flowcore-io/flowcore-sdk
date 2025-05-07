@@ -64,6 +64,7 @@ export class IngestEventCommand<T extends unknown> extends Command<IngestEventIn
 
     return {
       "Content-Type": "application/json",
+      ...(this.input.flowcoreManaged && { "X-Flowcore-Managed": "true" }),
       ...(metadata && { "x-flowcore-metadata-json": JSON.stringify(metadata) }),
       ...(this.input.eventTime && { "x-flowcore-event-time": this.input.eventTime }),
       ...(this.input.validTime && { "x-flowcore-valid-time": this.input.validTime }),

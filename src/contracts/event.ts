@@ -54,4 +54,6 @@ export interface IngestEventInput<T extends unknown> {
   validTime?: string
   /** event time of the event, overrides what time bucket this event is stored in */
   eventTime?: string
+  /** flowcore managed event */
+  flowcoreManaged?: boolean
 }
