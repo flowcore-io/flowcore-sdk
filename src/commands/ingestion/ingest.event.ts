@@ -2,7 +2,6 @@ import { Type } from "@sinclair/typebox"
 import { Command } from "../../common/command.ts"
 import type { IngestEventInput } from "../../contracts/event.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
-import { Buffer } from "node:buffer"
 
 /**
  * The output for the ingest event command
