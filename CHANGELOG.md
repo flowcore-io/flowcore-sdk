@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.44.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.44.0...v1.44.1) (2025-05-07)
+
+
+### Bug Fixes
+
+* **ingestion:** :art: refactor ingest commands for improved readability ([753109f](https://github.com/flowcore-io/flowcore-sdk/commit/753109f88fc3e1d9233669f80e371a5c4a60e445))
+* **ingestion:** :art: update generics to use unknown type for ingest commands ([182b8c7](https://github.com/flowcore-io/flowcore-sdk/commit/182b8c7a6770382a4c3250d5502def151257dcb4))
+
 ## [1.44.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.43.0...v1.44.0) (2025-05-06)
 
 
