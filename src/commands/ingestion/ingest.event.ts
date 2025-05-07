@@ -60,7 +60,7 @@ export class IngestEventCommand<T extends unknown> extends Command<IngestEventIn
     }
 
     // For legacy ingestion endpoints, use just the API key instead of the "ApiKey {apiKeyId}:{apiKey}" format
-    const authHeader = this.clientAuthOptions.apiKey || null;
+    const authHeader = this.clientAuthOptions.apiKey || null
 
     return {
       "Content-Type": "application/json",

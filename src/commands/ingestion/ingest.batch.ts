@@ -64,7 +64,7 @@ export class IngestBatchCommand<T extends unknown> extends Command<IngestBatchIn
     }
 
     // For legacy ingestion endpoints, use just the API key instead of the "ApiKey {apiKeyId}:{apiKey}" format
-    const authHeader = this.clientAuthOptions.apiKey || null;
+    const authHeader = this.clientAuthOptions.apiKey || null
 
     return {
       "Content-Type": "application/json",

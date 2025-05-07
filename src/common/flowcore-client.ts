@@ -87,15 +87,15 @@ export class FlowcoreClient {
     direct?: boolean,
   ): Promise<Output> {
     // Set the client auth options on the command
-    if (typeof (command as any).setClientAuthOptions === 'function') {
+    if (typeof (command as unknown as Command<Input, Output>).setClientAuthOptions === "function") {
       if ((this.options as ClientOptionsBearer).getBearerToken) {
-        const bearerToken = await (this.options as ClientOptionsBearer).getBearerToken();
-        (command as any).setClientAuthOptions({ token: bearerToken });
+        const bearerToken = await (this.options as ClientOptionsBearer).getBearerToken()
+        ;(command as unknown as Command<Input, Output>).setClientAuthOptions({ token: bearerToken || undefined })
       } else if ((this.options as ClientOptionsApiKey).apiKeyId && (this.options as ClientOptionsApiKey).apiKey) {
-        (command as any).setClientAuthOptions({ 
-          apiKeyId: (this.options as ClientOptionsApiKey).apiKeyId, 
-          apiKey: (this.options as ClientOptionsApiKey).apiKey 
-        });
+        ;(command as unknown as Command<Input, Output>).setClientAuthOptions({
+          apiKeyId: (this.options as ClientOptionsApiKey).apiKeyId,
+          apiKey: (this.options as ClientOptionsApiKey).apiKey,
+        })
       }
     }
 

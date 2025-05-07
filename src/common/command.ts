@@ -49,7 +49,7 @@ export abstract class Command<Input, Output> {
    * before executing the command
    */
   public setClientAuthOptions(options: { token?: string; apiKeyId?: string; apiKey?: string }): void {
-    Object.assign(this.clientAuthOptions, options);
+    Object.assign(this.clientAuthOptions, options)
   }
 
   /**
