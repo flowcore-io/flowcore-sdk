@@ -1,27 +1,29 @@
-import { Type } from "@sinclair/typebox"
 import { Command } from "../../common/command.ts"
+import { type Scenario, ScenarioSchema } from "../../contracts/scenario.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 
+
 /**
- * The input for the scenario delete command
+ * The input for the scenario fetch command
  */
-export interface ScenarioDeleteInput {
+export interface ScenarioFetchInput {
   /** The scenario id */
   scenarioId: string
 }
 
-export interface ScenarioDeleteOutput {
-  success: boolean
-}
-
-const ScenarioDeleteOutputSchema = Type.Object({
-  success: Type.Boolean(),
-})
-
 /**
- * Delete a scenario
+ * The output for the scenario fetch command
  */
-export class ScenarioDeleteCommand extends Command<ScenarioDeleteInput, ScenarioDeleteOutput> {
+export interface ScenarioFetchOutput {
+  /** The tenant id */
+  id: string
+  /** the scenarios in that tenant */
+  scenarios: Scenario[]
+}
+/**
+ * fetch a scenario
+ */
+export class ScenarioFetchCommand extends Command<ScenarioFetchInput, Scenario> {
   /**
    * Whether the command should retry on failure
    */
@@ -31,7 +33,7 @@ export class ScenarioDeleteCommand extends Command<ScenarioDeleteInput, Scenario
    * Get the method
    */
   protected override getMethod(): string {
-    return "DELETE"
+    return "GET"
   }
   /**
    * Get the base url
@@ -50,7 +52,7 @@ export class ScenarioDeleteCommand extends Command<ScenarioDeleteInput, Scenario
   /**
    * Parse the response
    */
-  protected override parseResponse(rawResponse: unknown): ScenarioDeleteOutput {
-    return parseResponseHelper(ScenarioDeleteOutputSchema, rawResponse)
+  protected override parseResponse(rawResponse: unknown): Scenario {
+    return parseResponseHelper(ScenarioSchema, rawResponse)
   }
 }
