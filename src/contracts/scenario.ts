@@ -1,10 +1,4 @@
-import {
-  type Static,
-  type TObject,
-  type TOptional,
-  type TString,
-  Type
-} from "@sinclair/typebox"
+import { type Static, type TObject, type TOptional, type TString, Type } from "@sinclair/typebox"
 
 /**
  * The schema for an event type

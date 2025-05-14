@@ -2,7 +2,6 @@ import { Command } from "../../common/command.ts"
 import { type Scenario, ScenarioSchema } from "../../contracts/scenario.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 
-
 /**
  * The input for the scenario create command
  */
