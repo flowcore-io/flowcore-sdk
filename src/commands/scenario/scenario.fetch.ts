@@ -11,15 +11,6 @@ export interface ScenarioFetchInput {
 }
 
 /**
- * The output for the scenario fetch command
- */
-export interface ScenarioFetchOutput {
-  /** The tenant id */
-  id: string
-  /** the scenarios in that tenant */
-  scenarios: Scenario[]
-}
-/**
  * fetch a scenario
  */
 export class ScenarioFetchCommand extends Command<ScenarioFetchInput, Scenario> {
