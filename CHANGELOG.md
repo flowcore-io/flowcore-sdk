@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.48.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.47.1...v1.48.0) (2025-05-14)
+
+
+### Features
+
+* **scenario:** :tada: add create and list scenario commands with schema ([3b6433e](https://github.com/flowcore-io/flowcore-sdk/commit/3b6433ebb7b85caffc8eae8d99d60a4adc1b96a1))
+* **scenario:** :tada: add delete and update scenario commands with schemas ([452a88c](https://github.com/flowcore-io/flowcore-sdk/commit/452a88c96cb71069580bbee23dd1f472b69a6439))
+* **scenario:** :tada: add fetch scenario command with input and output interfaces ([84a2bba](https://github.com/flowcore-io/flowcore-sdk/commit/84a2bba15dc2ee446c003e2454db928d452afbc5))
+* **scenario:** :tada: add scenario commands for create, fetch, list, and update ([034d1dd](https://github.com/flowcore-io/flowcore-sdk/commit/034d1ddd6e04f5071b76e932120c7ba24f3c00ba))
+
 ## [1.47.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.47.0...v1.47.1) (2025-05-07)
 
 
