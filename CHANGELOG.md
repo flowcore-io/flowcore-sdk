@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.49.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.48.0...v1.49.0) (2025-05-14)
+
+
+### Features
+
+* **scenario:** :tada: enhance scenario fetch command to support fetching by tenantId and name ([c31bfb8](https://github.com/flowcore-io/flowcore-sdk/commit/c31bfb87fe99b1944886c0436ea94cadffbd2571))
+
+
+### Bug Fixes
+
+* **scenario:** :art: clean up whitespace in scenario fetch and test files ([f8248d6](https://github.com/flowcore-io/flowcore-sdk/commit/f8248d6f9ba91544f0b7088a254153456084c4e4))
+
 ## [1.48.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.47.1...v1.48.0) (2025-05-14)
 
 
