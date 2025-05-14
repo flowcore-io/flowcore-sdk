@@ -35,7 +35,6 @@ function isScenarioFetchByNameAndTenantInput(input: ScenarioFetchInput): input i
  */
 export type ScenarioFetchInput = ScenarioFetchByIdInput | ScenarioFetchByNameInput
 
-
 /**
  * fetch a scenario
  */

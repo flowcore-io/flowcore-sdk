@@ -9,7 +9,7 @@ import {
   ScenarioDeleteCommand,
   ScenarioFetchCommand,
   ScenarioListCommand,
-  ScenarioUpdateCommand
+  ScenarioUpdateCommand,
 } from "../../../src/mod.ts"
 import { FetchMocker } from "../../fixtures/fetch.fixture.ts"
 
@@ -121,7 +121,7 @@ describe("Scenario", () => {
       description: "Test scenario description",
       displayName: "Test Scenario",
     }
-    
+
     const scenario: Scenario = {
       id: crypto.randomUUID(),
       tenantId,
@@ -154,7 +154,7 @@ describe("Scenario", () => {
       description: "Updated description",
       displayName: "Updated Display Name",
     }
-    
+
     const scenario: Scenario = {
       id: scenarioId,
       tenantId,
@@ -245,7 +245,7 @@ describe("Scenario", () => {
       scenarioId,
       description: "Updated description only",
     }
-    
+
     const originalScenario: Scenario = {
       id: scenarioId,
       tenantId,
@@ -255,7 +255,7 @@ describe("Scenario", () => {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     }
-    
+
     const updatedScenario: Scenario = {
       id: scenarioId,
       tenantId,
@@ -282,4 +282,3 @@ describe("Scenario", () => {
     assertEquals(response.displayName, originalScenario.displayName) // Verify other fields remain unchanged
   })
 })
-
