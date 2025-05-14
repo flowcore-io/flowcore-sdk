@@ -15,6 +15,7 @@ This is the Flowcore SDK, a TypeScript library for interacting with the Flowcore
   - [Data Core Operations](#data-core-operations)
   - [Flow Type Operations](#flow-type-operations)
   - [Event Type Operations](#event-type-operations)
+  - [Scenario Operations](#scenario-operations)
   - [Notifications](#notifications)
 
 ## Installation
@@ -679,6 +680,94 @@ const result = await client.execute(command)
 > **Note**: The `type` parameter determines how sensitive data is handled. Use `scramble` to replace the data with a masked version, or `remove` to completely delete it.
 > **Important**: Sensitive data removal operations require bearer token authentication.
 > **WARNING**: This operation is NON-REVERSIBLE. Once sensitive data has been removed or scrambled, it cannot be recovered. Make sure you have backups before proceeding, as this action permanently alters your data.
+
+### Scenario Operations
+
+Scenario operations allow you to manage scenarios in your Flowcore tenant.
+
+> **Important**: Scenario operations require bearer token authentication and cannot be performed using API key authentication.
+
+#### Create a Scenario
+
+```typescript
+import { ScenarioCreateCommand, FlowcoreClient } from "@flowcore/sdk"
+
+const command = new ScenarioCreateCommand({
+  tenantId: "your-tenant-id",
+  name: "my-scenario",
+  description: "A test scenario", // Optional
+  displayName: "My Test Scenario" // Optional
+})
+
+const result = await client.execute(command)
+// Returns the created Scenario object:
+// {
+//   id: string;
+//   tenantId: string;
+//   name: string;
+//   displayName?: string;
+//   description?: string;
+//   createdAt: string;
+//   updatedAt: string;
+// }
+```
+
+#### Fetch a Scenario
+
+```typescript
+import { ScenarioFetchCommand, FlowcoreClient } from "@flowcore/sdk"
+
+const command = new ScenarioFetchCommand({
+  scenarioId: "your-scenario-id"
+})
+
+const scenario = await client.execute(command)
+```
+
+#### List Scenarios
+
+```typescript
+import { ScenarioListCommand, FlowcoreClient } from "@flowcore/sdk"
+
+const command = new ScenarioListCommand({
+  tenantId: "your-tenant-id"
+})
+
+const result = await client.execute(command)
+// Returns:
+// {
+//   id: string; // The tenant ID
+//   scenarios: Scenario[]; // Array of scenario objects
+// }
+```
+
+#### Update a Scenario
+
+```typescript
+import { ScenarioUpdateCommand, FlowcoreClient } from "@flowcore/sdk"
+
+const command = new ScenarioUpdateCommand({
+  tenantId: "your-tenant-id",
+  scenarioId: "your-scenario-id",
+  description: "Updated description", // Optional
+  displayName: "Updated Display Name"  // Optional
+})
+
+const updatedScenario = await client.execute(command)
+```
+
+#### Delete a Scenario
+
+```typescript
+import { ScenarioDeleteCommand, FlowcoreClient } from "@flowcore/sdk"
+
+const command = new ScenarioDeleteCommand({
+  scenarioId: "your-scenario-id"
+})
+
+const result = await client.execute(command)
+// Returns: { success: boolean }
+```
 
 ### Event Ingestion Operations
 
