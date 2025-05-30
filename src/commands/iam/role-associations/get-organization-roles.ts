@@ -1,6 +1,6 @@
 import { Command, parseResponseHelper } from "@flowcore/sdk";
 import { Type } from "@sinclair/typebox";
-import { RoleSchema, type Role } from "../roles/create-role.ts";
+import type { Role } from "../roles/create-role.ts";
 
 /**
  * The input for the organization roles command

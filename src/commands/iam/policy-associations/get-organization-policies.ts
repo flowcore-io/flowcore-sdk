@@ -34,11 +34,11 @@ export class OrganizationPoliciesCommand extends Command<
 	 */
 	protected override getBaseUrl(): string {
 		// Use a proxy URL in development mode
-		if (process.env.NODE_ENV === "development") {
-			return typeof window === "undefined"
-				? "http://localhost:3000" // Server-side in dev
-				: ""; // Client-side in dev (relative URL)
-		}
+		// if (process.env.NODE_ENV === "development") {
+		// 	return typeof window === "undefined"
+		// 		? "http://localhost:3000" // Server-side in dev
+		// 		: ""; // Client-side in dev (relative URL)
+		// }
 		return "https://iam.api.flowcore.io";
 	}
 
@@ -47,9 +47,9 @@ export class OrganizationPoliciesCommand extends Command<
 	 */
 	protected override getPath(): string {
 		// Use the proxy API in development mode
-		if (process.env.NODE_ENV === "development") {
-			return `/api/proxy/iam/policy-associations/organization/${this.input.organizationId}`;
-		}
+		// if (process.env.NODE_ENV === "development") {
+		// 	return `/api/proxy/iam/policy-associations/organization/${this.input.organizationId}`;
+		// }
 		return `/api/v1/policy-associations/organization/${this.input.organizationId}`;
 	}
 
@@ -107,10 +107,10 @@ export class OrganizationPoliciesCommand extends Command<
 			}
 
 			// In development, return an empty array instead of crashing
-			if (process.env.NODE_ENV === "development") {
-				console.log("Returning empty policies array due to parsing error");
-				return [];
-			}
+			// if (process.env.NODE_ENV === "development") {
+			// 	console.log("Returning empty policies array due to parsing error");
+			// 	return [];
+			// }
 			throw error;
 		}
 	}

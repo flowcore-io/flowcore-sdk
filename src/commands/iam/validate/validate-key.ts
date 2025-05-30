@@ -55,7 +55,7 @@ export class ValidateKeyCommand extends Command<
 	 * Get the body
 	 */
 	protected override getBody(): Record<string, unknown> {
-		const { keyId, ...rest } = this.input;
+		const { ...rest } = this.input;
 		return rest;
 	}
 

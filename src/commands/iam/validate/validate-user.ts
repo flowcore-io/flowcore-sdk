@@ -97,7 +97,7 @@ export class ValidateUserCommand extends Command<
 	 * Get the body
 	 */
 	protected override getBody(): Record<string, unknown> {
-		const { userId, ...rest } = this.input;
+		const { ...rest } = this.input;
 		return rest;
 	}
 

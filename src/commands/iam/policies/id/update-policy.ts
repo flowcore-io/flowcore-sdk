@@ -3,7 +3,7 @@ import {
 	type Policy,
 	PolicySchema,
 	type PolicyStatement,
-} from "../create-policy";
+} from "../create-policy.ts";
 
 /**
  * The input for the policy update command
@@ -61,7 +61,7 @@ export class PolicyUpdateCommand extends Command<PolicyUpdateInput, Policy> {
 	 * Get the body
 	 */
 	protected override getBody(): Record<string, unknown> {
-		const { policyId, ...rest } = this.input;
+		const { ...rest } = this.input;
 		return {
 			...rest,
 			flowcoreManaged: rest.flowcoreManaged ?? false,

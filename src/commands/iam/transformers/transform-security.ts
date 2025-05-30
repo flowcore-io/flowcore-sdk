@@ -71,7 +71,7 @@ export class SecurityTransformerCommand extends Command<
 	 * Get the body
 	 */
 	protected override getBody(): Record<string, unknown> {
-		const { secret, ...rest } = this.input;
+		const { ...rest } = this.input;
 		return rest;
 	}
 

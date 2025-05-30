@@ -111,11 +111,11 @@ export class TenantAuditLogsCommand extends Command<
 	 */
 	protected override getBaseUrl(): string {
 		// Use a proxy URL in development mode
-		if (process.env.NODE_ENV === "development") {
-			return typeof window === "undefined"
-				? "http://localhost:3000" // Server-side in dev
-				: ""; // Client-side in dev (relative URL)
-		}
+		// if (process.env.NODE_ENV === "development") {
+		// 	return typeof window === "undefined"
+		// 		? "http://localhost:3000" // Server-side in dev
+		// 		: ""; // Client-side in dev (relative URL)
+		// }
 		return "https://iam.api.flowcore.io";
 	}
 
@@ -124,13 +124,14 @@ export class TenantAuditLogsCommand extends Command<
 	 */
 	protected override getPath(): string {
 		// Build base path
-		let path = "";
+		let path = `/api/v1/tenant-iam-audit/${this.input.tenantId}`;
+		// let path = "";
 		// Use the proxy API in development mode
-		if (process.env.NODE_ENV === "development") {
-			path = `/api/proxy/iam/tenant-iam-audit/${this.input.tenantId}`;
-		} else {
-			path = `/api/v1/tenant-iam-audit/${this.input.tenantId}`;
-		}
+		// if (process.env.NODE_ENV === "development") {
+		// 	path = `/api/proxy/iam/tenant-iam-audit/${this.input.tenantId}`;
+		// } else {
+		// 	path = `/api/v1/tenant-iam-audit/${this.input.tenantId}`;
+		// }
 
 		// Add query parameters directly to the path
 		const queryParams = [];
@@ -243,13 +244,13 @@ export class TenantAuditLogsCommand extends Command<
 			console.error("Error parsing tenant audit logs response:", error);
 
 			// In development, return an empty response instead of crashing
-			if (process.env.NODE_ENV === "development") {
-				console.log("Returning empty audit logs array due to parsing error");
-				return {
-					logs: [],
-					pagination: { page: 1, pageSize: 20, totalItems: 0, totalPages: 0 },
-				};
-			}
+			// if (process.env.NODE_ENV === "development") {
+			// 	console.log("Returning empty audit logs array due to parsing error");
+			// 	return {
+			// 		logs: [],
+			// 		pagination: { page: 1, pageSize: 20, totalItems: 0, totalPages: 0 },
+			// 	};
+			// }
 			throw error;
 		}
 	}

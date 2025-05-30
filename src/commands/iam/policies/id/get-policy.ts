@@ -1,5 +1,5 @@
 import { Command, parseResponseHelper } from "@flowcore/sdk";
-import { type Policy, PolicySchema } from "../create-policy";
+import { type Policy, PolicySchema } from "../create-policy.ts";
 
 /**
  * The input for the policy get command
