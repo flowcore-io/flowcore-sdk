@@ -1,17 +1,20 @@
 import { assertEquals } from "@std/assert"
-import { describe, it } from "jsr:@std/testing/bdd"
+import { afterAll, describe, it } from "jsr:@std/testing/bdd"
 import { FlowcoreClient } from "../../../../src/mod.ts"
 import { RoleListCommand } from "../../../../src/commands/iam/role.list.ts"
 import { FetchMocker } from "../../../fixtures/fetch.fixture.ts"
 
 describe("Role commands", () => {
+  const fetchMocker = new FetchMocker()
+  const flowcoreClient = new FlowcoreClient({ getBearerToken: () => "BEARER_TOKEN" })
+  const fetchMockerBuilder = fetchMocker.mock("https://iam.api.flowcore.io")
+
+  afterAll(() => {
+    fetchMocker.restore()
+  })
+
   describe("RoleListCommand", () => {
     it("should list all roles for a tenant", async () => {
-      // Create fresh instances for this test
-      const fetchMocker = new FetchMocker()
-      const flowcoreClient = new FlowcoreClient({ getBearerToken: () => "BEARER_TOKEN" })
-      const fetchMockerBuilder = fetchMocker.mock("https://iam.api.flowcore.io")
-      
       // arrange
       const tenantId = crypto.randomUUID()
       const organizationId1 = crypto.randomUUID()
@@ -46,14 +49,16 @@ describe("Role commands", () => {
       ]
 
       fetchMockerBuilder.get(`/api/v1/role-associations/organization/${tenantId}?`)
+        .matchSearchParams({})
         .matchHeaders({
           "authorization": "Bearer BEARER_TOKEN",
         })
+        .persisted()
         .respondWith(200, mockResponse)
 
       // act
       const command = new RoleListCommand({ tenantId })
-      const response = await flowcoreClient.execute(command, true) // Use direct: true
+      const response = await flowcoreClient.execute(command)
 
       // assert
       assertEquals(response.length, 3)
@@ -72,17 +77,9 @@ describe("Role commands", () => {
       // Check third role (Flowcore managed)
       assertEquals(response[2].name, "SystemAdmin")
       assertEquals(response[2].flowcoreManaged, true)
-      
-      // Clean up
-      fetchMocker.restore()
     })
 
     it("should list roles filtered by name", async () => {
-      // Create fresh instances for this test
-      const fetchMocker = new FetchMocker()
-      const flowcoreClient = new FlowcoreClient({ getBearerToken: () => "BEARER_TOKEN" })
-      const fetchMockerBuilder = fetchMocker.mock("https://iam.api.flowcore.io")
-      
       // arrange
       const tenantId = crypto.randomUUID()
       const organizationId = crypto.randomUUID()
@@ -105,53 +102,40 @@ describe("Role commands", () => {
         .matchHeaders({
           "authorization": "Bearer BEARER_TOKEN",
         })
+        .persisted()
         .respondWith(200, mockResponse)
 
       // act
       const command = new RoleListCommand({ tenantId, name: roleName })
-      const response = await flowcoreClient.execute(command, true) // Use direct: true
+      const response = await flowcoreClient.execute(command)
 
       // assert
       assertEquals(response.length, 1)
       assertEquals(response[0].name, roleName)
       assertEquals(response[0].tenantId, organizationId)
-      
-      // Clean up
-      fetchMocker.restore()
     })
 
     it("should return empty array when no roles exist", async () => {
-      // Create fresh instances for this test
-      const fetchMocker = new FetchMocker()
-      const flowcoreClient = new FlowcoreClient({ getBearerToken: () => "BEARER_TOKEN" })
-      const fetchMockerBuilder = fetchMocker.mock("https://iam.api.flowcore.io")
-      
       // arrange
       const tenantId = crypto.randomUUID()
       
       fetchMockerBuilder.get(`/api/v1/role-associations/organization/${tenantId}?`)
+        .matchSearchParams({})
         .matchHeaders({
           "authorization": "Bearer BEARER_TOKEN",
         })
+        .persisted()
         .respondWith(200, [])
 
       // act
       const command = new RoleListCommand({ tenantId })
-      const response = await flowcoreClient.execute(command, true) // Use direct: true
+      const response = await flowcoreClient.execute(command)
 
       // assert
       assertEquals(response, [])
-      
-      // Clean up
-      fetchMocker.restore()
     })
 
     it("should handle large role lists", async () => {
-      // Create fresh instances for this test
-      const fetchMocker = new FetchMocker()
-      const flowcoreClient = new FlowcoreClient({ getBearerToken: () => "BEARER_TOKEN" })
-      const fetchMockerBuilder = fetchMocker.mock("https://iam.api.flowcore.io")
-      
       // arrange
       const tenantId = crypto.randomUUID()
       const mockResponse = Array.from({ length: 50 }, (_, i) => ({
@@ -163,14 +147,16 @@ describe("Role commands", () => {
       }))
 
       fetchMockerBuilder.get(`/api/v1/role-associations/organization/${tenantId}?`)
+        .matchSearchParams({})
         .matchHeaders({
           "authorization": "Bearer BEARER_TOKEN",
         })
+        .persisted()
         .respondWith(200, mockResponse)
 
       // act
       const command = new RoleListCommand({ tenantId })
-      const response = await flowcoreClient.execute(command, true) // Use direct: true
+      const response = await flowcoreClient.execute(command)
 
       // assert
       assertEquals(response.length, 50)
@@ -181,9 +167,6 @@ describe("Role commands", () => {
       assertEquals(response[0].flowcoreManaged, true)
       assertEquals(response[1].flowcoreManaged, false)
       assertEquals(response[5].flowcoreManaged, true)
-      
-      // Clean up
-      fetchMocker.restore()
     })
   })
 }) 

@@ -135,11 +135,6 @@ describe("UserRoleAssociation commands", () => {
     })
 
     it("should list user role associations without tenantId", async () => {
-      // Create fresh instances for this test
-      const fetchMocker = new FetchMocker()
-      const flowcoreClient = new FlowcoreClient({ getBearerToken: () => "BEARER_TOKEN" })
-      const fetchMockerBuilder = fetchMocker.mock("https://iam.api.flowcore.io")
-      
       // arrange
       const userId = crypto.randomUUID()
       const organizationId = crypto.randomUUID()
@@ -155,49 +150,42 @@ describe("UserRoleAssociation commands", () => {
       ]
 
       fetchMockerBuilder.get(`/api/v1/role-associations/user/${userId}?`)
+        .matchSearchParams({})
         .matchHeaders({
           "authorization": "Bearer BEARER_TOKEN",
         })
+        .persisted()
         .respondWith(200, mockResponse)
 
       // act
       const command = new UserRoleAssociationListCommand({ userId })
-      const response = await flowcoreClient.execute(command, true) // Use direct: true
+      const response = await flowcoreClient.execute(command)
 
       // assert
       assertEquals(response.length, 1)
       assertEquals(response[0].name, "GlobalAdmin")
       assertEquals(response[0].tenantId, organizationId)
       assertEquals(response[0].flowcoreManaged, true)
-      
-      // Clean up
-      fetchMocker.restore()
     })
 
     it("should return empty array when no associations exist", async () => {
-      // Create fresh instances for this test
-      const fetchMocker = new FetchMocker()
-      const flowcoreClient = new FlowcoreClient({ getBearerToken: () => "BEARER_TOKEN" })
-      const fetchMockerBuilder = fetchMocker.mock("https://iam.api.flowcore.io")
-      
       // arrange
       const userId = crypto.randomUUID()
 
       fetchMockerBuilder.get(`/api/v1/role-associations/user/${userId}?`)
+        .matchSearchParams({})
         .matchHeaders({
           "authorization": "Bearer BEARER_TOKEN",
         })
+        .persisted()
         .respondWith(200, [])
 
       // act
       const command = new UserRoleAssociationListCommand({ userId })
-      const response = await flowcoreClient.execute(command, true) // Use direct: true
+      const response = await flowcoreClient.execute(command)
 
       // assert
       assertEquals(response, [])
-      
-      // Clean up
-      fetchMocker.restore()
     })
   })
 

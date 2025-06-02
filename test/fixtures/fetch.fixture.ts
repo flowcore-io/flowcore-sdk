@@ -107,6 +107,10 @@ export class FetchMockBuilder {
     return notCalled
   }
 
+  public getAllMocks() {
+    return this.mockedRequests.map(r => `${r.method} ${this.baseUrl}${r.path}`)
+  }
+
   public get(path: string) {
     const methodPath = new FetchMockBuilderPath(this, "GET", path)
     return methodPath
