@@ -149,17 +149,16 @@ describe("UserRoleAssociation commands", () => {
         },
       ]
 
-      fetchMockerBuilder.get(`/api/v1/role-associations/user/${userId}?`)
+      fetchMockerBuilder.get(`/api/v1/role-associations/user/${userId}`)
         .matchSearchParams({})
         .matchHeaders({
           "authorization": "Bearer BEARER_TOKEN",
         })
-        .persisted()
         .respondWith(200, mockResponse)
 
       // act
       const command = new UserRoleAssociationListCommand({ userId })
-      const response = await flowcoreClient.execute(command)
+      const response = await flowcoreClient.execute(command, true)
 
       // assert
       assertEquals(response.length, 1)
@@ -172,17 +171,16 @@ describe("UserRoleAssociation commands", () => {
       // arrange
       const userId = crypto.randomUUID()
 
-      fetchMockerBuilder.get(`/api/v1/role-associations/user/${userId}?`)
+      fetchMockerBuilder.get(`/api/v1/role-associations/user/${userId}`)
         .matchSearchParams({})
         .matchHeaders({
           "authorization": "Bearer BEARER_TOKEN",
         })
-        .persisted()
         .respondWith(200, [])
 
       // act
       const command = new UserRoleAssociationListCommand({ userId })
-      const response = await flowcoreClient.execute(command)
+      const response = await flowcoreClient.execute(command, true)
 
       // assert
       assertEquals(response, [])

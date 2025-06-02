@@ -48,17 +48,16 @@ describe("Role commands", () => {
         },
       ]
 
-      fetchMockerBuilder.get(`/api/v1/role-associations/organization/${tenantId}?`)
+      fetchMockerBuilder.get(`/api/v1/role-associations/organization/${tenantId}`)
         .matchSearchParams({})
         .matchHeaders({
           "authorization": "Bearer BEARER_TOKEN",
         })
-        .persisted()
         .respondWith(200, mockResponse)
 
       // act
       const command = new RoleListCommand({ tenantId })
-      const response = await flowcoreClient.execute(command)
+      const response = await flowcoreClient.execute(command, true)
 
       // assert
       assertEquals(response.length, 3)
@@ -119,17 +118,16 @@ describe("Role commands", () => {
       // arrange
       const tenantId = crypto.randomUUID()
       
-      fetchMockerBuilder.get(`/api/v1/role-associations/organization/${tenantId}?`)
+      fetchMockerBuilder.get(`/api/v1/role-associations/organization/${tenantId}`)
         .matchSearchParams({})
         .matchHeaders({
           "authorization": "Bearer BEARER_TOKEN",
         })
-        .persisted()
         .respondWith(200, [])
 
       // act
       const command = new RoleListCommand({ tenantId })
-      const response = await flowcoreClient.execute(command)
+      const response = await flowcoreClient.execute(command, true)
 
       // assert
       assertEquals(response, [])
@@ -146,17 +144,16 @@ describe("Role commands", () => {
         flowcoreManaged: i % 5 === 0, // Every 5th role is Flowcore managed
       }))
 
-      fetchMockerBuilder.get(`/api/v1/role-associations/organization/${tenantId}?`)
+      fetchMockerBuilder.get(`/api/v1/role-associations/organization/${tenantId}`)
         .matchSearchParams({})
         .matchHeaders({
           "authorization": "Bearer BEARER_TOKEN",
         })
-        .persisted()
         .respondWith(200, mockResponse)
 
       // act
       const command = new RoleListCommand({ tenantId })
-      const response = await flowcoreClient.execute(command)
+      const response = await flowcoreClient.execute(command, true)
 
       // assert
       assertEquals(response.length, 50)
