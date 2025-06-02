@@ -67,17 +67,17 @@ describe("Audit commands", () => {
       assertEquals(response.logs.length, 3)
       assertEquals(response.pagination.totalItems, 3)
       assertEquals(response.pagination.page, 1)
-      
+
       // Check first log entry
       assertEquals(response.logs[0].event, "role_assigned")
       assertEquals(response.logs[0].resourceName, "admin-role")
       assertEquals(response.logs[0].performedBy, "user-123")
       assertEquals(response.logs[0].status, "success")
-      
+
       // Check second log entry (performedBy as object)
       assertEquals(response.logs[1].event, "policy_created")
       assertEquals(typeof response.logs[1].performedBy, "object")
-      
+
       // Check third log entry (performedBy as null)
       assertEquals(response.logs[2].event, "permission_denied")
       assertEquals(response.logs[2].performedBy, null)
@@ -89,7 +89,7 @@ describe("Audit commands", () => {
       const tenantId = crypto.randomUUID()
       const page = 2
       const pageSize = 10
-      
+
       const mockResponse = {
         logs: [
           {
@@ -120,10 +120,10 @@ describe("Audit commands", () => {
         .respondWith(200, mockResponse)
 
       // act
-      const command = new TenantAuditLogsCommand({ 
-        tenantId, 
-        page, 
-        pageSize 
+      const command = new TenantAuditLogsCommand({
+        tenantId,
+        page,
+        pageSize,
       })
       const response = await flowcoreClient.execute(command, true)
 
@@ -139,7 +139,7 @@ describe("Audit commands", () => {
       // arrange
       const tenantId = crypto.randomUUID()
       const resourceType = "role"
-      
+
       const mockResponse = {
         logs: [
           {
@@ -177,9 +177,9 @@ describe("Audit commands", () => {
         .respondWith(200, mockResponse)
 
       // act
-      const command = new TenantAuditLogsCommand({ 
-        tenantId, 
-        resourceType 
+      const command = new TenantAuditLogsCommand({
+        tenantId,
+        resourceType,
       })
       const response = await flowcoreClient.execute(command, true)
 
@@ -193,7 +193,7 @@ describe("Audit commands", () => {
       // arrange
       const tenantId = crypto.randomUUID()
       const status = "failure"
-      
+
       const mockResponse = {
         logs: [
           {
@@ -223,9 +223,9 @@ describe("Audit commands", () => {
         .respondWith(200, mockResponse)
 
       // act
-      const command = new TenantAuditLogsCommand({ 
-        tenantId, 
-        status: "failure" 
+      const command = new TenantAuditLogsCommand({
+        tenantId,
+        status: "failure",
       })
       const response = await flowcoreClient.execute(command, true)
 
@@ -240,7 +240,7 @@ describe("Audit commands", () => {
       const tenantId = crypto.randomUUID()
       const startDate = "2024-01-01"
       const endDate = "2024-01-31"
-      
+
       const mockResponse = {
         logs: [
           {
@@ -271,10 +271,10 @@ describe("Audit commands", () => {
         .respondWith(200, mockResponse)
 
       // act
-      const command = new TenantAuditLogsCommand({ 
-        tenantId, 
-        startDate, 
-        endDate 
+      const command = new TenantAuditLogsCommand({
+        tenantId,
+        startDate,
+        endDate,
       })
       const response = await flowcoreClient.execute(command, true)
 
@@ -287,7 +287,7 @@ describe("Audit commands", () => {
       // arrange
       const tenantId = crypto.randomUUID()
       const performedBy = "admin-user-123"
-      
+
       const mockResponse = {
         logs: [
           {
@@ -317,9 +317,9 @@ describe("Audit commands", () => {
         .respondWith(200, mockResponse)
 
       // act
-      const command = new TenantAuditLogsCommand({ 
-        tenantId, 
-        performedBy 
+      const command = new TenantAuditLogsCommand({
+        tenantId,
+        performedBy,
       })
       const response = await flowcoreClient.execute(command, true)
 
@@ -340,7 +340,7 @@ describe("Audit commands", () => {
         startDate: "2024-01-01",
         endDate: "2024-01-31",
       }
-      
+
       const mockResponse = {
         logs: [
           {
@@ -376,9 +376,9 @@ describe("Audit commands", () => {
         .respondWith(200, mockResponse)
 
       // act
-      const command = new TenantAuditLogsCommand({ 
-        tenantId, 
-        ...filters 
+      const command = new TenantAuditLogsCommand({
+        tenantId,
+        ...filters,
       })
       const response = await flowcoreClient.execute(command, true)
 
@@ -392,7 +392,7 @@ describe("Audit commands", () => {
     it("should return empty logs when no audit entries exist", async () => {
       // arrange
       const tenantId = crypto.randomUUID()
-      
+
       const mockResponse = {
         logs: [],
         pagination: {
@@ -424,13 +424,13 @@ describe("Audit commands", () => {
       // arrange
       const tenantId = crypto.randomUUID()
       const logsCount = 100
-      
+
       const mockLogs = Array.from({ length: logsCount }, (_, i) => ({
         id: crypto.randomUUID(),
         event: `event_${i}`,
         resourceName: `resource_${i}`,
         performedBy: `user_${i}`,
-        timestamp: `2024-01-${String(i % 28 + 1).padStart(2, '0')}T${String(i % 24).padStart(2, '0')}:00:00Z`,
+        timestamp: `2024-01-${String(i % 28 + 1).padStart(2, "0")}T${String(i % 24).padStart(2, "0")}:00:00Z`,
         status: i % 2 === 0 ? "success" : "failure",
       }))
 
@@ -454,9 +454,9 @@ describe("Audit commands", () => {
         .respondWith(200, mockResponse)
 
       // act
-      const command = new TenantAuditLogsCommand({ 
-        tenantId, 
-        pageSize: 100 
+      const command = new TenantAuditLogsCommand({
+        tenantId,
+        pageSize: 100,
       })
       const response = await flowcoreClient.execute(command, true)
 
@@ -465,10 +465,10 @@ describe("Audit commands", () => {
       assertEquals(response.pagination.totalItems, logsCount)
       assertEquals(response.logs[0].event, "event_0")
       assertEquals(response.logs[99].event, "event_99")
-      
+
       // Check that statuses alternate
       assertEquals(response.logs[0].status, "success")
       assertEquals(response.logs[1].status, "failure")
     })
   })
-}) 
+})

@@ -75,11 +75,11 @@ describe("UserRoleAssociation commands", () => {
         userId,
         roleId,
       })
-      
+
       await assertRejects(
         () => flowcoreClient.execute(command),
         Error,
-        "UserRoleAssociationCreateCommand failed with 400:"
+        "UserRoleAssociationCreateCommand failed with 400:",
       )
     })
   })
@@ -91,7 +91,7 @@ describe("UserRoleAssociation commands", () => {
       const tenantId = crypto.randomUUID()
       const organizationId1 = crypto.randomUUID()
       const organizationId2 = crypto.randomUUID()
-      
+
       // Mock response matches the RoleSchema structure (before transformation)
       const mockResponse = [
         {
@@ -138,7 +138,7 @@ describe("UserRoleAssociation commands", () => {
       // arrange
       const userId = crypto.randomUUID()
       const organizationId = crypto.randomUUID()
-      
+
       const mockResponse = [
         {
           id: crypto.randomUUID(),
@@ -247,12 +247,12 @@ describe("UserRoleAssociation commands", () => {
         userId,
         roleId,
       })
-      
+
       await assertRejects(
         () => flowcoreClient.execute(command),
         Error,
-        "UserRoleAssociationDeleteCommand failed with 404:"
+        "UserRoleAssociationDeleteCommand failed with 404:",
       )
     })
   })
-}) 
+})

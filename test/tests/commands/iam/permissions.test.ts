@@ -54,10 +54,10 @@ describe("Permissions commands", () => {
       assertEquals(response[0].type, "datacore")
       assertEquals(response[0].id, "datacore-1")
       assertEquals(response[0].action, ["read", "write"])
-      
+
       assertEquals(response[1].type, "role")
       assertEquals(response[1].action, ["read"])
-      
+
       assertEquals(response[2].tenant, "tenant-2")
       assertEquals(response[2].type, "policy")
       assertEquals(response[2].action, ["create", "read", "update", "delete"])
@@ -148,4 +148,4 @@ describe("Permissions commands", () => {
       assertEquals(response[0].action, ["read"])
     })
   })
-}) 
+})

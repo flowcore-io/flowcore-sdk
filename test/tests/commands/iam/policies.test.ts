@@ -160,7 +160,7 @@ describe("Policy commands", () => {
       await assertRejects(
         () => flowcoreClient.execute(command),
         Error,
-        "PolicyCreateCommand failed with 400:"
+        "PolicyCreateCommand failed with 400:",
       )
     })
   })
@@ -364,7 +364,7 @@ describe("Policy commands", () => {
       await assertRejects(
         () => flowcoreClient.execute(command),
         Error,
-        "PolicyGetCommand failed with 404:"
+        "PolicyGetCommand failed with 404:",
       )
     })
   })
@@ -447,7 +447,7 @@ describe("Policy commands", () => {
       await assertRejects(
         () => flowcoreClient.execute(command),
         Error,
-        "PolicyUpdateCommand failed with 403:"
+        "PolicyUpdateCommand failed with 403:",
       )
     })
   })
@@ -493,8 +493,8 @@ describe("Policy commands", () => {
       await assertRejects(
         () => flowcoreClient.execute(command),
         Error,
-        "PolicyArchiveCommand failed with 404:"
+        "PolicyArchiveCommand failed with 404:",
       )
     })
   })
-}) 
+})

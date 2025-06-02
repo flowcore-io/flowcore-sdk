@@ -75,11 +75,11 @@ describe("ApiKeyRoleAssociation commands", () => {
         apiKeyId,
         roleId,
       })
-      
+
       await assertRejects(
         () => flowcoreClient.execute(command),
         Error,
-        "ApiKeyRoleAssociationCreateCommand failed with 400:"
+        "ApiKeyRoleAssociationCreateCommand failed with 400:",
       )
     })
   })
@@ -90,7 +90,7 @@ describe("ApiKeyRoleAssociation commands", () => {
       const apiKeyId = crypto.randomUUID()
       const organizationId1 = crypto.randomUUID()
       const organizationId2 = crypto.randomUUID()
-      
+
       // Mock response matches the RoleSchema structure (before transformation)
       const mockResponse = [
         {
@@ -209,12 +209,12 @@ describe("ApiKeyRoleAssociation commands", () => {
         apiKeyId,
         roleId,
       })
-      
+
       await assertRejects(
         () => flowcoreClient.execute(command),
         Error,
-        "ApiKeyRoleAssociationDeleteCommand failed with 404:"
+        "ApiKeyRoleAssociationDeleteCommand failed with 404:",
       )
     })
   })
-}) 
+})

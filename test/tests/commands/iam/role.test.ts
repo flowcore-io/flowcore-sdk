@@ -19,7 +19,7 @@ describe("Role commands", () => {
       const tenantId = crypto.randomUUID()
       const organizationId1 = crypto.randomUUID()
       const organizationId2 = crypto.randomUUID()
-      
+
       // Mock response matches the RoleSchema structure (before transformation)
       const mockResponse = [
         {
@@ -61,18 +61,18 @@ describe("Role commands", () => {
 
       // assert
       assertEquals(response.length, 3)
-      
+
       // Check first role
       assertEquals(response[0].name, "Admin")
       assertEquals(response[0].description, "Administrator role with full permissions")
       assertEquals(response[0].tenantId, organizationId1)
       assertEquals(response[0].flowcoreManaged, false)
       assertEquals(response[0].frn, "frn:role:admin")
-      
+
       // Check second role
       assertEquals(response[1].name, "Viewer")
       assertEquals(response[1].tenantId, organizationId2)
-      
+
       // Check third role (Flowcore managed)
       assertEquals(response[2].name, "SystemAdmin")
       assertEquals(response[2].flowcoreManaged, true)
@@ -83,7 +83,7 @@ describe("Role commands", () => {
       const tenantId = crypto.randomUUID()
       const organizationId = crypto.randomUUID()
       const roleName = "Admin"
-      
+
       const mockResponse = [
         {
           id: crypto.randomUUID(),
@@ -117,7 +117,7 @@ describe("Role commands", () => {
     it("should return empty array when no roles exist", async () => {
       // arrange
       const tenantId = crypto.randomUUID()
-      
+
       fetchMockerBuilder.get(`/api/v1/role-associations/organization/${tenantId}`)
         .matchSearchParams({})
         .matchHeaders({
@@ -159,11 +159,11 @@ describe("Role commands", () => {
       assertEquals(response.length, 50)
       assertEquals(response[0].name, "Role0")
       assertEquals(response[49].name, "Role49")
-      
+
       // Check that every 5th role is Flowcore managed
       assertEquals(response[0].flowcoreManaged, true)
       assertEquals(response[1].flowcoreManaged, false)
       assertEquals(response[5].flowcoreManaged, true)
     })
   })
-}) 
+})
