@@ -104,13 +104,13 @@ describe("Role commands", () => {
         .respondWith(200, mockResponse)
 
       // act
-      const command = new RoleListCommand({ organizationId: tenantId, name: roleName })
+      const command = new RoleListCommand({ organizationId: tenantId })
       const response = await flowcoreClient.execute(command)
 
       // assert
       assertEquals(response.length, 1)
       assertEquals(response[0].name, roleName)
-      assertEquals(response[0].tenantId, organizationId)
+      assertEquals(response[0].organizationId, organizationId)
     })
 
     it("should return empty array when no roles exist", async () => {
