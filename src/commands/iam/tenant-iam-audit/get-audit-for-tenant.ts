@@ -171,19 +171,13 @@ export class TenantAuditLogsCommand extends Command<
    * Parse the response
    */
   protected override parseResponse(rawResponse: unknown): AuditLogResponse {
-    try {
-      // Handle empty responses
-      if (!rawResponse) {
-        return {
-          logs: [],
-          pagination: { page: 1, pageSize: 20, totalItems: 0, totalPages: 0 },
-        }
+    if (!rawResponse) {
+      return {
+        logs: [],
+        pagination: { page: 1, pageSize: 20, totalItems: 0, totalPages: 0 },
       }
-
-      // Try the normal parsing
-      return parseResponseHelper(AuditLogResponseSchema, rawResponse)
-    } catch (error) {
-      throw error
     }
+
+    return parseResponseHelper(AuditLogResponseSchema, rawResponse)
   }
 }
