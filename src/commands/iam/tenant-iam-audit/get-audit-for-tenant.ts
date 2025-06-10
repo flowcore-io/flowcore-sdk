@@ -97,7 +97,7 @@ export class TenantAuditLogsCommand extends Command<
   /**
    * Whether the command should retry on failure
    */
-  protected override retryOnFailure = false
+  protected override retryOnFailure = true
 
   /**
    * Get the method

@@ -19,7 +19,7 @@ export class UserRolesCommand extends Command<UserRolesInput, Role[]> {
   /**
    * Whether the command should retry on failure
    */
-  protected override retryOnFailure = false
+  protected override retryOnFailure = true
 
   /**
    * Get the method

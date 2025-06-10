@@ -16,7 +16,7 @@ export class PolicyGetCommand extends Command<PolicyGetInput, Policy> {
   /**
    * Whether the command should retry on failure
    */
-  protected override retryOnFailure = false
+  protected override retryOnFailure = true
 
   /**
    * Create a new instance of the command

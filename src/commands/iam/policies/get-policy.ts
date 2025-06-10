@@ -17,7 +17,7 @@ export class PolicyListCommand extends Command<PolicyListInput, Policy[]> {
   /**
    * Whether the command should retry on failure
    */
-  protected override retryOnFailure = false
+  protected override retryOnFailure = true
 
   /**
    * Get the method

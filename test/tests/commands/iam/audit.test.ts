@@ -1,7 +1,7 @@
 import { assertEquals } from "@std/assert"
 import { afterAll, describe, it } from "jsr:@std/testing/bdd"
 import { FlowcoreClient } from "../../../../src/mod.ts"
-import { TenantAuditLogsCommand } from "../../../../src/commands/iam/audit/get-audit-for-tenant.ts"
+import { TenantAuditLogsCommand } from "../../../../src/commands/iam/tenant-iam-audit/get-audit-for-tenant.ts"
 import { FetchMocker } from "../../../fixtures/fetch.fixture.ts"
 
 describe("Audit commands", () => {

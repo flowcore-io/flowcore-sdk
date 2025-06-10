@@ -53,7 +53,7 @@ export * from "./ingestion/ingest.batch.ts"
 export * from "./ingestion/ingest.event.ts"
 
 // IAM
-export * from "./iam/api-key-role-association.create.ts"
+export * from "./iam/role-associations/api-key-role-association.create.ts"
 export * from "./iam/api-key-role-association.delete.ts"
 export * from "./iam/api-key-role-association.list.ts"
 export * from "./iam/role.list.ts"

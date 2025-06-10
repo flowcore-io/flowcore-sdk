@@ -1,6 +1,6 @@
 import { type Static, type TObject, type TString, Type } from "@sinclair/typebox"
-import { Command } from "../../common/command.ts"
-import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
+import { Command } from "../../../common/command.ts"
+import { parseResponseHelper } from "../../../utils/parse-response-helper.ts"
 
 /**
  * The input for the api key role associations create command
