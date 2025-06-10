@@ -90,8 +90,7 @@ const parsePolicyAssociationsResponse = (
   try {
     // First try standard parsing
     return parseResponseHelper(PolicyAssociationsSchema, rawResponse)
-  } catch (error) {
-    console.error("Error parsing policy associations:", error)
+  } catch (_error: unknown) {
 
     // If it's not an object at all, return empty arrays
     if (!rawResponse || typeof rawResponse !== "object") {
@@ -109,11 +108,7 @@ const parsePolicyAssociationsResponse = (
     // Try to validate each section separately
     try {
       keys = parseResponseHelper(Type.Array(PolicyKeyAssociationSchema), keys)
-    } catch (e) {
-      console.warn(
-        "Error parsing policy key associations, using empty array",
-        e,
-      )
+    } catch (_error: unknown) {
       keys = []
     }
 
@@ -122,11 +117,7 @@ const parsePolicyAssociationsResponse = (
         Type.Array(PolicyUserAssociationSchema),
         users,
       )
-    } catch (e) {
-      console.warn(
-        "Error parsing policy user associations, using empty array",
-        e,
-      )
+    } catch (_error: unknown) {
       users = []
     }
 
@@ -135,11 +126,7 @@ const parsePolicyAssociationsResponse = (
         Type.Array(PolicyRoleAssociationSchema),
         roles,
       )
-    } catch (e) {
-      console.warn(
-        "Error parsing policy role associations, using empty array",
-        e,
-      )
+    } catch (_error: unknown) {
       roles = []
     }
 

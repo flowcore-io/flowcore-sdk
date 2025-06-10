@@ -173,14 +173,8 @@ export class TenantAuditLogsCommand extends Command<
    */
   protected override parseResponse(rawResponse: unknown): AuditLogResponse {
     try {
-      console.log(
-        "Parsing response for TenantAuditLogsCommand:",
-        typeof rawResponse === "object" ? `${JSON.stringify(rawResponse).slice(0, 200)}...` : rawResponse,
-      )
-
       // Handle empty responses
       if (!rawResponse) {
-        console.warn("Empty response received from API")
         return {
           logs: [],
           pagination: { page: 1, pageSize: 20, totalItems: 0, totalPages: 0 },
@@ -190,9 +184,6 @@ export class TenantAuditLogsCommand extends Command<
       // Try the normal parsing
       return parseResponseHelper(AuditLogResponseSchema, rawResponse)
     } catch (error) {
-      console.error("Error parsing tenant audit logs response:", error)
-
-
       throw error
     }
   }

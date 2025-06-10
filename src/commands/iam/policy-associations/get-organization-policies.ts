@@ -58,25 +58,17 @@ export class OrganizationPoliciesCommand extends Command<
    */
   protected override parseResponse(rawResponse: unknown): Policy[] {
     try {
-      console.log(
-        "Parsing response for OrganizationPoliciesCommand:",
-        typeof rawResponse === "object" ? `${JSON.stringify(rawResponse).slice(0, 200)}...` : rawResponse,
-      )
-
       // Handle empty responses
       if (!rawResponse) {
-        console.warn("Empty response received from API")
         return []
       }
 
       // If we get an array directly, try to parse each item
       if (Array.isArray(rawResponse)) {
-        console.log("Got array response, attempting to parse each item")
         return rawResponse.map((item) => {
           try {
             return parseResponseHelper(PolicySchema, item)
-          } catch (err) {
-            console.warn("Failed to parse policy item:", item, err)
+          } catch (_error: unknown) {
             // Return a minimal valid policy object
             return {
               id: item.id || "unknown",
@@ -97,11 +89,6 @@ export class OrganizationPoliciesCommand extends Command<
       // Try the normal parsing
       return parseResponseHelper(Type.Array(PolicySchema), rawResponse)
     } catch (error) {
-      console.error("Error parsing organization policies response:", error)
-      console.error("Raw response type:", typeof rawResponse)
-      if (typeof rawResponse === "object") {
-        console.error("Raw response keys:", Object.keys(rawResponse || {}))
-      }
       throw error
     }
   }
