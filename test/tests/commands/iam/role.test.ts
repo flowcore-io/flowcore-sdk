@@ -1,8 +1,8 @@
 import { assertEquals } from "@std/assert"
 import { afterAll, describe, it } from "jsr:@std/testing/bdd"
 import { FlowcoreClient } from "../../../../src/mod.ts"
-import { RoleListCommand } from "../../../../src/commands/iam/role-associations/role.list.ts"
 import { FetchMocker } from "../../../fixtures/fetch.fixture.ts"
+import { RoleListCommand } from "../../../../src/commands/iam/roles/get-roles.ts"
 
 describe("Role commands", () => {
   const fetchMocker = new FetchMocker()
@@ -56,7 +56,7 @@ describe("Role commands", () => {
         .respondWith(200, mockResponse)
 
       // act
-      const command = new RoleListCommand({ tenantId })
+      const command = new RoleListCommand({ organizationId: tenantId })
       const response = await flowcoreClient.execute(command, true)
 
       // assert
@@ -65,13 +65,12 @@ describe("Role commands", () => {
       // Check first role
       assertEquals(response[0].name, "Admin")
       assertEquals(response[0].description, "Administrator role with full permissions")
-      assertEquals(response[0].tenantId, organizationId1)
+      assertEquals(response[0].organizationId, organizationId1)
       assertEquals(response[0].flowcoreManaged, false)
-      assertEquals(response[0].frn, "frn:role:admin")
 
       // Check second role
       assertEquals(response[1].name, "Viewer")
-      assertEquals(response[1].tenantId, organizationId2)
+      assertEquals(response[1].organizationId, organizationId2)
 
       // Check third role (Flowcore managed)
       assertEquals(response[2].name, "SystemAdmin")
@@ -105,7 +104,7 @@ describe("Role commands", () => {
         .respondWith(200, mockResponse)
 
       // act
-      const command = new RoleListCommand({ tenantId, name: roleName })
+      const command = new RoleListCommand({ organizationId: tenantId, name: roleName })
       const response = await flowcoreClient.execute(command)
 
       // assert
@@ -126,7 +125,7 @@ describe("Role commands", () => {
         .respondWith(200, [])
 
       // act
-      const command = new RoleListCommand({ tenantId })
+      const command = new RoleListCommand({ organizationId: tenantId })
       const response = await flowcoreClient.execute(command, true)
 
       // assert
@@ -152,7 +151,7 @@ describe("Role commands", () => {
         .respondWith(200, mockResponse)
 
       // act
-      const command = new RoleListCommand({ tenantId })
+      const command = new RoleListCommand({ organizationId: tenantId })
       const response = await flowcoreClient.execute(command, true)
 
       // assert

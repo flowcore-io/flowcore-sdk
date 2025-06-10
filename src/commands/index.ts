@@ -53,9 +53,9 @@ export * from "./ingestion/ingest.batch.ts"
 export * from "./ingestion/ingest.event.ts"
 
 // IAM
-export * from "./iam/role-associations/api-key-role-association.create.ts"
-export * from "./iam/role-associations/api-key-role-association.delete.ts"
-export * from "./iam/role-associations/api-key-role-association.list.ts"
+export * from "./iam/role-associations/api-key-role-association/api-key-role-association.create.ts"
+export * from "./iam/role-associations/api-key-role-association/api-key-role-association.delete.ts"
+export * from "./iam/role-associations/api-key-role-association/api-key-role-association.list.ts"
 export * from "./iam/role-associations/role.list.ts"
 export * from "./iam/role-associations/user-role-association.create.ts"
 export * from "./iam/role-associations/user-role-association.delete.ts"

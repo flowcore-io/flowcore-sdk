@@ -1,9 +1,9 @@
 import { assertEquals, assertRejects } from "@std/assert"
 import { afterAll, describe, it } from "jsr:@std/testing/bdd"
 import { FlowcoreClient } from "../../../../src/mod.ts"
-import { ApiKeyRoleAssociationCreateCommand } from "../../../../src/commands/iam/role-associations/api-key-role-association.create.ts"
-import { ApiKeyRoleAssociationDeleteCommand } from "../../../../src/commands/iam/role-associations/api-key-role-association.delete.ts"
-import { ApiKeyRoleAssociationListCommand } from "../../../../src/commands/iam/role-associations/api-key-role-association.list.ts"
+import { LinkKeyRoleCommand } from "../../../../src/commands/iam/role-associations/link-key-role.ts"
+import { UnlinkKeyRoleCommand } from "../../../../src/commands/iam/role-associations/unlink-key-role.ts"
+import { KeyRolesCommand } from "../../../../src/commands/iam/role-associations/get-key-roles.ts"
 import { FetchMocker } from "../../../fixtures/fetch.fixture.ts"
 
 describe("ApiKeyRoleAssociation commands", () => {
@@ -15,7 +15,7 @@ describe("ApiKeyRoleAssociation commands", () => {
     fetchMocker.restore()
   })
 
-  describe("ApiKeyRoleAssociationCreateCommand", () => {
+  describe("LinkKeyRoleCommand", () => {
     it("should create an api key role association", async () => {
       // arrange
       const apiKeyId = crypto.randomUUID()
@@ -40,8 +40,8 @@ describe("ApiKeyRoleAssociation commands", () => {
         .respondWith(201, mockResponse)
 
       // act
-      const command = new ApiKeyRoleAssociationCreateCommand({
-        apiKeyId,
+      const command = new LinkKeyRoleCommand({
+        keyId: apiKeyId,
         roleId,
       })
       const response = await flowcoreClient.execute(command)
@@ -50,7 +50,7 @@ describe("ApiKeyRoleAssociation commands", () => {
       assertEquals(response, {
         roleId,
         organizationId,
-        apiKeyId, // Note: transformed from keyId
+        keyId: apiKeyId,
       })
     })
 
@@ -71,20 +71,20 @@ describe("ApiKeyRoleAssociation commands", () => {
         .respondWith(400, { error: "Invalid role ID" })
 
       // act & assert
-      const command = new ApiKeyRoleAssociationCreateCommand({
-        apiKeyId,
+      const command = new LinkKeyRoleCommand({
+        keyId: apiKeyId,
         roleId,
       })
 
       await assertRejects(
         () => flowcoreClient.execute(command),
         Error,
-        "ApiKeyRoleAssociationCreateCommand failed with 400:",
+        "LinkKeyRoleCommand failed with 400:",
       )
     })
   })
 
-  describe("ApiKeyRoleAssociationListCommand", () => {
+  describe("KeyRolesCommand", () => {
     it("should list api key role associations", async () => {
       // arrange
       const apiKeyId = crypto.randomUUID()
@@ -116,7 +116,7 @@ describe("ApiKeyRoleAssociation commands", () => {
         .respondWith(200, mockResponse)
 
       // act
-      const command = new ApiKeyRoleAssociationListCommand({ apiKeyId })
+      const command = new KeyRolesCommand({ keyId: apiKeyId })
       const response = await flowcoreClient.execute(command)
 
       // assert
@@ -124,8 +124,8 @@ describe("ApiKeyRoleAssociation commands", () => {
       assertEquals(response[0].name, "Admin")
       assertEquals(response[1].name, "User")
       // Verify organizationId is transformed to tenantId
-      assertEquals(response[0].tenantId, organizationId1)
-      assertEquals(response[1].tenantId, organizationId2)
+      assertEquals(response[0].organizationId, organizationId1)
+      assertEquals(response[1].organizationId, organizationId2)
       // flowcoreManaged property exists
       assertEquals(response[0].flowcoreManaged, false)
     })
@@ -141,7 +141,7 @@ describe("ApiKeyRoleAssociation commands", () => {
         .respondWith(200, [])
 
       // act
-      const command = new ApiKeyRoleAssociationListCommand({ apiKeyId })
+      const command = new KeyRolesCommand({ keyId: apiKeyId })
       const response = await flowcoreClient.execute(command)
 
       // assert
@@ -149,7 +149,7 @@ describe("ApiKeyRoleAssociation commands", () => {
     })
   })
 
-  describe("ApiKeyRoleAssociationDeleteCommand", () => {
+  describe("UnlinkKeyRoleCommand", () => {
     it("should delete an api key role association", async () => {
       // arrange
       const apiKeyId = crypto.randomUUID()
@@ -174,8 +174,8 @@ describe("ApiKeyRoleAssociation commands", () => {
         .respondWith(200, mockResponse)
 
       // act
-      const command = new ApiKeyRoleAssociationDeleteCommand({
-        apiKeyId,
+      const command = new UnlinkKeyRoleCommand({
+        keyId: apiKeyId,
         roleId,
       })
       const response = await flowcoreClient.execute(command)
@@ -184,7 +184,7 @@ describe("ApiKeyRoleAssociation commands", () => {
       assertEquals(response, {
         roleId,
         organizationId,
-        apiKeyId, // transformed from keyId
+        keyId: apiKeyId,
       })
     })
 
@@ -205,15 +205,15 @@ describe("ApiKeyRoleAssociation commands", () => {
         .respondWith(404, { error: "Association not found" })
 
       // act & assert
-      const command = new ApiKeyRoleAssociationDeleteCommand({
-        apiKeyId,
+      const command = new UnlinkKeyRoleCommand({
+        keyId: apiKeyId,
         roleId,
       })
 
       await assertRejects(
         () => flowcoreClient.execute(command),
         Error,
-        "ApiKeyRoleAssociationDeleteCommand failed with 404:",
+        "UnlinkKeyRoleCommand failed with 404:",
       )
     })
   })
