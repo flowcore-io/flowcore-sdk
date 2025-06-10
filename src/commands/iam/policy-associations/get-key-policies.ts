@@ -74,17 +74,7 @@ const parseKeyPoliciesResponse = (rawResponse: unknown): Policy[] => {
       return parseResponseHelper(Type.Array(PolicySchema), sanitizedPolicies)
     }
 
-    // If not a flowcoreManaged error or not an array, return empty
-    // Try to return raw array if it looks like it has the right structure
-    if (
-      Array.isArray(rawResponse) &&
-      rawResponse.length > 0 &&
-      rawResponse[0].id
-    ) {
-      return rawResponse as Policy[]
-    }
-
-    return []
+    throw error
   }
 }
 
