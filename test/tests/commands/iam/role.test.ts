@@ -102,7 +102,6 @@ describe("Role commands", () => {
         .matchHeaders({
           "authorization": "Bearer BEARER_TOKEN",
         })
-        .persisted()
         .respondWith(200, mockResponse)
 
       // act
