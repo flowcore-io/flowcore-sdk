@@ -28,9 +28,8 @@ describe("UserRoleAssociation commands", () => {
         userId,
       }
 
-      fetchMockerBuilder.post(`/api/v1/role-associations/user/${userId}`)
+      fetchMockerBuilder.post(`/api/v1/role-associations/user/${userId}/`)
         .matchBody({
-          userId,
           roleId,
         })
         .matchHeaders({
@@ -59,9 +58,8 @@ describe("UserRoleAssociation commands", () => {
       const userId = crypto.randomUUID()
       const roleId = crypto.randomUUID()
 
-      fetchMockerBuilder.post(`/api/v1/role-associations/user/${userId}`)
+      fetchMockerBuilder.post(`/api/v1/role-associations/user/${userId}/`)
         .matchBody({
-          userId,
           roleId,
         })
         .matchHeaders({
@@ -110,7 +108,7 @@ describe("UserRoleAssociation commands", () => {
         },
       ]
 
-      fetchMockerBuilder.get(`/api/v1/role-associations/user/${userId}`)
+      fetchMockerBuilder.get(`/api/v1/role-associations/user/${userId}/`)
         .matchSearchParams({
           organizationId: tenantId,
         })
@@ -149,7 +147,7 @@ describe("UserRoleAssociation commands", () => {
         },
       ]
 
-      fetchMockerBuilder.get(`/api/v1/role-associations/user/${userId}`)
+      fetchMockerBuilder.get(`/api/v1/role-associations/user/${userId}/`)
         .matchSearchParams({})
         .matchHeaders({
           "authorization": "Bearer BEARER_TOKEN",
@@ -171,7 +169,7 @@ describe("UserRoleAssociation commands", () => {
       // arrange
       const userId = crypto.randomUUID()
 
-      fetchMockerBuilder.get(`/api/v1/role-associations/user/${userId}`)
+      fetchMockerBuilder.get(`/api/v1/role-associations/user/${userId}/`)
         .matchSearchParams({})
         .matchHeaders({
           "authorization": "Bearer BEARER_TOKEN",
@@ -200,9 +198,8 @@ describe("UserRoleAssociation commands", () => {
         userId,
       }
 
-      fetchMockerBuilder.delete(`/api/v1/role-associations/user/${userId}`)
+      fetchMockerBuilder.delete(`/api/v1/role-associations/user/${userId}/`)
         .matchBody({
-          userId,
           roleId,
         })
         .matchHeaders({
@@ -231,9 +228,8 @@ describe("UserRoleAssociation commands", () => {
       const userId = crypto.randomUUID()
       const roleId = crypto.randomUUID()
 
-      fetchMockerBuilder.delete(`/api/v1/role-associations/user/${userId}`)
+      fetchMockerBuilder.delete(`/api/v1/role-associations/user/${userId}/`)
         .matchBody({
-          userId,
           roleId,
         })
         .matchHeaders({

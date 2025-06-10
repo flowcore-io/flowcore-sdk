@@ -28,9 +28,8 @@ describe("ApiKeyRoleAssociation commands", () => {
         keyId: apiKeyId,
       }
 
-      fetchMockerBuilder.post(`/api/v1/role-associations/key/${apiKeyId}`)
+      fetchMockerBuilder.post(`/api/v1/role-associations/key/${apiKeyId}/`)
         .matchBody({
-          apiKeyId,
           roleId,
         })
         .matchHeaders({
@@ -59,9 +58,8 @@ describe("ApiKeyRoleAssociation commands", () => {
       const apiKeyId = crypto.randomUUID()
       const roleId = crypto.randomUUID()
 
-      fetchMockerBuilder.post(`/api/v1/role-associations/key/${apiKeyId}`)
+      fetchMockerBuilder.post(`/api/v1/role-associations/key/${apiKeyId}/`)
         .matchBody({
-          apiKeyId,
           roleId,
         })
         .matchHeaders({
@@ -109,7 +107,7 @@ describe("ApiKeyRoleAssociation commands", () => {
         },
       ]
 
-      fetchMockerBuilder.get(`/api/v1/role-associations/key/${apiKeyId}`)
+      fetchMockerBuilder.get(`/api/v1/role-associations/key/${apiKeyId}/`)
         .matchHeaders({
           "authorization": "Bearer BEARER_TOKEN",
         })
@@ -134,7 +132,7 @@ describe("ApiKeyRoleAssociation commands", () => {
       // arrange
       const apiKeyId = crypto.randomUUID()
 
-      fetchMockerBuilder.get(`/api/v1/role-associations/key/${apiKeyId}`)
+      fetchMockerBuilder.get(`/api/v1/role-associations/key/${apiKeyId}/`)
         .matchHeaders({
           "authorization": "Bearer BEARER_TOKEN",
         })
@@ -162,9 +160,8 @@ describe("ApiKeyRoleAssociation commands", () => {
         keyId: apiKeyId,
       }
 
-      fetchMockerBuilder.delete(`/api/v1/role-associations/key/${apiKeyId}`)
+      fetchMockerBuilder.delete(`/api/v1/role-associations/key/${apiKeyId}/`)
         .matchBody({
-          apiKeyId,
           roleId,
         })
         .matchHeaders({
@@ -193,9 +190,8 @@ describe("ApiKeyRoleAssociation commands", () => {
       const apiKeyId = crypto.randomUUID()
       const roleId = crypto.randomUUID()
 
-      fetchMockerBuilder.delete(`/api/v1/role-associations/key/${apiKeyId}`)
+      fetchMockerBuilder.delete(`/api/v1/role-associations/key/${apiKeyId}/`)
         .matchBody({
-          apiKeyId,
           roleId,
         })
         .matchHeaders({
