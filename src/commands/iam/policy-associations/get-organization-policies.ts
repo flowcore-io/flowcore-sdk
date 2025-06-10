@@ -102,12 +102,6 @@ export class OrganizationPoliciesCommand extends Command<
       if (typeof rawResponse === "object") {
         console.error("Raw response keys:", Object.keys(rawResponse || {}))
       }
-
-      // In development, return an empty array instead of crashing
-      // if (process.env.NODE_ENV === "development") {
-      // 	console.log("Returning empty policies array due to parsing error");
-      // 	return [];
-      // }
       throw error
     }
   }

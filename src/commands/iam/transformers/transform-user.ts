@@ -68,7 +68,8 @@ export class UserTransformerCommand extends Command<
    * Get the body
    */
   protected override getBody(): Record<string, unknown> {
-    const { ...rest } = this.input
+    // deno-lint-ignore no-unused-vars
+    const { secret, ...rest } = this.input
     return rest
   }
 
