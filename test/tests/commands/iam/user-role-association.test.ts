@@ -98,6 +98,7 @@ describe("UserRoleAssociation commands", () => {
           description: "Administrator role",
           organizationId: organizationId1,
           flowcoreManaged: false,
+          archived: false,
         },
         {
           id: crypto.randomUUID(),
@@ -105,6 +106,7 @@ describe("UserRoleAssociation commands", () => {
           description: "Regular user role",
           organizationId: organizationId2,
           flowcoreManaged: false,
+          archived: false,
         },
       ]
 
@@ -144,6 +146,7 @@ describe("UserRoleAssociation commands", () => {
           description: "Global administrator role",
           organizationId,
           flowcoreManaged: true,
+          archived: false,
         },
       ]
 

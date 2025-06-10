@@ -97,6 +97,7 @@ describe("ApiKeyRoleAssociation commands", () => {
           description: "Administrator role",
           organizationId: organizationId1,
           flowcoreManaged: false,
+          archived: false,
         },
         {
           id: crypto.randomUUID(),
@@ -104,6 +105,7 @@ describe("ApiKeyRoleAssociation commands", () => {
           description: "Regular user role",
           organizationId: organizationId2,
           flowcoreManaged: false,
+          archived: false,
         },
       ]
 

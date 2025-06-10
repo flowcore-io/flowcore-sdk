@@ -28,6 +28,7 @@ describe("Role commands", () => {
           description: "Administrator role with full permissions",
           organizationId: organizationId1,
           flowcoreManaged: false,
+          archived: false,
           frn: "frn:role:admin",
         },
         {
@@ -36,6 +37,7 @@ describe("Role commands", () => {
           description: "Read-only access role",
           organizationId: organizationId2,
           flowcoreManaged: false,
+          archived: false,
           frn: "frn:role:viewer",
         },
         {
@@ -44,11 +46,12 @@ describe("Role commands", () => {
           description: "Flowcore managed system administrator",
           organizationId: organizationId1,
           flowcoreManaged: true,
+          archived: false,
           frn: "frn:role:system-admin",
         },
       ]
 
-      fetchMockerBuilder.get(`/api/v1/role-associations/organization/${tenantId}`)
+      fetchMockerBuilder.get("/api/v1/roles/")
         .matchSearchParams({})
         .matchHeaders({
           "authorization": "Bearer BEARER_TOKEN",
@@ -90,13 +93,12 @@ describe("Role commands", () => {
           description: "Administrator role",
           organizationId,
           flowcoreManaged: false,
+          archived: false,
         },
       ]
 
-      fetchMockerBuilder.get(`/api/v1/role-associations/organization/${tenantId}`)
-        .matchSearchParams({
-          name: roleName,
-        })
+      fetchMockerBuilder.get("/api/v1/roles/")
+        .matchSearchParams({})
         .matchHeaders({
           "authorization": "Bearer BEARER_TOKEN",
         })
@@ -117,7 +119,7 @@ describe("Role commands", () => {
       // arrange
       const tenantId = crypto.randomUUID()
 
-      fetchMockerBuilder.get(`/api/v1/role-associations/organization/${tenantId}`)
+      fetchMockerBuilder.get("/api/v1/roles/")
         .matchSearchParams({})
         .matchHeaders({
           "authorization": "Bearer BEARER_TOKEN",
@@ -141,9 +143,10 @@ describe("Role commands", () => {
         description: `Description for role ${i}`,
         organizationId: crypto.randomUUID(),
         flowcoreManaged: i % 5 === 0, // Every 5th role is Flowcore managed
+        archived: false,
       }))
 
-      fetchMockerBuilder.get(`/api/v1/role-associations/organization/${tenantId}`)
+      fetchMockerBuilder.get("/api/v1/roles/")
         .matchSearchParams({})
         .matchHeaders({
           "authorization": "Bearer BEARER_TOKEN",
