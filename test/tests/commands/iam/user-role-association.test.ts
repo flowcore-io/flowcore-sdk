@@ -1,9 +1,9 @@
 import { assertEquals, assertRejects } from "@std/assert"
 import { afterAll, describe, it } from "jsr:@std/testing/bdd"
 import { FlowcoreClient } from "../../../../src/mod.ts"
-import { UserRoleAssociationCreateCommand } from "../../../../src/commands/iam/role-associations/user-role-association.create.ts"
-import { UserRoleAssociationDeleteCommand } from "../../../../src/commands/iam/role-associations/user-role-association.delete.ts"
-import { UserRoleAssociationListCommand } from "../../../../src/commands/iam/role-associations/user-role-association.list.ts"
+import { LinkUserRoleCommand } from "../../../../src/commands/iam/role-associations/link-user-role.ts"
+import { UnlinkUserRoleCommand } from "../../../../src/commands/iam/role-associations/unlink-user-role.ts"
+import { UserRolesCommand } from "../../../../src/commands/iam/role-associations/get-user-roles.ts"
 import { FetchMocker } from "../../../fixtures/fetch.fixture.ts"
 
 describe("UserRoleAssociation commands", () => {
@@ -15,7 +15,7 @@ describe("UserRoleAssociation commands", () => {
     fetchMocker.restore()
   })
 
-  describe("UserRoleAssociationCreateCommand", () => {
+  describe("LinkUserRoleCommand", () => {
     it("should create a user role association", async () => {
       // arrange
       const userId = crypto.randomUUID()
@@ -40,7 +40,7 @@ describe("UserRoleAssociation commands", () => {
         .respondWith(201, mockResponse)
 
       // act
-      const command = new UserRoleAssociationCreateCommand({
+      const command = new LinkUserRoleCommand({
         userId,
         roleId,
       })
@@ -71,7 +71,7 @@ describe("UserRoleAssociation commands", () => {
         .respondWith(400, { error: "Invalid role ID" })
 
       // act & assert
-      const command = new UserRoleAssociationCreateCommand({
+      const command = new LinkUserRoleCommand({
         userId,
         roleId,
       })
@@ -79,12 +79,12 @@ describe("UserRoleAssociation commands", () => {
       await assertRejects(
         () => flowcoreClient.execute(command),
         Error,
-        "UserRoleAssociationCreateCommand failed with 400:",
+        "LinkUserRoleCommand failed with 400:",
       )
     })
   })
 
-  describe("UserRoleAssociationListCommand", () => {
+  describe("UserRolesCommand", () => {
     it("should list user role associations", async () => {
       // arrange
       const userId = crypto.randomUUID()
@@ -120,7 +120,7 @@ describe("UserRoleAssociation commands", () => {
         .respondWith(200, mockResponse)
 
       // act
-      const command = new UserRoleAssociationListCommand({ userId, tenantId })
+      const command = new UserRolesCommand({ userId, organizationId: tenantId })
       const response = await flowcoreClient.execute(command)
 
       // assert
@@ -128,8 +128,8 @@ describe("UserRoleAssociation commands", () => {
       assertEquals(response[0].name, "Admin")
       assertEquals(response[1].name, "User")
       // Verify organizationId is transformed to tenantId
-      assertEquals(response[0].tenantId, organizationId1)
-      assertEquals(response[1].tenantId, organizationId2)
+      assertEquals(response[0].organizationId, organizationId1)
+      assertEquals(response[1].organizationId, organizationId2)
       // flowcoreManaged property exists
       assertEquals(response[0].flowcoreManaged, false)
     })
@@ -157,13 +157,13 @@ describe("UserRoleAssociation commands", () => {
         .respondWith(200, mockResponse)
 
       // act
-      const command = new UserRoleAssociationListCommand({ userId })
+      const command = new UserRolesCommand({ userId })
       const response = await flowcoreClient.execute(command, true)
 
       // assert
       assertEquals(response.length, 1)
       assertEquals(response[0].name, "GlobalAdmin")
-      assertEquals(response[0].tenantId, organizationId)
+      assertEquals(response[0].organizationId, organizationId)
       assertEquals(response[0].flowcoreManaged, true)
     })
 
@@ -179,7 +179,7 @@ describe("UserRoleAssociation commands", () => {
         .respondWith(200, [])
 
       // act
-      const command = new UserRoleAssociationListCommand({ userId })
+      const command = new UserRolesCommand({ userId })
       const response = await flowcoreClient.execute(command, true)
 
       // assert
@@ -187,7 +187,7 @@ describe("UserRoleAssociation commands", () => {
     })
   })
 
-  describe("UserRoleAssociationDeleteCommand", () => {
+  describe("UnlinkUserRoleCommand", () => {
     it("should delete a user role association", async () => {
       // arrange
       const userId = crypto.randomUUID()
@@ -212,7 +212,7 @@ describe("UserRoleAssociation commands", () => {
         .respondWith(200, mockResponse)
 
       // act
-      const command = new UserRoleAssociationDeleteCommand({
+      const command = new UnlinkUserRoleCommand({
         userId,
         roleId,
       })
@@ -243,7 +243,7 @@ describe("UserRoleAssociation commands", () => {
         .respondWith(404, { error: "Association not found" })
 
       // act & assert
-      const command = new UserRoleAssociationDeleteCommand({
+      const command = new UnlinkUserRoleCommand({
         userId,
         roleId,
       })
@@ -251,7 +251,7 @@ describe("UserRoleAssociation commands", () => {
       await assertRejects(
         () => flowcoreClient.execute(command),
         Error,
-        "UserRoleAssociationDeleteCommand failed with 404:",
+        "UnlinkUserRoleCommand failed with 404:",
       )
     })
   })
