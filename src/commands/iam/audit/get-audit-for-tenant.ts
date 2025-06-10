@@ -192,14 +192,7 @@ export class TenantAuditLogsCommand extends Command<
     } catch (error) {
       console.error("Error parsing tenant audit logs response:", error)
 
-      // In development, return an empty response instead of crashing
-      // if (process.env.NODE_ENV === "development") {
-      // 	console.log("Returning empty audit logs array due to parsing error");
-      // 	return {
-      // 		logs: [],
-      // 		pagination: { page: 1, pageSize: 20, totalItems: 0, totalPages: 0 },
-      // 	};
-      // }
+
       throw error
     }
   }
