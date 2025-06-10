@@ -41,17 +41,6 @@ export class PolicyListCommand extends Command<PolicyListInput, Policy[]> {
   }
 
   /**
-   * Get the query parameters
-   */
-  protected getQueryParams(): Record<string, string> {
-    const params: Record<string, string> = {}
-    if (this.input.organizationId) {
-      params.organizationId = this.input.organizationId
-    }
-    return params
-  }
-
-  /**
    * Parse the response
    */
   protected override parseResponse(rawResponse: unknown): Policy[] {

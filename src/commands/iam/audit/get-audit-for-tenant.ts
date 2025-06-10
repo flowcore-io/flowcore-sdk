@@ -110,12 +110,6 @@ export class TenantAuditLogsCommand extends Command<
    * Get the base url
    */
   protected override getBaseUrl(): string {
-    // Use a proxy URL in development mode
-    // if (process.env.NODE_ENV === "development") {
-    // 	return typeof window === "undefined"
-    // 		? "http://localhost:3000" // Server-side in dev
-    // 		: ""; // Client-side in dev (relative URL)
-    // }
     return "https://iam.api.flowcore.io"
   }
 
@@ -125,13 +119,7 @@ export class TenantAuditLogsCommand extends Command<
   protected override getPath(): string {
     // Build base path
     let path = `/api/v1/tenant-iam-audit/${this.input.tenantId}`
-    // let path = "";
-    // Use the proxy API in development mode
-    // if (process.env.NODE_ENV === "development") {
-    // 	path = `/api/proxy/iam/tenant-iam-audit/${this.input.tenantId}`;
-    // } else {
-    // 	path = `/api/v1/tenant-iam-audit/${this.input.tenantId}`;
-    // }
+
 
     // Add query parameters directly to the path
     const queryParams = []
@@ -178,43 +166,6 @@ export class TenantAuditLogsCommand extends Command<
     }
 
     return path
-  }
-
-  /**
-   * Get the query parameters
-   */
-  protected getQueryParams(): Record<string, string> {
-    const params: Record<string, string> = {}
-
-    if (this.input.page !== undefined) {
-      params.page = this.input.page.toString()
-    }
-
-    if (this.input.pageSize !== undefined) {
-      params.pageSize = this.input.pageSize.toString()
-    }
-
-    if (this.input.resourceType) {
-      params.resourceType = this.input.resourceType
-    }
-
-    if (this.input.performedBy) {
-      params.performedBy = this.input.performedBy
-    }
-
-    if (this.input.status) {
-      params.status = this.input.status
-    }
-
-    if (this.input.startDate) {
-      params.startDate = this.input.startDate
-    }
-
-    if (this.input.endDate) {
-      params.endDate = this.input.endDate
-    }
-
-    return params
   }
 
   /**

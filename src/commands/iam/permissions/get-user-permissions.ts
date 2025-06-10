@@ -63,17 +63,6 @@ export class UserPermissionsCommand extends Command<
   }
 
   /**
-   * Get the query parameters
-   */
-  protected getQueryParams(): Record<string, string> {
-    const params: Record<string, string> = {}
-    if (this.input.type) {
-      params.type = this.input.type
-    }
-    return params
-  }
-
-  /**
    * Parse the response
    */
   protected override parseResponse(rawResponse: unknown): Permission[] {
