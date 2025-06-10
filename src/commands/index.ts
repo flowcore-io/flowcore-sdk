@@ -52,15 +52,6 @@ export * from "./event-type/event-type.update.ts"
 export * from "./ingestion/ingest.batch.ts"
 export * from "./ingestion/ingest.event.ts"
 
-// IAM
-export * from "./iam/api-key-role-association.create.ts"
-export * from "./iam/api-key-role-association.delete.ts"
-export * from "./iam/api-key-role-association.list.ts"
-export * from "./iam/role.list.ts"
-export * from "./iam/user-role-association.create.ts"
-export * from "./iam/user-role-association.delete.ts"
-export * from "./iam/user-role-association.list.ts"
-
 // Events
 export * from "./events/event.list.ts"
 export * from "./events/events.fetch-time-buckets-by-names.ts"
