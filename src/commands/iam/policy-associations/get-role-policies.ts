@@ -47,8 +47,10 @@ const parseRolePoliciesResponse = (rawResponse: unknown): Policy[] => {
       // Convert flowcoreManaged to boolean for each policy
       const sanitizedPolicies = rawResponse.map((policy: RawPolicy) => ({
         ...policy,
-        // Convert to boolean using double negation
-        flowcoreManaged: policy.flowcoreManaged === true || !!policy.flowcoreManaged,
+        // Convert to boolean with explicit type-safe conversion
+        flowcoreManaged: policy.flowcoreManaged === true || 
+          policy.flowcoreManaged === "true" || 
+          (typeof policy.flowcoreManaged === "boolean" && policy.flowcoreManaged),
       }))
 
       // Try parsing again with the sanitized data
