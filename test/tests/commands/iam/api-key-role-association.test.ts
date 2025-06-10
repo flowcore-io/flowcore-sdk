@@ -2,8 +2,8 @@ import { assertEquals, assertRejects } from "@std/assert"
 import { afterAll, describe, it } from "jsr:@std/testing/bdd"
 import { FlowcoreClient } from "../../../../src/mod.ts"
 import { ApiKeyRoleAssociationCreateCommand } from "../../../../src/commands/iam/role-associations/api-key-role-association.create.ts"
-import { ApiKeyRoleAssociationDeleteCommand } from "../../../../src/commands/iam/api-key-role-association.delete.ts"
-import { ApiKeyRoleAssociationListCommand } from "../../../../src/commands/iam/api-key-role-association.list.ts"
+import { ApiKeyRoleAssociationDeleteCommand } from "../../../../src/commands/iam/role-associations/api-key-role-association.delete.ts"
+import { ApiKeyRoleAssociationListCommand } from "../../../../src/commands/iam/role-associations/api-key-role-association.list.ts"
 import { FetchMocker } from "../../../fixtures/fetch.fixture.ts"
 
 describe("ApiKeyRoleAssociation commands", () => {

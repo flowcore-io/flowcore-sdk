@@ -1,7 +1,7 @@
 import { assertEquals } from "@std/assert"
 import { afterAll, describe, it } from "jsr:@std/testing/bdd"
 import { FlowcoreClient } from "../../../../src/mod.ts"
-import { RoleListCommand } from "../../../../src/commands/iam/role.list.ts"
+import { RoleListCommand } from "../../../../src/commands/iam/role-associations/role.list.ts"
 import { FetchMocker } from "../../../fixtures/fetch.fixture.ts"
 
 describe("Role commands", () => {

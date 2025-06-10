@@ -1,7 +1,7 @@
-import { Command } from "../../common/command.ts"
+import { Command } from "../../../common/command.ts"
 import { Type } from "@sinclair/typebox"
-import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
-import { type Role, RoleSchema } from "../../contracts/iam.ts"
+import { parseResponseHelper } from "../../../utils/parse-response-helper.ts"
+import { type Role, RoleSchema } from "../../../contracts/iam.ts"
 
 /**
  * The input for the user role associations list command

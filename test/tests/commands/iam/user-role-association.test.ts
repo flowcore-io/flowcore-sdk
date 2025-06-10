@@ -1,9 +1,9 @@
 import { assertEquals, assertRejects } from "@std/assert"
 import { afterAll, describe, it } from "jsr:@std/testing/bdd"
 import { FlowcoreClient } from "../../../../src/mod.ts"
-import { UserRoleAssociationCreateCommand } from "../../../../src/commands/iam/user-role-association.create.ts"
-import { UserRoleAssociationDeleteCommand } from "../../../../src/commands/iam/user-role-association.delete.ts"
-import { UserRoleAssociationListCommand } from "../../../../src/commands/iam/user-role-association.list.ts"
+import { UserRoleAssociationCreateCommand } from "../../../../src/commands/iam/role-associations/user-role-association.create.ts"
+import { UserRoleAssociationDeleteCommand } from "../../../../src/commands/iam/role-associations/user-role-association.delete.ts"
+import { UserRoleAssociationListCommand } from "../../../../src/commands/iam/role-associations/user-role-association.list.ts"
 import { FetchMocker } from "../../../fixtures/fetch.fixture.ts"
 
 describe("UserRoleAssociation commands", () => {
