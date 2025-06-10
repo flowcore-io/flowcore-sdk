@@ -120,7 +120,6 @@ export class TenantAuditLogsCommand extends Command<
     // Build base path
     let path = `/api/v1/tenant-iam-audit/${this.input.tenantId}`
 
-
     // Add query parameters directly to the path
     const queryParams = []
 

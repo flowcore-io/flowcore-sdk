@@ -48,8 +48,8 @@ const parseRolePoliciesResponse = (rawResponse: unknown): Policy[] => {
       const sanitizedPolicies = rawResponse.map((policy: RawPolicy) => ({
         ...policy,
         // Convert to boolean with explicit type-safe conversion
-        flowcoreManaged: policy.flowcoreManaged === true || 
-          policy.flowcoreManaged === "true" || 
+        flowcoreManaged: policy.flowcoreManaged === true ||
+          policy.flowcoreManaged === "true" ||
           (typeof policy.flowcoreManaged === "boolean" && policy.flowcoreManaged),
       }))
 

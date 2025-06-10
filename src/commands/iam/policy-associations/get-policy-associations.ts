@@ -91,7 +91,6 @@ const parsePolicyAssociationsResponse = (
     // First try standard parsing
     return parseResponseHelper(PolicyAssociationsSchema, rawResponse)
   } catch (_error: unknown) {
-
     // If it's not an object at all, return empty arrays
     if (!rawResponse || typeof rawResponse !== "object") {
       return { keys: [], users: [], roles: [] }
