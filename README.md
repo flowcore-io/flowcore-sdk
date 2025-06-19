@@ -17,6 +17,7 @@ This is the Flowcore SDK, a TypeScript library for interacting with the Flowcore
   - [Event Type Operations](#event-type-operations)
   - [Scenario Operations](#scenario-operations)
   - [Notifications](#notifications)
+  - [Adapter Operations](#adapter-operations)
 
 ## Installation
 
@@ -1194,3 +1195,49 @@ You can narrow down your notification subscription by specifying:
 - **eventType**: Optional - Specific event type to monitor (requires flowType to be specified)
 
 > **Important**: The NotificationClient requires OIDC authentication. Make sure your OIDC client implements the required `getToken()` method that returns a Promise with an `accessToken`.
+
+### Adapter Operations
+
+Adapter operations allow you to manage and reset adapters in your Flowcore environment.
+
+> **Important**: Adapter operations require bearer token authentication and cannot be performed using API key authentication.
+
+#### Reset an Adapter
+
+Resets an adapter to a specific state, allowing you to restart processing from a particular time bucket or event.
+
+```typescript
+import { ResetAdapterCommand, FlowcoreClient } from "@flowcore/sdk"
+
+const command = new ResetAdapterCommand({
+  adapterId: "your-adapter-id",
+  tenant: "your-tenant-name",
+  timeBucket: "20240101000000",        // Optional: Time bucket to reset from (format: YYYYMMDDhhiiss)
+  eventId: "your-event-id",            // Optional: Specific event ID to reset from
+  reason: "Manual reset for testing"   // Optional: Reason for the reset
+})
+
+const result = await client.execute(command)
+// Returns:
+// {
+//   success: boolean;  // Whether the reset was successful
+//   message: string;   // A message describing the result
+// }
+
+if (result.success) {
+  console.log("Adapter reset successfully:", result.message)
+} else {
+  console.error("Failed to reset adapter:", result.message)
+}
+```
+
+#### Reset Parameters
+
+- **adapterId**: Required - The unique identifier of the adapter to reset
+- **tenant**: Required - The tenant name where the adapter is located
+- **timeBucket**: Optional - The time bucket to reset from in `YYYYMMDDhhiiss` format (e.g., `20240101000000`)
+- **eventId**: Optional - A specific event ID to reset from
+- **reason**: Optional - A descriptive reason for the reset operation
+
+> **Note**: If both `timeBucket` and `eventId` are provided, the adapter will reset from the specified event within that time bucket.
+> **Important**: Resetting an adapter will cause it to reprocess events from the specified point, which may result in duplicate processing if not handled properly in your adapter logic.

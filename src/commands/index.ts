@@ -5,6 +5,9 @@ export * from "./tenant/tenant.fetch.ts"
 export * from "./tenant/tenant.list.ts"
 export * from "./tenant/tenant.translate-name-to-id.ts"
 
+// Adapter
+export * from "./adapter/reset-adapter.ts"
+
 // Api Key
 export * from "./api-key/api-key.create.ts"
 export * from "./api-key/api-key.delete.ts"
@@ -79,3 +82,4 @@ export * from "./scenario/scenario.delete.ts"
 export * from "./scenario/scenario.fetch.ts"
 export * from "./scenario/scenario.list.ts"
 export * from "./scenario/scenario.update.ts"
+
