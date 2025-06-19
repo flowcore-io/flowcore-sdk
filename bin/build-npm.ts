@@ -8,10 +8,16 @@ await build({
   test: false,
   outDir: "./npm",
   importMap: "./deno.json",
+  typeCheck: false,
   shims: {
     // see JS docs for overview and more options
     deno: true,
     webSocket: true,
+  },
+  compilerOptions: {
+    lib: ["ES2022", "DOM"],
+    target: "ES2022",
+    skipLibCheck: true,
   },
   package: {
     name: denoJson.name,
