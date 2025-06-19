@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.50.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.49.0...v1.50.0) (2025-06-19)
+
+
+### Features
+
+* **adapter:** :sparkles: add reset adapter command and documentation ([c234e86](https://github.com/flowcore-io/flowcore-sdk/commit/c234e8672dee6d1b3ae1844d4de43f53ca92f172))
+* **iam:** add role association commands for API key and user roles, reorganize file structure ([288bbef](https://github.com/flowcore-io/flowcore-sdk/commit/288bbef534eaacb171d18c8ff1c119911f983f68))
+* **iam:** add tests for ApiKeyRoleAssociation commands including create, list, and delete functionalities ([76597e4](https://github.com/flowcore-io/flowcore-sdk/commit/76597e45d3ed39bcb924e4ef7cf860d5a77114ce))
+* **iam:** add tests for UserRoleAssociation commands and refactor ApiKeyRoleAssociation tests ([547a29b](https://github.com/flowcore-io/flowcore-sdk/commit/547a29bd66fc5bd57b5a0fc3202a9d45a2b9162b))
+* **iam:** add various IAM commands for auditing, health checks, permissions, policies, and role associations ([78fbe53](https://github.com/flowcore-io/flowcore-sdk/commit/78fbe53ee3a664d21da6f31df40ed7d8562d792f))
+* **tests:** add 'archived' property to role and user role associations in tests ([5531a02](https://github.com/flowcore-io/flowcore-sdk/commit/5531a0239524bce8a5b14f206e70065274be04cf))
+* **tests:** add comprehensive tests for IAM audit, permissions, and policy commands ([f3891f9](https://github.com/flowcore-io/flowcore-sdk/commit/f3891f95ffca8c0c9d3674565360d05efec79432))
+* **tests:** add getAllMocks method to FetchMockBuilder and streamline test setup in IAM command tests ([1ee15e3](https://github.com/flowcore-io/flowcore-sdk/commit/1ee15e38bc2c84e3dae65b043a03bd54207ae0dd))
+
+
+### Bug Fixes
+
+* added missing slash on rest request ([5dec0a8](https://github.com/flowcore-io/flowcore-sdk/commit/5dec0a8ec01e47ef002d142b59b77f0100440cb5))
+* **build:** :art: update build configuration with type checking and compiler options ([adb3a11](https://github.com/flowcore-io/flowcore-sdk/commit/adb3a118dbc1a0f375f9ad2b50abd32b23e6d67b))
+* **iam:** enhance flowcoreManaged boolean conversion for role policies to ensure type safety ([ffcfde3](https://github.com/flowcore-io/flowcore-sdk/commit/ffcfde300f11ec9170651bc79c434f5fd42b52bf))
+* **iam:** remove variable 'secret' from input in transformer classes ([0cda4f4](https://github.com/flowcore-io/flowcore-sdk/commit/0cda4f4c5bff04ca36c19302537a748d3c9df9aa))
+* **iam:** throw error instead of returning empty array in parseKeyPoliciesResponse ([ba55989](https://github.com/flowcore-io/flowcore-sdk/commit/ba559899fd593f1f232c99e294a9112edccf9a3d))
+
 ## [1.49.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.48.0...v1.49.0) (2025-05-14)
 
 
