@@ -1,4 +1,4 @@
-import { Command } from "@flowcore/sdk"
+import { Command } from "../../common/command.ts"
 
 /**
  * The input for the reset adapter command
