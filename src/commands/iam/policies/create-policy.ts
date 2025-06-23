@@ -1,11 +1,24 @@
 // src/contracts/policy.ts
 import { Command, parseResponseHelper } from "@flowcore/sdk"
-import { type Static, Type } from "@sinclair/typebox"
+import {
+  type Static,
+  type TArray,
+  type TBoolean,
+  type TObject,
+  type TOptional,
+  type TString,
+  type TUnion,
+  Type,
+} from "@sinclair/typebox"
 
 /**
  * The schema for a policy statement document
  */
-export const PolicyStatementSchema = Type.Object({
+export const PolicyStatementSchema: TObject<{
+  statementId: TOptional<TString>
+  resource: TString
+  action: TUnion<[TString, TArray<TString>]>
+}> = Type.Object({
   statementId: Type.Optional(Type.String()),
   resource: Type.String(),
   action: Type.Union([Type.String(), Type.Array(Type.String())]),
@@ -14,7 +27,18 @@ export const PolicyStatementSchema = Type.Object({
 /**
  * The schema for a policy
  */
-export const PolicySchema = Type.Object({
+export const PolicySchema: TObject<{
+  id: TString
+  organizationId: TString
+  name: TString
+  version: TString
+  policyDocuments: TArray<typeof PolicyStatementSchema>
+  description: TOptional<TString>
+  principal: TOptional<TString>
+  flowcoreManaged: TBoolean
+  archived: TOptional<TBoolean>
+  frn: TString
+}> = Type.Object({
   id: Type.String(),
   organizationId: Type.String(),
   name: Type.String(),

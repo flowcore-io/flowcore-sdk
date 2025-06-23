@@ -1,10 +1,14 @@
 import { Command, parseResponseHelper } from "@flowcore/sdk"
-import { Type } from "@sinclair/typebox"
+import { type Static, type TArray, type TObject, type TString, Type } from "@sinclair/typebox"
 
 /**
  * The schema for a policy-key association
  */
-export const PolicyKeyAssociationSchema = Type.Object({
+export const PolicyKeyAssociationSchema: TObject<{
+  policyId: TString
+  organizationId: TString
+  keyId: TString
+}> = Type.Object({
   policyId: Type.String(),
   organizationId: Type.String(),
   keyId: Type.String(),
@@ -13,7 +17,11 @@ export const PolicyKeyAssociationSchema = Type.Object({
 /**
  * The schema for a policy-user association
  */
-export const PolicyUserAssociationSchema = Type.Object({
+export const PolicyUserAssociationSchema: TObject<{
+  policyId: TString
+  organizationId: TString
+  userId: TString
+}> = Type.Object({
   policyId: Type.String(),
   organizationId: Type.String(),
   userId: Type.String(),
@@ -22,7 +30,11 @@ export const PolicyUserAssociationSchema = Type.Object({
 /**
  * The schema for a policy-role association
  */
-export const PolicyRoleAssociationSchema = Type.Object({
+export const PolicyRoleAssociationSchema: TObject<{
+  policyId: TString
+  organizationId: TString
+  roleId: TString
+}> = Type.Object({
   policyId: Type.String(),
   organizationId: Type.String(),
   roleId: Type.String(),
@@ -31,7 +43,11 @@ export const PolicyRoleAssociationSchema = Type.Object({
 /**
  * The schema for policy associations
  */
-export const PolicyAssociationsSchema = Type.Object({
+export const PolicyAssociationsSchema: TObject<{
+  keys: TArray<typeof PolicyKeyAssociationSchema>
+  users: TArray<typeof PolicyUserAssociationSchema>
+  roles: TArray<typeof PolicyRoleAssociationSchema>
+}> = Type.Object({
   keys: Type.Array(PolicyKeyAssociationSchema),
   users: Type.Array(PolicyUserAssociationSchema),
   roles: Type.Array(PolicyRoleAssociationSchema),
@@ -40,38 +56,22 @@ export const PolicyAssociationsSchema = Type.Object({
 /**
  * The policy-key association type
  */
-export type PolicyKeyAssociation = {
-  policyId: string
-  organizationId: string
-  keyId: string
-}
+export type PolicyKeyAssociation = Static<typeof PolicyKeyAssociationSchema>
 
 /**
  * The policy-user association type
  */
-export type PolicyUserAssociation = {
-  policyId: string
-  organizationId: string
-  userId: string
-}
+export type PolicyUserAssociation = Static<typeof PolicyUserAssociationSchema>
 
 /**
  * The policy-role association type
  */
-export type PolicyRoleAssociation = {
-  policyId: string
-  organizationId: string
-  roleId: string
-}
+export type PolicyRoleAssociation = Static<typeof PolicyRoleAssociationSchema>
 
 /**
  * The policy associations type
  */
-export type PolicyAssociations = {
-  keys: PolicyKeyAssociation[]
-  users: PolicyUserAssociation[]
-  roles: PolicyRoleAssociation[]
-}
+export type PolicyAssociations = Static<typeof PolicyAssociationsSchema>
 
 /**
  * The input for the policy associations command

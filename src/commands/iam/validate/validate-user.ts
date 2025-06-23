@@ -1,5 +1,5 @@
 import { Command, parseResponseHelper } from "@flowcore/sdk"
-import { Type } from "@sinclair/typebox"
+import { type Static, type TArray, type TBoolean, type TObject, type TString, Type } from "@sinclair/typebox"
 
 /**
  * The mode of validation
@@ -17,7 +17,10 @@ export interface ValidationRequestAccessItem {
 /**
  * The schema for a valid policy
  */
-export const ValidPolicySchema = Type.Object({
+export const ValidPolicySchema: TObject<{
+  policyFrn: TString
+  statementId: TString
+}> = Type.Object({
   policyFrn: Type.String(),
   statementId: Type.String(),
 })
@@ -25,7 +28,11 @@ export const ValidPolicySchema = Type.Object({
 /**
  * The schema for a validation response
  */
-export const ValidationResponseSchema = Type.Object({
+export const ValidationResponseSchema: TObject<{
+  valid: TBoolean
+  checksum: TString
+  validPolicies: TArray<typeof ValidPolicySchema>
+}> = Type.Object({
   valid: Type.Boolean(),
   checksum: Type.String(),
   validPolicies: Type.Array(ValidPolicySchema),
@@ -34,19 +41,12 @@ export const ValidationResponseSchema = Type.Object({
 /**
  * The valid policy type
  */
-export interface ValidPolicy {
-  policyFrn: string
-  statementId: string
-}
+export type ValidPolicy = Static<typeof ValidPolicySchema>
 
 /**
  * The validation response type
  */
-export interface ValidationResponse {
-  valid: boolean
-  checksum: string
-  validPolicies: ValidPolicy[]
-}
+export type ValidationResponse = Static<typeof ValidationResponseSchema>
 
 /**
  * The input for the user validation command

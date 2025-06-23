@@ -1,10 +1,14 @@
 import { Command, parseResponseHelper } from "@flowcore/sdk"
-import { Type } from "@sinclair/typebox"
+import { type Static, type TArray, type TObject, type TString, Type } from "@sinclair/typebox"
 
 /**
  * The schema for a role-key association
  */
-export const RoleKeyAssociationSchema = Type.Object({
+export const RoleKeyAssociationSchema: TObject<{
+  roleId: TString
+  organizationId: TString
+  keyId: TString
+}> = Type.Object({
   roleId: Type.String(),
   organizationId: Type.String(),
   keyId: Type.String(),
@@ -13,7 +17,11 @@ export const RoleKeyAssociationSchema = Type.Object({
 /**
  * The schema for a role-user association
  */
-export const RoleUserAssociationSchema = Type.Object({
+export const RoleUserAssociationSchema: TObject<{
+  roleId: TString
+  organizationId: TString
+  userId: TString
+}> = Type.Object({
   roleId: Type.String(),
   organizationId: Type.String(),
   userId: Type.String(),
@@ -22,7 +30,10 @@ export const RoleUserAssociationSchema = Type.Object({
 /**
  * The schema for role associations
  */
-export const RoleAssociationsSchema = Type.Object({
+export const RoleAssociationsSchema: TObject<{
+  keys: TArray<typeof RoleKeyAssociationSchema>
+  users: TArray<typeof RoleUserAssociationSchema>
+}> = Type.Object({
   keys: Type.Array(RoleKeyAssociationSchema),
   users: Type.Array(RoleUserAssociationSchema),
 })
@@ -30,28 +41,17 @@ export const RoleAssociationsSchema = Type.Object({
 /**
  * The role-key association type
  */
-export type RoleKeyAssociation = {
-  roleId: string
-  organizationId: string
-  keyId: string
-}
+export type RoleKeyAssociation = Static<typeof RoleKeyAssociationSchema>
 
 /**
  * The role-user association type
  */
-export type RoleUserAssociation = {
-  roleId: string
-  organizationId: string
-  userId: string
-}
+export type RoleUserAssociation = Static<typeof RoleUserAssociationSchema>
 
 /**
  * The role associations type
  */
-export type RoleAssociations = {
-  keys: RoleKeyAssociation[]
-  users: RoleUserAssociation[]
-}
+export type RoleAssociations = Static<typeof RoleAssociationsSchema>
 
 /**
  * The input for the role associations command
