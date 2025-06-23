@@ -1,10 +1,17 @@
 import { Command, parseResponseHelper } from "@flowcore/sdk"
-import { Type } from "@sinclair/typebox"
+import { Type, type TObject, type TString, type TUnion, type TNull, type Static, type TProperties, type TNumber, type TArray } from "@sinclair/typebox"
 
 /**
  * Audit log entry type
  */
-export const AuditLogEntrySchema = Type.Object({
+export const AuditLogEntrySchema: TObject<{
+  id: TString
+  event: TString
+  resourceName: TString
+  performedBy: TUnion<[TString, TObject<TProperties>, TNull]>
+  timestamp: TString
+  status: TString
+}> = Type.Object({
   id: Type.String(),
   event: Type.String(),
   resourceName: Type.String(),
@@ -20,7 +27,12 @@ export const AuditLogEntrySchema = Type.Object({
 /**
  * Pagination information
  */
-export const PaginationSchema = Type.Object({
+export const PaginationSchema: TObject<{
+  page: TNumber
+  pageSize: TNumber
+  totalItems: TNumber
+  totalPages: TNumber
+}> = Type.Object({
   page: Type.Number(),
   pageSize: Type.Number(),
   totalItems: Type.Number(),
@@ -30,7 +42,10 @@ export const PaginationSchema = Type.Object({
 /**
  * Audit log response schema
  */
-export const AuditLogResponseSchema = Type.Object({
+export const AuditLogResponseSchema: TObject<{
+  logs: TArray<typeof AuditLogEntrySchema>
+  pagination: typeof PaginationSchema
+}> = Type.Object({
   logs: Type.Array(AuditLogEntrySchema),
   pagination: PaginationSchema,
 })
@@ -38,32 +53,17 @@ export const AuditLogResponseSchema = Type.Object({
 /**
  * Audit log entry type
  */
-export type AuditLogEntry = {
-  id: string
-  event: string
-  resourceName: string
-  performedBy: string | Record<string, unknown> | null
-  timestamp: string
-  status: string
-}
+export type AuditLogEntry = Static<typeof AuditLogEntrySchema>
 
 /**
  * Pagination information
  */
-export type Pagination = {
-  page: number
-  pageSize: number
-  totalItems: number
-  totalPages: number
-}
+export type Pagination = Static<typeof PaginationSchema>
 
 /**
  * Audit log response type
  */
-export type AuditLogResponse = {
-  logs: AuditLogEntry[]
-  pagination: Pagination
-}
+export type AuditLogResponse = Static<typeof AuditLogResponseSchema>
 
 /**
  * The input for the tenant audit logs command

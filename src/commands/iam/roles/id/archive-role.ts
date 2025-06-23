@@ -1,5 +1,5 @@
 import { Command, parseResponseHelper } from "@flowcore/sdk"
-import { Type } from "@sinclair/typebox"
+import { Type, type TObject, type TString, type Static } from "@sinclair/typebox"
 
 /**
  * The input for the role archive command
@@ -12,16 +12,16 @@ export interface RoleArchiveInput {
 /**
  * The schema for the archive role response
  */
-export const ArchiveRoleResponseSchema = Type.Object({
+export const ArchiveRoleResponseSchema: TObject<{
+  message: TString
+}> = Type.Object({
   message: Type.String(),
 })
 
 /**
  * The archive role response type
  */
-export interface ArchiveRoleResponse {
-  message: string
-}
+export type ArchiveRoleResponse = Static<typeof ArchiveRoleResponseSchema>
 
 /**
  * Archive a role by ID
