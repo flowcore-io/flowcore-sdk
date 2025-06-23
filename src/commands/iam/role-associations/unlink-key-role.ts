@@ -1,4 +1,5 @@
-import { Command, parseResponseHelper } from "@flowcore/sdk"
+import { Command } from "../../../common/command.ts"
+import { parseResponseHelper } from "../../../utils/parse-response-helper.ts"
 import { type KeyRoleLink, KeyRoleLinkSchema } from "./link-key-role.ts"
 
 /**

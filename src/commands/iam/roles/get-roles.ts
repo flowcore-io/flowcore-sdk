@@ -1,4 +1,5 @@
-import { Command, parseResponseHelper } from "@flowcore/sdk"
+import { Command } from "../../../common/command.ts"
+import { parseResponseHelper } from "../../../utils/parse-response-helper.ts"
 import { Type } from "@sinclair/typebox"
 import { type Role, RoleSchema } from "./create-role.ts"
 
