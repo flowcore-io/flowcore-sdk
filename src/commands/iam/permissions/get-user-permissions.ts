@@ -4,7 +4,7 @@ import { type Static, type TArray, type TObject, type TString, Type } from "@sin
 /**
  * The schema for a permission
  */
-export const PermissionSchema: TObject<{
+export const UserPermissionSchema: TObject<{
   tenant: TString
   type: TString
   id: TString
@@ -19,7 +19,7 @@ export const PermissionSchema: TObject<{
 /**
  * The permission type
  */
-export type Permission = Static<typeof PermissionSchema>
+export type UserPermission = Static<typeof UserPermissionSchema>
 
 /**
  * The input for the user permissions command
@@ -34,7 +34,7 @@ export interface UserPermissionsInput {
  */
 export class UserPermissionsCommand extends Command<
   UserPermissionsInput,
-  Permission[]
+  UserPermission[]
 > {
   /**
    * Whether the command should retry on failure
@@ -65,7 +65,7 @@ export class UserPermissionsCommand extends Command<
   /**
    * Parse the response
    */
-  protected override parseResponse(rawResponse: unknown): Permission[] {
-    return parseResponseHelper(Type.Array(PermissionSchema), rawResponse)
+  protected override parseResponse(rawResponse: unknown): UserPermission[] {
+    return parseResponseHelper(Type.Array(UserPermissionSchema), rawResponse)
   }
 }
