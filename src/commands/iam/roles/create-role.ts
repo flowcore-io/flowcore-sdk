@@ -1,5 +1,5 @@
 import { Command, parseResponseHelper } from "@flowcore/sdk"
-import { type Static, Type, type TObject, type TString, type TOptional, type TBoolean } from "@sinclair/typebox"
+import { type Static, type TBoolean, type TObject, type TOptional, type TString, Type } from "@sinclair/typebox"
 
 /**
  * The schema for a role

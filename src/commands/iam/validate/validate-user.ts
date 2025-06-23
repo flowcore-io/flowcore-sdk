@@ -1,5 +1,5 @@
 import { Command, parseResponseHelper } from "@flowcore/sdk"
-import { Type, type TObject, type TString, type Static, type TBoolean, type TArray } from "@sinclair/typebox"
+import { type Static, type TArray, type TBoolean, type TObject, type TString, Type } from "@sinclair/typebox"
 
 /**
  * The mode of validation

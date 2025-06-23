@@ -1,5 +1,5 @@
 import { Command, parseResponseHelper } from "@flowcore/sdk"
-import { Type, type TObject, type TString, type Static } from "@sinclair/typebox"
+import { type Static, type TObject, type TString, Type } from "@sinclair/typebox"
 
 /**
  * The schema for a key policy link response

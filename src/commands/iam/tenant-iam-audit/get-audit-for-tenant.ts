@@ -1,5 +1,15 @@
 import { Command, parseResponseHelper } from "@flowcore/sdk"
-import { Type, type TObject, type TString, type TUnion, type TNull, type Static, type TProperties, type TNumber, type TArray } from "@sinclair/typebox"
+import {
+  type Static,
+  type TArray,
+  type TNull,
+  type TNumber,
+  type TObject,
+  type TProperties,
+  type TString,
+  type TUnion,
+  Type,
+} from "@sinclair/typebox"
 
 /**
  * Audit log entry type

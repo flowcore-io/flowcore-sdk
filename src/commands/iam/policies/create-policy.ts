@@ -1,6 +1,15 @@
 // src/contracts/policy.ts
 import { Command, parseResponseHelper } from "@flowcore/sdk"
-import { type Static, Type, type TObject, type TString, type TArray, type TUnion, type TOptional, type TBoolean } from "@sinclair/typebox"
+import {
+  type Static,
+  type TArray,
+  type TBoolean,
+  type TObject,
+  type TOptional,
+  type TString,
+  type TUnion,
+  Type,
+} from "@sinclair/typebox"
 
 /**
  * The schema for a policy statement document
