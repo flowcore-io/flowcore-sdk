@@ -1,10 +1,14 @@
 import { Command, parseResponseHelper } from "@flowcore/sdk"
-import { Type } from "@sinclair/typebox"
+import { Type, type TObject, type TString, type Static } from "@sinclair/typebox"
 
 /**
  * The schema for a key policy link response
  */
-export const KeyPolicyLinkSchema = Type.Object({
+export const KeyPolicyLinkSchema: TObject<{
+  policyId: TString
+  organizationId: TString
+  keyId: TString
+}> = Type.Object({
   policyId: Type.String(),
   organizationId: Type.String(),
   keyId: Type.String(),
@@ -13,11 +17,7 @@ export const KeyPolicyLinkSchema = Type.Object({
 /**
  * The key policy link response type
  */
-export interface KeyPolicyLink {
-  policyId: string
-  organizationId: string
-  keyId: string
-}
+export type KeyPolicyLink = Static<typeof KeyPolicyLinkSchema>
 
 /**
  * The input for the link key policy command
