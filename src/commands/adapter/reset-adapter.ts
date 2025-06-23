@@ -1,7 +1,7 @@
 import { Command } from "../../common/command.ts"
 
 /**
- * The input for the reset adapter command
+ * The input for the reset adapter command.
  */
 export interface ResetAdapterInput {
   /** The adapter ID to reset */
