@@ -643,9 +643,9 @@ const result = await client.execute(command)
 #### Truncate an Event Type
 
 ```typescript
-import { EventTypeTruncateRequestCommand, FlowcoreClient } from "@flowcore/sdk"
+import { EventTypeRequestTruncateCommand, FlowcoreClient } from "@flowcore/sdk"
 
-const command = new EventTypeTruncateRequestCommand({
+const command = new EventTypeRequestTruncateCommand({
   eventTypeId: "your-event-type-id",
   waitForTruncate: true  // Optional: Wait for truncation to complete (default: true)
 })
