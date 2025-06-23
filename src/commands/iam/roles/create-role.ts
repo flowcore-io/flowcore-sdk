@@ -1,10 +1,17 @@
 import { Command, parseResponseHelper } from "@flowcore/sdk"
-import { type Static, Type } from "@sinclair/typebox"
+import { type Static, Type, type TObject, type TString, type TOptional, type TBoolean } from "@sinclair/typebox"
 
 /**
  * The schema for a role
  */
-export const RoleSchema = Type.Object({
+export const RoleSchema: TObject<{
+  id: TString
+  organizationId: TString
+  name: TString
+  description: TOptional<TString>
+  flowcoreManaged: TOptional<TBoolean>
+  archived: TBoolean
+}> = Type.Object({
   id: Type.String(),
   organizationId: Type.String(),
   name: Type.String(),

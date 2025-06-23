@@ -1,10 +1,14 @@
 import { Command, parseResponseHelper } from "@flowcore/sdk"
-import { Type } from "@sinclair/typebox"
+import { Type, type TObject, type TString, type Static } from "@sinclair/typebox"
 
 /**
  * The schema for a user role link response
  */
-export const UserRoleLinkSchema = Type.Object({
+export const UserRoleLinkSchema: TObject<{
+  roleId: TString
+  organizationId: TString
+  userId: TString
+}> = Type.Object({
   roleId: Type.String(),
   organizationId: Type.String(),
   userId: Type.String(),
@@ -13,11 +17,7 @@ export const UserRoleLinkSchema = Type.Object({
 /**
  * The user role link response type
  */
-export interface UserRoleLink {
-  roleId: string
-  organizationId: string
-  userId: string
-}
+export type UserRoleLink = Static<typeof UserRoleLinkSchema>
 
 /**
  * The input for the link user role command

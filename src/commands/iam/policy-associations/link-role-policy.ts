@@ -1,10 +1,14 @@
 import { Command, parseResponseHelper } from "@flowcore/sdk"
-import { Type } from "@sinclair/typebox"
+import { Type, type TObject, type TString, type Static } from "@sinclair/typebox"
 
 /**
  * The schema for a role policy link response
  */
-export const RolePolicyLinkSchema = Type.Object({
+export const RolePolicyLinkSchema: TObject<{
+  policyId: TString
+  organizationId: TString
+  roleId: TString
+}> = Type.Object({
   policyId: Type.String(),
   organizationId: Type.String(),
   roleId: Type.String(),
@@ -13,11 +17,7 @@ export const RolePolicyLinkSchema = Type.Object({
 /**
  * The role policy link response type
  */
-export interface RolePolicyLink {
-  policyId: string
-  organizationId: string
-  roleId: string
-}
+export type RolePolicyLink = Static<typeof RolePolicyLinkSchema>
 
 /**
  * The input for the link role policy command
