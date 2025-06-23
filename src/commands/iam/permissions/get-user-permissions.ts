@@ -1,10 +1,15 @@
 import { Command, parseResponseHelper } from "@flowcore/sdk"
-import { Type } from "@sinclair/typebox"
+import { Type, type TObject, type TString, type TArray, type Static } from "@sinclair/typebox"
 
 /**
  * The schema for a permission
  */
-export const PermissionSchema = Type.Object({
+export const PermissionSchema: TObject<{
+  tenant: TString
+  type: TString
+  id: TString
+  action: TArray<TString>
+}> = Type.Object({
   tenant: Type.String(),
   type: Type.String(),
   id: Type.String(),
@@ -14,12 +19,7 @@ export const PermissionSchema = Type.Object({
 /**
  * The permission type
  */
-export interface Permission {
-  tenant: string
-  type: string
-  id: string
-  action: string[]
-}
+export type Permission = Static<typeof PermissionSchema>
 
 /**
  * The input for the user permissions command
