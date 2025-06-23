@@ -1,5 +1,5 @@
 import { Command, parseResponseHelper } from "@flowcore/sdk"
-import { Type } from "@sinclair/typebox"
+import { Type, type TObject, type TString, type Static } from "@sinclair/typebox"
 
 /**
  * The input for the policy archive command
@@ -12,16 +12,16 @@ export interface PolicyArchiveInput {
 /**
  * The schema for the archive policy response
  */
-export const ArchivePolicyResponseSchema = Type.Object({
+export const ArchivePolicyResponseSchema: TObject<{
+  message: TString
+}> = Type.Object({
   message: Type.String(),
 })
 
 /**
  * The archive policy response type
  */
-export interface ArchivePolicyResponse {
-  message: string
-}
+export type ArchivePolicyResponse = Static<typeof ArchivePolicyResponseSchema>
 
 /**
  * Archive a policy by ID
