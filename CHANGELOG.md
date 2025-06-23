@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.51.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.50.0...v1.51.0) (2025-06-23)
+
+
+### Features
+
+* **commands:** add IAM-related exports to index.ts for permissions, … ([022b85b](https://github.com/flowcore-io/flowcore-sdk/commit/022b85b7d2c7e0171e0315977b0dad03d439a52e))
+* **commands:** add IAM-related exports to index.ts for permissions, policies, role associations, and validation ([f55a116](https://github.com/flowcore-io/flowcore-sdk/commit/f55a1164e35dc18f8c068b1fad633f493ac64c47))
+
 ## [1.50.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.49.0...v1.50.0) (2025-06-19)
 
 
