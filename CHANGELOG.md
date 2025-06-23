@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.52.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.51.0...v1.52.0) (2025-06-23)
+
+
+### Features
+
+* add period to make release please happen ([a566202](https://github.com/flowcore-io/flowcore-sdk/commit/a56620263c67b1d7b0e943416310d59fb59fbb49))
+* add period to make release please happen ([44ca4bc](https://github.com/flowcore-io/flowcore-sdk/commit/44ca4bc9203462c3139caf5f0abe4dbe9a23b917))
+
 ## [1.51.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.50.0...v1.51.0) (2025-06-23)
 
 
