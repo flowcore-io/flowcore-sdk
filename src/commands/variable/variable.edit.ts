@@ -1,19 +1,25 @@
 import { Command } from "../../common/command.ts"
+import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
+import { type Variable, VariableSchema } from "../../contracts/variable.ts"
 
 /**
- * The input for the variable delete command
+ * The input for the variable edit command
  */
-export interface VariableDeleteInput {
+export interface VariableEditInput {
   /** The tenant id */
   tenantId: string
   /** The key of the variable */
   key: string
+  /** The value of the variable */
+  value?: string
+  /** The description of the variable */
+  description?: string
 }
 
 /**
- * Create a variable
+ * Edit a variable
  */
-export class VariableDeleteCommand extends Command<VariableDeleteInput, boolean> {
+export class VariableEditCommand extends Command<VariableEditInput, Variable> {
   /**
    * Whether the command should retry on failure
    */
@@ -23,7 +29,7 @@ export class VariableDeleteCommand extends Command<VariableDeleteInput, boolean>
    * Get the method
    */
   protected override getMethod(): string {
-    return "DELETE"
+    return "PATCH"
   }
   /**
    * Get the base url
@@ -47,7 +53,7 @@ export class VariableDeleteCommand extends Command<VariableDeleteInput, boolean>
   /**
    * Parse the response
    */
-  protected override parseResponse(_rawResponse: unknown): boolean {
-    return true
+  protected override parseResponse(rawResponse: unknown): Variable {
+    return parseResponseHelper(VariableSchema, rawResponse)
   }
 }

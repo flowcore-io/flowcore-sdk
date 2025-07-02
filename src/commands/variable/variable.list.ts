@@ -1,8 +1,7 @@
-import { Type } from "@sinclair/typebox"
-import { GraphQlCommand } from "../../common/command-graphql.ts"
+import { Command } from "../../common/command.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
-import type { Variable } from "../../contracts/variable.ts"
-import { CommandError } from "../../exceptions/command-error.ts"
+import { type Variable, VariableSchema } from "../../contracts/variable.ts"
+import { Type } from "@sinclair/typebox"
 
 /**
  * The input for the variable list command
@@ -12,42 +11,35 @@ export interface VariableListInput {
   tenantId: string
 }
 
-const graphQlQueryById = `
-  query FLOWCORE_SDK_VARIABLE_LIST($tenantId: ID!) {
-    organization(search: {id: $tenantId}) {
-      variables {
-        key
-        value
-      }
-    }
-  }
-`
-
-const responseSchema = Type.Object({
-  errors: Type.Optional(
-    Type.Array(
-      Type.Object({
-        message: Type.String(),
-      }),
-    ),
-  ),
-  data: Type.Union([
-    Type.Object({
-      organization: Type.Object({
-        variables: Type.Array(Type.Object({
-          key: Type.String(),
-          value: Type.String(),
-        })),
-      }),
-    }),
-    Type.Null(),
-  ]),
-})
-
 /**
  * List variables
  */
-export class VariableListCommand extends GraphQlCommand<VariableListInput, Variable[]> {
+export class VariableListCommand extends Command<VariableListInput, Variable[]> {
+  /**
+   * Whether the command should retry on failure
+   */
+  protected override retryOnFailure: boolean = false
+
+  /**
+   * Get the method
+   */
+  protected override getMethod(): string {
+    return "GET"
+  }
+  /**
+   * Get the base url
+   */
+  protected override getBaseUrl(): string {
+    return "https://tenant-store.api.flowcore.io"
+  }
+
+  /**
+   * Get the path
+   */
+  protected override getPath(): string {
+    return `/api/v1/tenants/${this.input.tenantId}/variables`
+  }
+
   /**
    * The allowed modes for the command
    */
@@ -57,23 +49,6 @@ export class VariableListCommand extends GraphQlCommand<VariableListInput, Varia
    * Parse the response
    */
   protected override parseResponse(rawResponse: unknown): Variable[] {
-    const response = parseResponseHelper(responseSchema, rawResponse)
-    if (response.errors) {
-      throw new CommandError(this.constructor.name, response.errors[0].message)
-    }
-    if (!response.data) {
-      throw new CommandError(this.constructor.name, "Failed to list variables")
-    }
-    return response.data.organization.variables
-  }
-
-  /**
-   * Get the body for the request
-   */
-  protected override getBody(): Record<string, unknown> {
-    return {
-      query: graphQlQueryById,
-      variables: this.input,
-    }
+    return parseResponseHelper(Type.Array(VariableSchema), rawResponse)
   }
 }

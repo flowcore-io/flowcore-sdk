@@ -1,7 +1,4 @@
-import { Type } from "@sinclair/typebox"
-import { GraphQlCommand } from "../../common/command-graphql.ts"
-import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
-import { CommandError } from "../../exceptions/command-error.ts"
+import { Command } from "../../common/command.ts"
 
 /**
  * The input for the secret delete command
@@ -13,33 +10,35 @@ export interface SecretDeleteInput {
   key: string
 }
 
-const graphQlQueryById = `
-  mutation FLOWCORE_SDK_SECRET_DELETE($tenantId: ID!, $key: String!) {
-    organization(id: $tenantId) {
-      removeSecret(key: $key)
-    }
-  }
-`
-
-const responseSchema = Type.Object({
-  errors: Type.Optional(
-    Type.Array(
-      Type.Object({
-        message: Type.String(),
-      }),
-    ),
-  ),
-  data: Type.Object({
-    organization: Type.Object({
-      removeSecret: Type.Union([Type.Boolean(), Type.Null()]),
-    }),
-  }),
-})
-
 /**
- * List secrets
+ * Delete a secret
  */
-export class SecretDeleteCommand extends GraphQlCommand<SecretDeleteInput, boolean> {
+export class SecretDeleteCommand extends Command<SecretDeleteInput, boolean> {
+  /**
+   * Whether the command should retry on failure
+   */
+  protected override retryOnFailure: boolean = false
+
+  /**
+   * Get the method
+   */
+  protected override getMethod(): string {
+    return "DELETE"
+  }
+  /**
+   * Get the base url
+   */
+  protected override getBaseUrl(): string {
+    return "https://tenant-store.api.flowcore.io"
+  }
+
+  /**
+   * Get the path
+   */
+  protected override getPath(): string {
+    return `/api/v1/tenants/${this.input.tenantId}/secrets/${this.input.key}`
+  }
+
   /**
    * The allowed modes for the command
    */
@@ -48,24 +47,7 @@ export class SecretDeleteCommand extends GraphQlCommand<SecretDeleteInput, boole
   /**
    * Parse the response
    */
-  protected override parseResponse(rawResponse: unknown): boolean {
-    const response = parseResponseHelper(responseSchema, rawResponse)
-    if (response.errors) {
-      throw new CommandError(this.constructor.name, response.errors[0].message)
-    }
-    if (response.data.organization.removeSecret !== true) {
-      throw new CommandError(this.constructor.name, "Failed to delete secret")
-    }
-    return response.data.organization.removeSecret
-  }
-
-  /**
-   * Get the body for the request
-   */
-  protected override getBody(): Record<string, unknown> {
-    return {
-      query: graphQlQueryById,
-      variables: this.input,
-    }
+  protected override parseResponse(_rawResponse: unknown): boolean {
+    return true
   }
 }

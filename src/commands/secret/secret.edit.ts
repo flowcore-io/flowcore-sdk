@@ -1,19 +1,25 @@
 import { Command } from "../../common/command.ts"
+import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
+import { type Secret, SecretSchema } from "../../contracts/secret.ts"
 
 /**
- * The input for the variable delete command
+ * The input for the secret edit command
  */
-export interface VariableDeleteInput {
+export interface SecretEditInput {
   /** The tenant id */
   tenantId: string
-  /** The key of the variable */
+  /** The key of the secret */
   key: string
+  /** The value of the secret */
+  value?: string
+  /** The description of the secret */
+  description?: string
 }
 
 /**
- * Create a variable
+ * Edit a secret
  */
-export class VariableDeleteCommand extends Command<VariableDeleteInput, boolean> {
+export class SecretEditCommand extends Command<SecretEditInput, Secret> {
   /**
    * Whether the command should retry on failure
    */
@@ -23,7 +29,7 @@ export class VariableDeleteCommand extends Command<VariableDeleteInput, boolean>
    * Get the method
    */
   protected override getMethod(): string {
-    return "DELETE"
+    return "PATCH"
   }
   /**
    * Get the base url
@@ -36,7 +42,7 @@ export class VariableDeleteCommand extends Command<VariableDeleteInput, boolean>
    * Get the path
    */
   protected override getPath(): string {
-    return `/api/v1/tenants/${this.input.tenantId}/variables/${this.input.key}`
+    return `/api/v1/tenants/${this.input.tenantId}/secrets/${this.input.key}`
   }
 
   /**
@@ -47,7 +53,7 @@ export class VariableDeleteCommand extends Command<VariableDeleteInput, boolean>
   /**
    * Parse the response
    */
-  protected override parseResponse(_rawResponse: unknown): boolean {
-    return true
+  protected override parseResponse(rawResponse: unknown): Secret {
+    return parseResponseHelper(SecretSchema, rawResponse)
   }
 }
