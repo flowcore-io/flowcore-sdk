@@ -11,7 +11,7 @@ export interface VariableDeleteInput {
 }
 
 /**
- * Create a variable
+ * Delete a variable
  */
 export class VariableDeleteCommand extends Command<VariableDeleteInput, boolean> {
   /**
@@ -47,7 +47,7 @@ export class VariableDeleteCommand extends Command<VariableDeleteInput, boolean>
   /**
    * Parse the response
    */
-  protected override parseResponse(_rawResponse: unknown): boolean {
+  protected override parseResponse(): boolean {
     return true
   }
 }
