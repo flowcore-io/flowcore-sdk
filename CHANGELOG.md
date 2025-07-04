@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.53.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.52.0...v1.53.0) (2025-07-04)
+
+
+### Features
+
+* change tenant variable and secret commands to use new rest api ([10a89aa](https://github.com/flowcore-io/flowcore-sdk/commit/10a89aac505ff2be4771586385cc86dc161c4c72))
+* change tenant variable and secret commands to use new rest api ([93eef31](https://github.com/flowcore-io/flowcore-sdk/commit/93eef31d217b5dc367c5c18d04e1b68218876488))
+
+
+### Bug Fixes
+
+* typo ([7876235](https://github.com/flowcore-io/flowcore-sdk/commit/78762351af7dd4c8a9394270c5bdda8127d003b2))
+
 ## [1.52.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.51.0...v1.52.0) (2025-06-23)
 
 
