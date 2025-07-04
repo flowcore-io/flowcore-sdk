@@ -1,7 +1,6 @@
-import { Type } from "@sinclair/typebox"
-import { GraphQlCommand } from "../../common/command-graphql.ts"
+import { Command } from "../../common/command.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
-import { CommandError } from "../../exceptions/command-error.ts"
+import { type Secret, SecretSchema } from "../../contracts/secret.ts"
 
 /**
  * The input for the secret create command
@@ -13,35 +12,39 @@ export interface SecretCreateInput {
   key: string
   /** The value of the secret */
   value: string
+  /** The description of the secret */
+  description?: string
 }
 
-const graphQlQueryById = `
-  mutation FLOWCORE_SDK_SECRET_CREATE($tenantId: ID!, $key: String!, $value: String!) {
-    organization(id: $tenantId) {
-      createSecret(key: $key, value: $value)
-    }
-  }
-`
-
-const responseSchema = Type.Object({
-  errors: Type.Optional(
-    Type.Array(
-      Type.Object({
-        message: Type.String(),
-      }),
-    ),
-  ),
-  data: Type.Object({
-    organization: Type.Object({
-      createSecret: Type.Union([Type.Boolean(), Type.Null()]),
-    }),
-  }),
-})
-
 /**
- * List secrets
+ * Create a secret
  */
-export class SecretCreateCommand extends GraphQlCommand<SecretCreateInput, boolean> {
+export class SecretCreateCommand extends Command<SecretCreateInput, Secret> {
+  /**
+   * Whether the command should retry on failure
+   */
+  protected override retryOnFailure: boolean = false
+
+  /**
+   * Get the method
+   */
+  protected override getMethod(): string {
+    return "POST"
+  }
+  /**
+   * Get the base url
+   */
+  protected override getBaseUrl(): string {
+    return "https://tenant-store.api.flowcore.io"
+  }
+
+  /**
+   * Get the path
+   */
+  protected override getPath(): string {
+    return `/api/v1/tenants/${this.input.tenantId}/secrets`
+  }
+
   /**
    * The allowed modes for the command
    */
@@ -50,24 +53,7 @@ export class SecretCreateCommand extends GraphQlCommand<SecretCreateInput, boole
   /**
    * Parse the response
    */
-  protected override parseResponse(rawResponse: unknown): boolean {
-    const response = parseResponseHelper(responseSchema, rawResponse)
-    if (response.errors) {
-      throw new CommandError(this.constructor.name, response.errors[0].message)
-    }
-    if (response.data.organization.createSecret === null) {
-      throw new CommandError(this.constructor.name, "Failed to create secret")
-    }
-    return response.data.organization.createSecret
-  }
-
-  /**
-   * Get the body for the request
-   */
-  protected override getBody(): Record<string, unknown> {
-    return {
-      query: graphQlQueryById,
-      variables: this.input,
-    }
+  protected override parseResponse(rawResponse: unknown): Secret {
+    return parseResponseHelper(SecretSchema, rawResponse)
   }
 }

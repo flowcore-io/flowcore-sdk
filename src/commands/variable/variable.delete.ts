@@ -1,7 +1,4 @@
-import { Type } from "@sinclair/typebox"
-import { GraphQlCommand } from "../../common/command-graphql.ts"
-import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
-import { CommandError } from "../../exceptions/command-error.ts"
+import { Command } from "../../common/command.ts"
 
 /**
  * The input for the variable delete command
@@ -13,36 +10,35 @@ export interface VariableDeleteInput {
   key: string
 }
 
-const graphQlQueryById = `
-  mutation FLOWCORE_SDK_VARIABLE_DELETE($tenantId: ID!, $key: String!) {
-    organization(id: $tenantId) {
-      removeVariable(key: $key)
-    }
-  }
-`
-
-const responseSchema = Type.Object({
-  errors: Type.Optional(
-    Type.Array(
-      Type.Object({
-        message: Type.String(),
-      }),
-    ),
-  ),
-  data: Type.Union([
-    Type.Object({
-      organization: Type.Object({
-        removeVariable: Type.Union([Type.Boolean(), Type.Null()]),
-      }),
-    }),
-    Type.Null(),
-  ]),
-})
-
 /**
- * Create a variable
+ * Delete a variable
  */
-export class VariableDeleteCommand extends GraphQlCommand<VariableDeleteInput, boolean> {
+export class VariableDeleteCommand extends Command<VariableDeleteInput, boolean> {
+  /**
+   * Whether the command should retry on failure
+   */
+  protected override retryOnFailure: boolean = false
+
+  /**
+   * Get the method
+   */
+  protected override getMethod(): string {
+    return "DELETE"
+  }
+  /**
+   * Get the base url
+   */
+  protected override getBaseUrl(): string {
+    return "https://tenant-store.api.flowcore.io"
+  }
+
+  /**
+   * Get the path
+   */
+  protected override getPath(): string {
+    return `/api/v1/tenants/${this.input.tenantId}/variables/${this.input.key}`
+  }
+
   /**
    * The allowed modes for the command
    */
@@ -51,24 +47,7 @@ export class VariableDeleteCommand extends GraphQlCommand<VariableDeleteInput, b
   /**
    * Parse the response
    */
-  protected override parseResponse(rawResponse: unknown): boolean {
-    const response = parseResponseHelper(responseSchema, rawResponse)
-    if (response.errors) {
-      throw new CommandError(this.constructor.name, response.errors[0].message)
-    }
-    if (!response.data || response.data.organization.removeVariable !== true) {
-      throw new CommandError(this.constructor.name, "Failed to delete variable")
-    }
-    return response.data.organization.removeVariable
-  }
-
-  /**
-   * Get the body for the request
-   */
-  protected override getBody(): Record<string, unknown> {
-    return {
-      query: graphQlQueryById,
-      variables: this.input,
-    }
+  protected override parseResponse(): boolean {
+    return true
   }
 }

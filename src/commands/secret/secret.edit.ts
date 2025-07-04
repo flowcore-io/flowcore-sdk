@@ -1,20 +1,25 @@
 import { Command } from "../../common/command.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
-import { type Variable, VariableSchema } from "../../contracts/variable.ts"
-import { Type } from "@sinclair/typebox"
+import { type Secret, SecretSchema } from "../../contracts/secret.ts"
 
 /**
- * The input for the variable list command
+ * The input for the secret edit command
  */
-export interface VariableListInput {
+export interface SecretEditInput {
   /** The tenant id */
   tenantId: string
+  /** The key of the secret */
+  key: string
+  /** The value of the secret */
+  value?: string
+  /** The description of the secret */
+  description?: string
 }
 
 /**
- * List variables
+ * Edit a secret
  */
-export class VariableListCommand extends Command<VariableListInput, Variable[]> {
+export class SecretEditCommand extends Command<SecretEditInput, Secret> {
   /**
    * Whether the command should retry on failure
    */
@@ -24,7 +29,7 @@ export class VariableListCommand extends Command<VariableListInput, Variable[]> 
    * Get the method
    */
   protected override getMethod(): string {
-    return "GET"
+    return "PATCH"
   }
   /**
    * Get the base url
@@ -37,7 +42,7 @@ export class VariableListCommand extends Command<VariableListInput, Variable[]> 
    * Get the path
    */
   protected override getPath(): string {
-    return `/api/v1/tenants/${this.input.tenantId}/variables`
+    return `/api/v1/tenants/${this.input.tenantId}/secrets/${this.input.key}`
   }
 
   /**
@@ -48,7 +53,7 @@ export class VariableListCommand extends Command<VariableListInput, Variable[]> 
   /**
    * Parse the response
    */
-  protected override parseResponse(rawResponse: unknown): Variable[] {
-    return parseResponseHelper(Type.Array(VariableSchema), rawResponse)
+  protected override parseResponse(rawResponse: unknown): Secret {
+    return parseResponseHelper(SecretSchema, rawResponse)
   }
 }
