@@ -10,6 +10,7 @@ export * from "./adapter/reset-adapter.ts"
 
 // Api Key
 export * from "./api-key/api-key.create.ts"
+export * from "./api-key/api-key.edit.ts"
 export * from "./api-key/api-key.delete.ts"
 export * from "./api-key/api-key.list.ts"
 

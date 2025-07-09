@@ -37,7 +37,7 @@ export const ApiKeyWithValueSchema: TObject<{
   maskedApiKey: TString
   createdAt: TString
   lastUsedAt: TUnion<[TString, TNull]>
-  value: TString
+  apiKey: TString
 }> = Type.Object({
   id: Type.String(),
   tenantId: Type.String(),
@@ -46,7 +46,7 @@ export const ApiKeyWithValueSchema: TObject<{
   maskedApiKey: Type.String(),
   createdAt: Type.String(),
   lastUsedAt: Type.Union([Type.String(), Type.Null()]),
-  value: Type.String(),
+  apiKey: Type.String(),
 })
 
 /**
