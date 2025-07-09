@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.54.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.53.0...v1.54.0) (2025-07-09)
+
+
+### Features
+
+* use new rest api for api keys ([bdccaf2](https://github.com/flowcore-io/flowcore-sdk/commit/bdccaf2e9622a1a22df77f49ea819dabb0fd555a))
+* use new rest api for api keys ([bc7db6b](https://github.com/flowcore-io/flowcore-sdk/commit/bc7db6bb05f75d1960f139f6bce52b90600b2109))
+
+
+### Bug Fixes
+
+* fix create apikey response ([9438f5d](https://github.com/flowcore-io/flowcore-sdk/commit/9438f5d0838bde01dada8a8a67ed78993375d70f))
+
 ## [1.53.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.52.0...v1.53.0) (2025-07-04)
 
 
