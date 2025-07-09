@@ -1,23 +1,21 @@
 import { Command } from "../../common/command.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
-import { type ApiKeyWithValue, ApiKeyWithValueSchema } from "../../contracts/api-key.ts"
+import { type ApiKey, ApiKeySchema } from "../../contracts/api-key.ts"
 
 /**
- * The input for the api key create command
+ * The input for the api key edit command
  */
-export interface ApiKeyCreateInput {
-  /** The tenant id */
-  tenantId: string
-  /** The name of the api key */
-  name: string
+export interface ApiKeyEditInput {
+  /** The api key id */
+  apiKeyId: string
   /** The description of the api key */
-  description?: string
+  description: string
 }
 
 /**
- * Create an api key
+ * Edit an api key
  */
-export class ApiKeyCreateCommand extends Command<ApiKeyCreateInput, ApiKeyWithValue> {
+export class ApiKeyEditCommand extends Command<ApiKeyEditInput, ApiKey> {
   /**
    * Whether the command should retry on failure
    */
@@ -27,7 +25,7 @@ export class ApiKeyCreateCommand extends Command<ApiKeyCreateInput, ApiKeyWithVa
    * Get the method
    */
   protected override getMethod(): string {
-    return "POST"
+    return "PATCH"
   }
   /**
    * Get the base url
@@ -40,7 +38,7 @@ export class ApiKeyCreateCommand extends Command<ApiKeyCreateInput, ApiKeyWithVa
    * Get the path
    */
   protected override getPath(): string {
-    return "/api/v1/api-keys"
+    return `/api/v1/api-keys/${this.input.apiKeyId}`
   }
 
   /**
@@ -51,7 +49,7 @@ export class ApiKeyCreateCommand extends Command<ApiKeyCreateInput, ApiKeyWithVa
   /**
    * Parse the response
    */
-  protected override parseResponse(rawResponse: unknown): ApiKeyWithValue {
-    return parseResponseHelper(ApiKeyWithValueSchema, rawResponse)
+  protected override parseResponse(rawResponse: unknown): ApiKey {
+    return parseResponseHelper(ApiKeySchema, rawResponse)
   }
 }

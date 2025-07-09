@@ -1,44 +1,45 @@
-import { Type } from "@sinclair/typebox"
-import { GraphQlCommand } from "../../common/command-graphql.ts"
+import { Command } from "../../common/command.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
-import type { ApiKey } from "../../contracts/api-key.ts"
+import { Type } from "@sinclair/typebox"
+import { type ApiKey, ApiKeySchema } from "../../contracts/api-key.ts"
 
 /**
- * The input for the API key list command
+ * The input for the api key list command
  */
 export interface ApiKeyListInput {
   /** The tenant id */
   tenantId: string
 }
 
-const graphQlQueryById = `
-  query FLOWCORE_SDK_API_KEY_LIST($tenantId: ID!) {
-    organization(search: {id: $tenantId}) {
-      apiKeys {
-        id
-        name
-        createdAt
-      }
-    }
-  }
-`
-
-const responseSchema = Type.Object({
-  data: Type.Object({
-    organization: Type.Object({
-      apiKeys: Type.Array(Type.Object({
-        id: Type.String(),
-        name: Type.String(),
-        createdAt: Type.String(),
-      })),
-    }),
-  }),
-})
-
 /**
  * List api keys
  */
-export class ApiKeyListCommand extends GraphQlCommand<ApiKeyListInput, ApiKey[]> {
+export class ApiKeyListCommand extends Command<ApiKeyListInput, ApiKey[]> {
+  /**
+   * Whether the command should retry on failure
+   */
+  protected override retryOnFailure: boolean = false
+
+  /**
+   * Get the method
+   */
+  protected override getMethod(): string {
+    return "GET"
+  }
+  /**
+   * Get the base url
+   */
+  protected override getBaseUrl(): string {
+    return "https://tenant-store.api.flowcore.io"
+  }
+
+  /**
+   * Get the path
+   */
+  protected override getPath(): string {
+    return `/api/v1/api-keys?tenantId=${this.input.tenantId}`
+  }
+
   /**
    * The allowed modes for the command
    */
@@ -48,17 +49,6 @@ export class ApiKeyListCommand extends GraphQlCommand<ApiKeyListInput, ApiKey[]>
    * Parse the response
    */
   protected override parseResponse(rawResponse: unknown): ApiKey[] {
-    const response = parseResponseHelper(responseSchema, rawResponse)
-    return response.data.organization.apiKeys
-  }
-
-  /**
-   * Get the body for the request
-   */
-  protected override getBody(): Record<string, unknown> {
-    return {
-      query: graphQlQueryById,
-      variables: this.input,
-    }
+    return parseResponseHelper(Type.Array(ApiKeySchema), rawResponse)
   }
 }
