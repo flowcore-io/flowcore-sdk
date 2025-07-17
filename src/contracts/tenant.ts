@@ -84,7 +84,7 @@ export type Tenant = Static<typeof TenantSchema>
  */
 export const TenantListItemSchema: TObject<{
   id: TString
-  tenant: TString
+  name: TString
   displayName: TString
   description: TString
   websiteUrl: TString
@@ -92,7 +92,7 @@ export const TenantListItemSchema: TObject<{
   permissions: TArray<TString>
 }> = Type.Object({
   id: Type.String(),
-  tenant: Type.String(),
+  name: Type.String(),
   displayName: Type.String(),
   description: Type.String(),
   websiteUrl: Type.String(),
