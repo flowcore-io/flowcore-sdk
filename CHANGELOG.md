@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.55.2](https://github.com/flowcore-io/flowcore-sdk/compare/v1.55.1...v1.55.2) (2025-07-17)
+
+
+### Bug Fixes
+
+* tenant list back to rest ([bbddaf1](https://github.com/flowcore-io/flowcore-sdk/commit/bbddaf145d891f270f12e0835040a9df940e276b))
+
 ## [1.55.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.55.0...v1.55.1) (2025-07-17)
 
 
