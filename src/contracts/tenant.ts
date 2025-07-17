@@ -1,5 +1,6 @@
 import {
   type Static,
+  type TArray,
   type TBoolean,
   type TLiteral,
   type TNull,
@@ -77,3 +78,29 @@ export const TenantSchema: TObject<{
  * The type for a tenant
  */
 export type Tenant = Static<typeof TenantSchema>
+
+/**
+ * The schema for a tenant list item
+ */
+export const TenantListItemSchema: TObject<{
+  id: TString
+  name: TString
+  displayName: TString
+  description: TString
+  websiteUrl: TString
+  isDedicated: TBoolean
+  permissions: TArray<TString>
+}> = Type.Object({
+  id: Type.String(),
+  name: Type.String(),
+  displayName: Type.String(),
+  description: Type.String(),
+  websiteUrl: Type.String(),
+  isDedicated: Type.Boolean(),
+  permissions: Type.Array(Type.String()),
+})
+
+/**
+ * The type for a tenant list item
+ */
+export type TenantListItem = Static<typeof TenantListItemSchema>
