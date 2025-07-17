@@ -3,6 +3,7 @@ export * from "./tenant/tenant.disable-sensitive-data.ts"
 export * from "./tenant/tenant.enable-sensitive-data.ts"
 export * from "./tenant/tenant.fetch.ts"
 export * from "./tenant/tenant.list.ts"
+export * from "./tenant/tenant.user-list.ts"
 export * from "./tenant/tenant.translate-name-to-id.ts"
 
 // Adapter
