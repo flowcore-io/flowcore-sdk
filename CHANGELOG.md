@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.56.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.55.2...v1.56.0) (2025-07-17)
+
+
+### Features
+
+* add tenant user list ([da21f0e](https://github.com/flowcore-io/flowcore-sdk/commit/da21f0efcfe4c40cbc2013e9d5e5b5bd45119087))
+
 ## [1.55.2](https://github.com/flowcore-io/flowcore-sdk/compare/v1.55.1...v1.55.2) (2025-07-17)
 
 
