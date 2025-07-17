@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.55.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.55.0...v1.55.1) (2025-07-17)
+
+
+### Bug Fixes
+
+* revert to tenant list graphql ([3245bb9](https://github.com/flowcore-io/flowcore-sdk/commit/3245bb93d198801ad16f09e2fc9115513534777b))
+
 ## [1.55.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.54.0...v1.55.0) (2025-07-17)
 
 
