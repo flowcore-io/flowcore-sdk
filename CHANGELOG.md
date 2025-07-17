@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.55.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.54.0...v1.55.0) (2025-07-17)
+
+
+### Features
+
+* use new rest api for tenant list ([cfbc108](https://github.com/flowcore-io/flowcore-sdk/commit/cfbc108223b8b0ed0203e7fa8b8006556e154423))
+
+
+### Bug Fixes
+
+* change tenant list response ([2b612db](https://github.com/flowcore-io/flowcore-sdk/commit/2b612dbdb1c23793901af01db4b56a8a8acea097))
+
 ## [1.54.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.53.0...v1.54.0) (2025-07-09)
 
 
