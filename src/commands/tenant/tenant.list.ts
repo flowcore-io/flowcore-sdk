@@ -6,7 +6,7 @@ import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 /**
  * List tenants
  */
-export class TenantListCommand extends Command<Record<string, never>, TenantListItem[]> {
+export class TenantListCommand extends Command<void, TenantListItem[]> {
   /**
    * Get the method
    */
