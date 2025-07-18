@@ -11,7 +11,7 @@ export interface TenantUserRemoveInput {
 }
 
 /**
- * Add a user to a tenant
+ * Remove a user from a tenant
  */
 export class TenantUserRemoveCommand extends Command<TenantUserRemoveInput, boolean> {
   /**
