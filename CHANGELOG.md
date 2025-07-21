@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.58.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.57.0...v1.58.0) (2025-07-21)
+
+
+### Features
+
+* user list command with managed roles ([51b12aa](https://github.com/flowcore-io/flowcore-sdk/commit/51b12aa9fe4075f3a6a97263b4c90c0f535b7d41))
+* user list command with managed roles ([f7ab54f](https://github.com/flowcore-io/flowcore-sdk/commit/f7ab54f473a880ef5f7f1885ce3b7d4ce6eb0628))
+
+
+### Bug Fixes
+
+* add expicit type ([9d4e72c](https://github.com/flowcore-io/flowcore-sdk/commit/9d4e72c97831396965184f8c95af4c68a5bc432a))
+* should not export ([e77df28](https://github.com/flowcore-io/flowcore-sdk/commit/e77df2843a9b7a7afb69910a24e3bdeac1103f71))
+
 ## [1.57.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.56.0...v1.57.0) (2025-07-21)
 
 
