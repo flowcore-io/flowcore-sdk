@@ -129,3 +129,5 @@ export * from "./iam/tenant-iam-audit/get-audit-for-tenant.ts"
 
 export * from "./iam/validate/validate-key.ts"
 export * from "./iam/validate/validate-user.ts"
+
+export * from "./iam/tenant/user-managed-roles.ts"
