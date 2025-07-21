@@ -1,45 +1,47 @@
-import { Type } from "@sinclair/typebox"
-import { Command } from "../../common/command.ts"
-import { type TenantUser, TenantUserSchema } from "../../contracts/tenant.ts"
-import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
+import { CustomCommand } from "../../common/command-custom.ts"
+import type { FlowcoreClient } from "../../common/flowcore-client.ts"
+import type { TenantUser } from "../../contracts/tenant.ts"
+import { TenantUserManagedRolesCommand } from "../iam/tenant/user-managed-roles.ts"
+import { TenantUserListInnerCommand } from "./tenant.user-list-inner.ts"
 
 /**
- * The input for the tenant user list command
+ * The input for the tenant users command
  */
 export interface TenantUserListInput {
+  /** the tenant id */
   tenantId: string
+}
+
+/**
+ * The output for the tenant user list command
+ */
+export interface TenantUserListOutput extends TenantUser {
+  managedRoles: string[]
 }
 
 /**
  * List tenants users
  */
-export class TenantUserListCommand extends Command<TenantUserListInput, TenantUser[]> {
+export class TenantUserListCommand extends CustomCommand<TenantUserListInput, TenantUserListOutput[]> {
   /**
-   * Get the method
+   * Custom execute method
    */
-  protected override getMethod(): string {
-    return "GET"
-  }
+  protected override async customExecute(client: FlowcoreClient): Promise<TenantUserListOutput[]> {
+    const usersCommand = new TenantUserListInnerCommand({
+      tenantId: this.input.tenantId,
+    })
+    const tenantUserManagedRolesCommand = new TenantUserManagedRolesCommand({
+      tenantId: this.input.tenantId,
+    })
 
-  /**
-   * Get the base url
-   */
-  protected override getBaseUrl(): string {
-    return "https://tenant.api.flowcore.io"
-  }
+    const [users, tenantUserManagedRoles] = await Promise.all([
+      client.execute(usersCommand),
+      client.execute(tenantUserManagedRolesCommand),
+    ])
 
-  /**
-   * Get the path
-   */
-  protected override getPath(): string {
-    return `/api/v1/tenants/${this.input.tenantId}/users`
-  }
-
-  /**
-   * Parse the response
-   */
-  protected override parseResponse(rawResponse: unknown): TenantUser[] {
-    const response = parseResponseHelper(Type.Array(TenantUserSchema), rawResponse)
-    return response
+    return users.map((user) => ({
+      ...user,
+      managedRoles: tenantUserManagedRoles[user.id] || [],
+    }))
   }
 }
