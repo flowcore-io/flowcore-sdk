@@ -89,6 +89,7 @@ export const TenantListItemSchema: TObject<{
   description: TString
   websiteUrl: TString
   isDedicated: TBoolean
+  sensitiveDataEnabled: TBoolean
   permissions: TArray<TString>
 }> = Type.Object({
   id: Type.String(),
@@ -97,6 +98,7 @@ export const TenantListItemSchema: TObject<{
   description: Type.String(),
   websiteUrl: Type.String(),
   isDedicated: Type.Boolean(),
+  sensitiveDataEnabled: Type.Boolean(),
   permissions: Type.Array(Type.String()),
 })
 
