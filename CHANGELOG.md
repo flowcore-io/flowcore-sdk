@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.58.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.58.0...v1.58.1) (2025-07-21)
+
+
+### Bug Fixes
+
+* add sensitiveDataEnabled to tenant list item ([ad8b591](https://github.com/flowcore-io/flowcore-sdk/commit/ad8b5912f96e05c5acf08459bc44653fb9588a43))
+
 ## [1.58.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.57.0...v1.58.0) (2025-07-21)
 
 
