@@ -1,4 +1,4 @@
-import { type Static, Type } from "@sinclair/typebox"
+import { type Static, type TArray, type TRecord, type TString, Type } from "@sinclair/typebox"
 import { Command } from "../../../common/command.ts"
 import { parseResponseHelper } from "../../../utils/parse-response-helper.ts"
 
@@ -12,7 +12,10 @@ interface TenantUserManagedRolesInput {
 /**
  * The schema for the tenant user managed roles command
  */
-const TenantUserManagedRolesSchema = Type.Record(Type.String(), Type.Array(Type.String()))
+const TenantUserManagedRolesSchema: TRecord<TString, TArray<TString>> = Type.Record(
+  Type.String(),
+  Type.Array(Type.String()),
+)
 
 /**
  * The output for the tenant user managed roles command
