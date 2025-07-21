@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.58.2](https://github.com/flowcore-io/flowcore-sdk/compare/v1.58.1...v1.58.2) (2025-07-21)
+
+
+### Bug Fixes
+
+* add domain to tenant list item ([2be8759](https://github.com/flowcore-io/flowcore-sdk/commit/2be8759454428fa8646935ae3c0b07c3e7c63e37))
+
 ## [1.58.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.58.0...v1.58.1) (2025-07-21)
 
 
