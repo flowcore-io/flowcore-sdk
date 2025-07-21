@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.57.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.56.0...v1.57.0) (2025-07-21)
+
+
+### Features
+
+* add remove user from tenant commands ([2229218](https://github.com/flowcore-io/flowcore-sdk/commit/2229218188b7738fd3fabe99f0f3d8dfbf97bc81))
+* add remove user from tenant commands ([31808b2](https://github.com/flowcore-io/flowcore-sdk/commit/31808b210cf1fdc31ab3cdb43d9d1ea522431647))
+
+
+### Bug Fixes
+
+* Update src/commands/tenant/tenant.user-remove.ts ([525f6ae](https://github.com/flowcore-io/flowcore-sdk/commit/525f6ae1872e6ce525bc10fee30738e34cb0cee6))
+
 ## [1.56.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.55.2...v1.56.0) (2025-07-17)
 
 
