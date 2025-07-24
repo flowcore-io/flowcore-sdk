@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.59.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.58.2...v1.59.0) (2025-07-24)
+
+
+### Features
+
+* support new api key format ([214e27e](https://github.com/flowcore-io/flowcore-sdk/commit/214e27e3186d17162288ba73dbbf5daebebead5e))
+* support new api key format ([a94f0de](https://github.com/flowcore-io/flowcore-sdk/commit/a94f0de8069d23997dd07d2702bb24b54bbb5cce))
+
+
+### Bug Fixes
+
+* add comments ([c324b71](https://github.com/flowcore-io/flowcore-sdk/commit/c324b71eece4bfeb7cd12686d7643d6af057cd28))
+
 ## [1.58.2](https://github.com/flowcore-io/flowcore-sdk/compare/v1.58.1...v1.58.2) (2025-07-21)
 
 
