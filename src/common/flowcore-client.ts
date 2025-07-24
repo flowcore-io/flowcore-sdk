@@ -11,6 +11,10 @@ const RETRYABLE_ERROR_CODES = [408, 429, 500, 502, 503, 504]
  */
 interface ClientOptionsBearer {
   getBearerToken: () => Promise<string | null> | string | null
+  /**
+   * The ID of the API key.
+   * @deprecated Use apiKey only instead (apiKeyId is only used for old api keys).
+   */
   apiKeyId?: never
   apiKey?: never
   retry?: {
@@ -23,13 +27,25 @@ interface ClientOptionsBearer {
  * The options for the api key
  */
 interface ClientOptionsApiKey {
-  apiKeyId: string
+  /**
+   * The ID of the API key.
+   * @deprecated Use apiKey only instead (apiKeyId is only used for old api keys).
+   */
+  apiKeyId?: string
   apiKey: string
   getBearerToken?: never
   retry?: {
     delay: number
     maxRetries: number
   } | null
+}
+
+function isClientOptionsBearer(options: ClientOptions): options is ClientOptionsBearer {
+  return "getBearerToken" in options
+}
+
+function isClientOptionsApiKey(options: ClientOptions): options is ClientOptionsApiKey {
+  return "apiKey" in options
 }
 
 /**
@@ -45,9 +61,16 @@ export class FlowcoreClient {
   private baseUrl: string | undefined
 
   constructor(private readonly options: ClientOptions) {
-    if ((this.options as ClientOptionsBearer).getBearerToken) {
+    if (isClientOptionsBearer(this.options)) {
       this.mode = "bearer"
-    } else if ((this.options as ClientOptionsApiKey).apiKeyId && (this.options as ClientOptionsApiKey).apiKey) {
+    } else if (isClientOptionsApiKey(this.options)) {
+      if (!this.options.apiKeyId) {
+        const parts = this.options.apiKey.split("_")
+        if (parts.length !== 3 || parts[0] !== "fc") {
+          throw new Error("Invalid api key")
+        }
+        this.options.apiKeyId = parts[1]
+      }
       this.mode = "apiKey"
     } else {
       throw new Error("Invalid client options")
