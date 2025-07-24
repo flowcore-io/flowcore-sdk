@@ -11,6 +11,10 @@ const RETRYABLE_ERROR_CODES = [408, 429, 500, 502, 503, 504]
  */
 interface ClientOptionsBearer {
   getBearerToken: () => Promise<string | null> | string | null
+  /**
+   * The ID of the API key.
+   * @deprecated Use apiKey only instead (apiKeyId is only used for old api keys).
+   */
   apiKeyId?: never
   apiKey?: never
   retry?: {
@@ -23,6 +27,10 @@ interface ClientOptionsBearer {
  * The options for the api key
  */
 interface ClientOptionsApiKey {
+  /**
+   * The ID of the API key.
+   * @deprecated Use apiKey only instead (apiKeyId is only used for old api keys).
+   */
   apiKeyId?: string
   apiKey: string
   getBearerToken?: never
