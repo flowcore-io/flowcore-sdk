@@ -28,7 +28,7 @@ jobs:
       - name: Setup Deno2 environment
         uses: denoland/setup-deno@v2
         with:
-          deno-version: v2.0.6
+          deno-version: v2.x
       - name: Deno install
         run: deno install --frozen-lockfile
       - name: Lint
