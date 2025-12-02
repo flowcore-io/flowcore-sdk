@@ -92,7 +92,7 @@ export const LegacyScenarioListItemSchema: TObject<{
   name: TString
   description: TOptional<TString>
   flowcoreUserId: TString
-  deploymentState: LegacyScenarioDeploymentState,
+  deploymentState: LegacyScenarioDeploymentState
   createdAt: TString
   updatedAt: TString
   lastDeployed: TOptional<TString>
