@@ -16,10 +16,17 @@ export const LegacyScenarioDeploymentState = {
   DEPLOYED: "DEPLOYED",
   PARTIALLY_DEPLOYED: "PARTIALLY_DEPLOYED",
   DELETING: "DELETING",
+  DELETIN: "DELETING",
 } as const
 
-export type LegacyScenarioDeploymentState =
-  (typeof LegacyScenarioDeploymentState)[keyof typeof LegacyScenarioDeploymentState]
+export type LegacyScenarioDeploymentState = TUnion<
+  [
+    TLiteral<typeof LegacyScenarioDeploymentState.NOT_DEPLOYED>,
+    TLiteral<typeof LegacyScenarioDeploymentState.DEPLOYED>,
+    TLiteral<typeof LegacyScenarioDeploymentState.PARTIALLY_DEPLOYED>,
+    TLiteral<typeof LegacyScenarioDeploymentState.DELETING>,
+  ]
+>
 
 /**
  * Kubernetes statuses for Legacy Scenario adapters
@@ -85,14 +92,7 @@ export const LegacyScenarioListItemSchema: TObject<{
   name: TString
   description: TOptional<TString>
   flowcoreUserId: TString
-  deploymentState: TUnion<
-    [
-      TLiteral<typeof LegacyScenarioDeploymentState.NOT_DEPLOYED>,
-      TLiteral<typeof LegacyScenarioDeploymentState.DEPLOYED>,
-      TLiteral<typeof LegacyScenarioDeploymentState.PARTIALLY_DEPLOYED>,
-      TLiteral<typeof LegacyScenarioDeploymentState.DELETING>,
-    ]
-  >
+  deploymentState: LegacyScenarioDeploymentState,
   createdAt: TString
   updatedAt: TString
   lastDeployed: TOptional<TString>
