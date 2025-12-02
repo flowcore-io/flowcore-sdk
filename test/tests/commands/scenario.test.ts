@@ -1,5 +1,5 @@
 import { assertEquals, assertRejects } from "@std/assert"
-import { afterAll, afterEach, describe, it } from "jsr:@std/testing/bdd"
+import { afterAll, afterEach, describe, it } from "@std/testing/bdd"
 import { tenantCache } from "../../../src/common/tenant.cache.ts"
 import type { Scenario } from "../../../src/contracts/scenario.ts"
 import {

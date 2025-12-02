@@ -1,5 +1,5 @@
 import { assertEquals, assertRejects } from "@std/assert"
-import { afterAll, describe, it } from "jsr:@std/testing/bdd"
+import { afterAll, describe, it } from "@std/testing/bdd"
 import { FlowcoreClient } from "../../../../src/mod.ts"
 import { LinkKeyRoleCommand } from "../../../../src/commands/iam/role-associations/link-key-role.ts"
 import { UnlinkKeyRoleCommand } from "../../../../src/commands/iam/role-associations/unlink-key-role.ts"
