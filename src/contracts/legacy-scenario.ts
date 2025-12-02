@@ -1,4 +1,12 @@
-import { type Static, type TObject, type TOptional, type TString, Type } from "@sinclair/typebox"
+import {
+  type Static,
+  type TLiteral,
+  type TObject,
+  type TOptional,
+  type TString,
+  type TUnion,
+  Type,
+} from "@sinclair/typebox"
 
 /**
  * Deployment states for Legacy Scenarios
@@ -77,7 +85,14 @@ export const LegacyScenarioListItemSchema: TObject<{
   name: TString
   description: TOptional<TString>
   flowcoreUserId: TString
-  deploymentState: TString
+  deploymentState: TUnion<
+    [
+      TLiteral<typeof LegacyScenarioDeploymentState.NOT_DEPLOYED>,
+      TLiteral<typeof LegacyScenarioDeploymentState.DEPLOYED>,
+      TLiteral<typeof LegacyScenarioDeploymentState.PARTIALLY_DEPLOYED>,
+      TLiteral<typeof LegacyScenarioDeploymentState.DELETING>,
+    ]
+  >
   createdAt: TString
   updatedAt: TString
   lastDeployed: TOptional<TString>
@@ -91,7 +106,12 @@ export const LegacyScenarioListItemSchema: TObject<{
   /** ID of the user who created the scenario */
   flowcoreUserId: Type.String(),
   /** Current deployment state */
-  deploymentState: Type.String(),
+  deploymentState: Type.Union([
+    Type.Literal(LegacyScenarioDeploymentState.NOT_DEPLOYED),
+    Type.Literal(LegacyScenarioDeploymentState.DEPLOYED),
+    Type.Literal(LegacyScenarioDeploymentState.PARTIALLY_DEPLOYED),
+    Type.Literal(LegacyScenarioDeploymentState.DELETING),
+  ]),
   /** Creation timestamp */
   createdAt: Type.String(),
   /** Last update timestamp */
