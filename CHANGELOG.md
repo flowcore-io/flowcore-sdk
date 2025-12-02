@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.60.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.59.0...v1.60.0) (2025-12-02)
+
+
+### Features
+
+* add @std/testing dependency and update import path in legacy scenario tests ([5991e5d](https://github.com/flowcore-io/flowcore-sdk/commit/5991e5d36a2a73bad8de54c26d955d3537e72ed2))
+* add legacy scenario commands and types for GraphQL integration ([c03e021](https://github.com/flowcore-io/flowcore-sdk/commit/c03e021baf08cdbb948046d01850341658878ddc))
+* add legacy scenario commands and types for GraphQL integration ([eae8304](https://github.com/flowcore-io/flowcore-sdk/commit/eae8304ffaf42db4eb50a9fdc4c6e9b64d5c47e5))
+
+
+### Bug Fixes
+
+* correct typo in LegacyScenarioDeploymentState and add reminder to update type ([7db0f4b](https://github.com/flowcore-io/flowcore-sdk/commit/7db0f4b6025f6f1f7c5e88a25e3a920209069b96))
+* deno fmt ([ca8fed8](https://github.com/flowcore-io/flowcore-sdk/commit/ca8fed80f01383963dd17874585abd92ac1845ff))
+
 ## [1.59.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.58.2...v1.59.0) (2025-07-24)
 
 
