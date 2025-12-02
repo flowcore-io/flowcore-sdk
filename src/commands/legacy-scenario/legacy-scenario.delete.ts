@@ -78,4 +78,3 @@ export class LegacyScenarioDeleteCommand extends GraphQlCommand<LegacyScenarioDe
     }
   }
 }
-

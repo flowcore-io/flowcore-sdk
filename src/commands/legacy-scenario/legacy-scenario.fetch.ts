@@ -77,4 +77,3 @@ export class LegacyScenarioFetchCommand extends GraphQlCommand<LegacyScenarioFet
     return parseResponseHelper(LegacyScenarioSchema, response.data.scenario)
   }
 }
-

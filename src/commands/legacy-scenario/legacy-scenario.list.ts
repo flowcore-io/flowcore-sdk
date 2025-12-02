@@ -94,4 +94,3 @@ export class LegacyScenarioListCommand extends GraphQlCommand<LegacyScenarioList
     return parseResponseHelper(LegacyScenarioListOutputSchema, output)
   }
 }
-

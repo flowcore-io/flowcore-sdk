@@ -10,7 +10,8 @@ export const LegacyScenarioDeploymentState = {
   DELETING: "DELETING",
 } as const
 
-export type LegacyScenarioDeploymentState = (typeof LegacyScenarioDeploymentState)[keyof typeof LegacyScenarioDeploymentState]
+export type LegacyScenarioDeploymentState =
+  (typeof LegacyScenarioDeploymentState)[keyof typeof LegacyScenarioDeploymentState]
 
 /**
  * Kubernetes statuses for Legacy Scenario adapters
@@ -160,4 +161,3 @@ export const LegacyScenarioAdapterStateSchema: TObject<{
  * The type for adapter state
  */
 export type LegacyScenarioAdapterState = Static<typeof LegacyScenarioAdapterStateSchema>
-

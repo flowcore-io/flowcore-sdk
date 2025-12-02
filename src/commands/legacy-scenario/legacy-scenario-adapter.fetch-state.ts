@@ -86,4 +86,3 @@ export class LegacyScenarioAdapterFetchStateCommand extends GraphQlCommand<
     return { state }
   }
 }
-
