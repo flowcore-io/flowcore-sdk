@@ -12,11 +12,11 @@ import {
  * Deployment states for Legacy Scenarios
  */
 export const LegacyScenarioDeploymentState = {
+  // when updating this object remember to update the type too
   NOT_DEPLOYED: "NOT_DEPLOYED",
   DEPLOYED: "DEPLOYED",
   PARTIALLY_DEPLOYED: "PARTIALLY_DEPLOYED",
   DELETING: "DELETING",
-  DELETIN: "DELETING",
 } as const
 
 export type LegacyScenarioDeploymentState = TUnion<
