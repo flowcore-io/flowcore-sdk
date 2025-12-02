@@ -1,7 +1,7 @@
 import { assertEquals, assertExists, assertInstanceOf, fail } from "@std/assert"
-import { delay } from "jsr:@std/async/delay"
-import { afterEach, beforeEach, describe, it } from "jsr:@std/testing/bdd"
-import { type Stub, stub } from "jsr:@std/testing/mock"
+import { delay } from "@std/async/delay"
+import { afterEach, beforeEach, describe, it } from "@std/testing/bdd"
+import { type Stub, stub } from "@std/testing/mock"
 import type { Buffer } from "node:buffer"
 import type { Subscription } from "rxjs"
 

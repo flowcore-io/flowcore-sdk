@@ -1,5 +1,5 @@
 import { assertArrayIncludes, assertObjectMatch } from "@std/assert"
-import { type Stub, stub } from "jsr:@std/testing/mock"
+import { type Stub, stub } from "@std/testing/mock"
 
 type Method = "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "OPTIONS" | "HEAD" | "TRACE" | "CONNECT"
 

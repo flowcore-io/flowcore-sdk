@@ -1,5 +1,5 @@
 import { assertEquals, assertRejects } from "@std/assert"
-import { afterAll, describe, it } from "jsr:@std/testing/bdd"
+import { afterAll, describe, it } from "@std/testing/bdd"
 import { FlowcoreClient } from "../../../../src/mod.ts"
 import { PolicyCreateCommand } from "../../../../src/commands/iam/policies/create-policy.ts"
 import { PolicyListCommand } from "../../../../src/commands/iam/policies/get-policy.ts"
