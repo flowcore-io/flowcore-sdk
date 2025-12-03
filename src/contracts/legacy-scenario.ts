@@ -1,8 +1,8 @@
 import {
   type Static,
   type TLiteral,
-  type TObject,
   type TNull,
+  type TObject,
   type TOptional,
   type TString,
   type TUnion,
