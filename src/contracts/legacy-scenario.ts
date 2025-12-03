@@ -34,24 +34,23 @@ export type LegacyScenarioDeploymentState = Static<LegacyScenarioDeploymentState
  * Kubernetes statuses for Legacy Scenario adapters
  */
 export const LegacyScenarioAdapterKubernetesStatus = {
-    // when updating this object remember to update the type too
-    CREATED: "CREATED",
-    UPDATED: "UPDATED",
-    INITIALIZING: "INITIALIZING",
-    READY: "READY",
-    DELETED: "DELETED",
+  // when updating this object remember to update the type too
+  CREATED: "CREATED",
+  UPDATED: "UPDATED",
+  INITIALIZING: "INITIALIZING",
+  READY: "READY",
+  DELETED: "DELETED",
 } as const
 
-export type LegacyScenarioAdapterKubernetesStatusTypeBox = 
-  TUnion<
-    [
-      TLiteral<typeof LegacyScenarioAdapterKubernetesStatus.CREATED>,
-      TLiteral<typeof LegacyScenarioAdapterKubernetesStatus.UPDATED>,
-      TLiteral<typeof LegacyScenarioAdapterKubernetesStatus.INITIALIZING>,
-      TLiteral<typeof LegacyScenarioAdapterKubernetesStatus.READY>,
-      TLiteral<typeof LegacyScenarioAdapterKubernetesStatus.DELETED>,
-    ]
-  >
+export type LegacyScenarioAdapterKubernetesStatusTypeBox = TUnion<
+  [
+    TLiteral<typeof LegacyScenarioAdapterKubernetesStatus.CREATED>,
+    TLiteral<typeof LegacyScenarioAdapterKubernetesStatus.UPDATED>,
+    TLiteral<typeof LegacyScenarioAdapterKubernetesStatus.INITIALIZING>,
+    TLiteral<typeof LegacyScenarioAdapterKubernetesStatus.READY>,
+    TLiteral<typeof LegacyScenarioAdapterKubernetesStatus.DELETED>,
+  ]
+>
 
 export type LegacyScenarioAdapterKubernetesStatus = Static<LegacyScenarioAdapterKubernetesStatusTypeBox>
 
