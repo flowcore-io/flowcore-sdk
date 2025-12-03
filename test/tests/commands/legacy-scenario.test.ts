@@ -457,7 +457,7 @@ mutation DeleteScenario($organizationId: ID!, $scenarioId: ID!) {
       const organizationId = crypto.randomUUID()
       const state: LegacyScenarioAdapterState = {
         kubernetes: {
-          status: "RUNNING",
+          status: "READY",
         },
       }
 
