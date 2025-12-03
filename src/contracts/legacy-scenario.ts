@@ -1,6 +1,7 @@
 import {
   type Static,
   type TLiteral,
+  type TNull,
   type TObject,
   type TOptional,
   type TString,
@@ -108,7 +109,7 @@ export const LegacyScenarioListItemSchema: TObject<{
   deploymentState: LegacyScenarioDeploymentStateTypeBox
   createdAt: TString
   updatedAt: TString
-  lastDeployed: TOptional<TString>
+  lastDeployed: TUnion<[TString, TNull]>
 }> = Type.Object({
   /** Unique identifier for the scenario */
   id: Type.String(),
@@ -130,7 +131,7 @@ export const LegacyScenarioListItemSchema: TObject<{
   /** Last update timestamp */
   updatedAt: Type.String(),
   /** Last deployment timestamp */
-  lastDeployed: Type.Optional(Type.String()),
+  lastDeployed: Type.Union([Type.String(), Type.Null()]),
 })
 
 /**
