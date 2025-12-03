@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.60.2](https://github.com/flowcore-io/flowcore-sdk/compare/v1.60.1...v1.60.2) (2025-12-03)
+
+
+### Bug Fixes
+
+* add lastDeployed field to legacy scenario test data ([1c2eb50](https://github.com/flowcore-io/flowcore-sdk/commit/1c2eb508862c151478e0b2a8bfe60410d46fda7f))
+* reorder import of TObject in legacy-scenario.ts ([329ca6a](https://github.com/flowcore-io/flowcore-sdk/commit/329ca6ac2109203fab1056a723cf78a241c17508))
+* update lastDeployed type in LegacyScenarioListItemSchema to allow null values ([bb13e49](https://github.com/flowcore-io/flowcore-sdk/commit/bb13e494da2fc99f57241c54b5fe7ec260346176))
+
 ## [1.60.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.60.0...v1.60.1) (2025-12-03)
 
 
