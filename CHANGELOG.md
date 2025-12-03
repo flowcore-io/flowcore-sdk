@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.60.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.60.0...v1.60.1) (2025-12-03)
+
+
+### Bug Fixes
+
+* adapter state kubernetes output type ([d079a56](https://github.com/flowcore-io/flowcore-sdk/commit/d079a56cdc426b5d1e1eb4dc85d10a3464e29b74))
+* deno fmt ([589c6e4](https://github.com/flowcore-io/flowcore-sdk/commit/589c6e440471c02c89a5bb7201596fae75eeaea5))
+* update kubernetes status in LegacyScenarioAdapterState from RUNNING to READY ([3e9e773](https://github.com/flowcore-io/flowcore-sdk/commit/3e9e7735f4ff942d3cee25caae4e002f6e4b576b))
+
 ## [1.60.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.59.0...v1.60.0) (2025-12-02)
 
 
