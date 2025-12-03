@@ -19,7 +19,7 @@ export const LegacyScenarioDeploymentState = {
   DELETING: "DELETING",
 } as const
 
-export type LegacyScenarioDeploymentState = TUnion<
+type LegacyScenarioDeploymentStateTypeBox = TUnion<
   [
     TLiteral<typeof LegacyScenarioDeploymentState.NOT_DEPLOYED>,
     TLiteral<typeof LegacyScenarioDeploymentState.DEPLOYED>,
@@ -28,18 +28,32 @@ export type LegacyScenarioDeploymentState = TUnion<
   ]
 >
 
+export type LegacyScenarioDeploymentState = Static<LegacyScenarioDeploymentStateTypeBox>
+
 /**
  * Kubernetes statuses for Legacy Scenario adapters
  */
 export const LegacyScenarioAdapterKubernetesStatus = {
-  RUNNING: "RUNNING",
-  PENDING: "PENDING",
-  FAILED: "FAILED",
-  NOT_DEPLOYED: "NOT_DEPLOYED",
+    // when updating this object remember to update the type too
+    CREATED: "CREATED",
+    UPDATED: "UPDATED",
+    INITIALIZING: "INITIALIZING",
+    READY: "READY",
+    DELETED: "DELETED",
 } as const
 
-export type LegacyScenarioAdapterKubernetesStatus =
-  (typeof LegacyScenarioAdapterKubernetesStatus)[keyof typeof LegacyScenarioAdapterKubernetesStatus]
+export type LegacyScenarioAdapterKubernetesStatusTypeBox = 
+  TUnion<
+    [
+      TLiteral<typeof LegacyScenarioAdapterKubernetesStatus.CREATED>,
+      TLiteral<typeof LegacyScenarioAdapterKubernetesStatus.UPDATED>,
+      TLiteral<typeof LegacyScenarioAdapterKubernetesStatus.INITIALIZING>,
+      TLiteral<typeof LegacyScenarioAdapterKubernetesStatus.READY>,
+      TLiteral<typeof LegacyScenarioAdapterKubernetesStatus.DELETED>,
+    ]
+  >
+
+export type LegacyScenarioAdapterKubernetesStatus = Static<LegacyScenarioAdapterKubernetesStatusTypeBox>
 
 /**
  * Node types in Legacy Scenarios
@@ -92,7 +106,7 @@ export const LegacyScenarioListItemSchema: TObject<{
   name: TString
   description: TOptional<TString>
   flowcoreUserId: TString
-  deploymentState: LegacyScenarioDeploymentState
+  deploymentState: LegacyScenarioDeploymentStateTypeBox
   createdAt: TString
   updatedAt: TString
   lastDeployed: TOptional<TString>
@@ -169,11 +183,17 @@ export type LegacyScenario = Static<typeof LegacyScenarioSchema>
  */
 export const LegacyScenarioAdapterStateSchema: TObject<{
   kubernetes: TObject<{
-    status: TString
+    status: LegacyScenarioAdapterKubernetesStatusTypeBox
   }>
 }> = Type.Object({
   kubernetes: Type.Object({
-    status: Type.String(),
+    status: Type.Union([
+      Type.Literal(LegacyScenarioAdapterKubernetesStatus.CREATED),
+      Type.Literal(LegacyScenarioAdapterKubernetesStatus.UPDATED),
+      Type.Literal(LegacyScenarioAdapterKubernetesStatus.INITIALIZING),
+      Type.Literal(LegacyScenarioAdapterKubernetesStatus.READY),
+      Type.Literal(LegacyScenarioAdapterKubernetesStatus.DELETED),
+    ]),
   }),
 })
 
