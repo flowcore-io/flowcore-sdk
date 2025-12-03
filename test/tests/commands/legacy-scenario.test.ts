@@ -54,6 +54,7 @@ describe("Legacy Scenario", () => {
           deploymentState: "NOT_DEPLOYED",
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
+          lastDeployed: null,
         },
       ]
 
