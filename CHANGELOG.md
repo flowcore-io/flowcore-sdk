@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.61.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.60.2...v1.61.0) (2025-12-05)
+
+
+### Features
+
+* add tenant update command to manage tenant details ([2520980](https://github.com/flowcore-io/flowcore-sdk/commit/2520980ddbe82da0fb5ad367270795911b46d684))
+* add tenant update command to manage tenant details ([e4b358a](https://github.com/flowcore-io/flowcore-sdk/commit/e4b358add6a7c7321024c4dcc1d469fc5e2aa6d8))
+
 ## [1.60.2](https://github.com/flowcore-io/flowcore-sdk/compare/v1.60.1...v1.60.2) (2025-12-03)
 
 
