@@ -87,4 +87,3 @@ export class TenantCreateCommand extends Command<TenantCreateInput, Tenant> {
     return response as Tenant
   }
 }
-
