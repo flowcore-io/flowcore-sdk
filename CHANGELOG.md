@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.62.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.61.0...v1.62.0) (2025-12-05)
+
+
+### Features
+
+* add tenant creation command to manage tenant lifecycle ([0da5d80](https://github.com/flowcore-io/flowcore-sdk/commit/0da5d80c2da949c7cf8dcc703deb99496ad17d97))
+* add tenant creation command to manage tenant lifecycle ([05d3972](https://github.com/flowcore-io/flowcore-sdk/commit/05d3972a160e74d95baafd4e8c7016c46604039e))
+
 ## [1.61.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.60.2...v1.61.0) (2025-12-05)
 
 
