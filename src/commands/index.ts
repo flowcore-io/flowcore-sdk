@@ -1,6 +1,7 @@
 // Tenant
 export * from "./tenant/tenant.disable-sensitive-data.ts"
 export * from "./tenant/tenant.enable-sensitive-data.ts"
+export * from "./tenant/tenant.create.ts"
 export * from "./tenant/tenant.fetch.ts"
 export * from "./tenant/tenant.list.ts"
 export * from "./tenant/tenant.update.ts"
