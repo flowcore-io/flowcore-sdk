@@ -9,6 +9,7 @@ export * from "./tenant/tenant.user-add.ts"
 export * from "./tenant/tenant.user-remove.ts"
 export * from "./tenant/tenant.user-list.ts"
 export * from "./tenant/tenant.translate-name-to-id.ts"
+export * from "./tenant/tenant.preview.ts"
 
 // Adapter
 export * from "./adapter/reset-adapter.ts"
