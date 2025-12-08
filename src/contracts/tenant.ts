@@ -134,7 +134,7 @@ export type TenantUser = Static<typeof TenantUserSchema>
 /**
  * The schema for a public tenant preview
  */
-export const TenantPreviewSchema = Type.Object({
+export const TenantPreviewSchema: TObject = Type.Object({
   displayName: Type.String(),
   websiteUrl: Type.String(),
   description: Type.String(),
