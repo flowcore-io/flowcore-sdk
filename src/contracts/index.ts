@@ -13,7 +13,7 @@ export type {
 } from "./event-type.ts"
 export type { FlowType } from "./flow-type.ts"
 export type { FlowcoreEvent, IngestEventInput } from "./event.ts"
-export type { Tenant } from "./tenant.ts"
+export type { Tenant, TenantPreview } from "./tenant.ts"
 export type { Permission } from "./permission.ts"
 export type {
   LegacyScenario,
