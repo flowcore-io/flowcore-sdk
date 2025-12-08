@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.63.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.62.0...v1.63.0) (2025-12-08)
+
+
+### Features
+
+* add tenant preview command and schema for public tenant previews ([0dd4c3d](https://github.com/flowcore-io/flowcore-sdk/commit/0dd4c3d2ba8a8c7d1945e5ebb4bf66d0b6f6f89a))
+* add tenant preview command and schema for public tenant previews ([af4af60](https://github.com/flowcore-io/flowcore-sdk/commit/af4af60f31a11ae38eb32c3cc49138c8cdf96d09))
+
+
+### Bug Fixes
+
+* specify type for TenantPreviewSchema in tenant contract ([416e7b9](https://github.com/flowcore-io/flowcore-sdk/commit/416e7b93430888c1f150f636be531b7f1436bcb2))
+
 ## [1.62.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.61.0...v1.62.0) (2025-12-05)
 
 
