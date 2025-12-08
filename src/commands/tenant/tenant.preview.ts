@@ -55,4 +55,3 @@ export class TenantPreviewCommand extends Command<TenantPreviewInput, TenantPrev
     throw error
   }
 }
-
