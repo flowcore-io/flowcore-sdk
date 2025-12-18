@@ -85,6 +85,9 @@ export * from "./security/pat.get.ts"
 export * from "./security/pat.list.ts"
 export * from "./security/permissions.list.ts"
 
+// User
+export * from "./user/user.initialize-in-keycloak.ts"
+
 // Scenario
 export * from "./scenario/scenario.create.ts"
 export * from "./scenario/scenario.delete.ts"
