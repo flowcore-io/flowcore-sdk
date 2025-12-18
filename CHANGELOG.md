@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.64.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.63.0...v1.64.0) (2025-12-18)
+
+
+### Features
+
+* add user initialization command for Keycloak with corresponding tests ([f265bf4](https://github.com/flowcore-io/flowcore-sdk/commit/f265bf464e17bb9a7747235672bf42f33992092c))
+* add user initialization command for Keycloak with corresponding… ([c3809f2](https://github.com/flowcore-io/flowcore-sdk/commit/c3809f2eb1872ade87ab8fea1562aeac9606af41))
+
 ## [1.63.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.62.0...v1.63.0) (2025-12-08)
 
 
