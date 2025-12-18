@@ -3,11 +3,9 @@ import { InvalidResponseException } from "../../exceptions/invalid-response.ts"
 
 /**
  * The input for initializing user in Keycloak
+ * No input parameters needed - checks current authenticated user
  */
-export interface UserInitializeInKeycloakInput {
-  /** Optional user identifier */
-  userId?: string
-}
+export type UserInitializeInKeycloakInput = Record<PropertyKey, never>
 
 /**
  * The output for initializing user in Keycloak
