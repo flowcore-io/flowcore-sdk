@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.64.2](https://github.com/flowcore-io/flowcore-sdk/compare/v1.64.1...v1.64.2) (2025-12-18)
+
+
+### Bug Fixes
+
+* supporting blacksmith ([5d6984a](https://github.com/flowcore-io/flowcore-sdk/commit/5d6984a7401199697b8fc3d7a468d2ec91803d1b))
+
 ## [1.64.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.64.0...v1.64.1) (2025-12-18)
 
 
