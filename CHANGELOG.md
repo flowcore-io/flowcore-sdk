@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.64.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.64.0...v1.64.1) (2025-12-18)
+
+
+### Bug Fixes
+
+* adjusted the build pipeline ([13f567b](https://github.com/flowcore-io/flowcore-sdk/commit/13f567b423fbf14c57ce5c7ab19b1bf4e2a7846e))
+
 ## [1.64.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.63.0...v1.64.0) (2025-12-18)
 
 
