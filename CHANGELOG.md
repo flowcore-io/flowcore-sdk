@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.64.3](https://github.com/flowcore-io/flowcore-sdk/compare/v1.64.2...v1.64.3) (2025-12-19)
+
+
+### Bug Fixes
+
+* include user ID in Keycloak initialization query ([c6c3f11](https://github.com/flowcore-io/flowcore-sdk/commit/c6c3f1181068a3c1fbd8164e890c3d00df1f5d4c))
+* include user ID in Keycloak initialization query ([6e11cdf](https://github.com/flowcore-io/flowcore-sdk/commit/6e11cdfa2784f4cac0a32b6ea7ce5c265d733747))
+* update user initialization to include user ID in response structure ([4bbb1ad](https://github.com/flowcore-io/flowcore-sdk/commit/4bbb1ad1c4e61969db0c3cef43da15215c658411))
+
 ## [1.64.2](https://github.com/flowcore-io/flowcore-sdk/compare/v1.64.1...v1.64.2) (2025-12-18)
 
 
