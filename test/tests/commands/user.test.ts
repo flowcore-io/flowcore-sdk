@@ -18,13 +18,15 @@ describe("User", () => {
   describe("UserInitializeInKeycloakCommand", () => {
     it("should return initialized true when user exists", async () => {
       // arrange
-      const userData = { id: "user123", email: "user@example.com" }
+      const userData = { id: "user123" }
 
       fetchMockerBuilder.post("/graphql")
         .matchBody({
           query: `
 query UserIsInitializedIfDoesNotExist {
-  me
+  me {
+    id
+  }
 }
 `,
           variables: {},
@@ -50,7 +52,9 @@ query UserIsInitializedIfDoesNotExist {
         .matchBody({
           query: `
 query UserIsInitializedIfDoesNotExist {
-  me
+  me {
+    id
+  }
 }
 `,
           variables: {},
@@ -76,7 +80,9 @@ query UserIsInitializedIfDoesNotExist {
         .matchBody({
           query: `
 query UserIsInitializedIfDoesNotExist {
-  me
+  me {
+    id
+  }
 }
 `,
           variables: {},

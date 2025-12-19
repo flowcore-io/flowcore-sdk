@@ -48,7 +48,9 @@ export class UserInitializeInKeycloakCommand extends GraphQlCommand<
   protected override parseResponse(rawResponse: unknown): UserInitializeInKeycloakOutput {
     const response = rawResponse as {
       data?: {
-        me?: unknown
+        me?: {
+          id: string
+        } | null
       }
       errors?: Array<{ message: string }>
     }
