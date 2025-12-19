@@ -19,7 +19,9 @@ export interface UserInitializeInKeycloakOutput {
 
 const QUERY = `
 query UserIsInitializedIfDoesNotExist {
-  me
+  me {
+    id
+  }
 }
 `
 
