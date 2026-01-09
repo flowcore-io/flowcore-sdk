@@ -1,14 +1,8 @@
 import { Type } from "@sinclair/typebox"
 import { Command } from "../../common/command.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
+import type { Static } from "@sinclair/typebox"
 
-export interface UserInitializeInKeycloakMe {
-  id: string
-  username: string
-  email: string
-  firstName: string
-  lastName: string
-}
 
 /**
  * The input for initializing user in Keycloak
@@ -20,7 +14,7 @@ export type UserInitializeInKeycloakInput = Record<PropertyKey, never>
  * The output for initializing user in Keycloak
  * (matches the REST API response)
  */
-export type UserInitializeInKeycloakOutput = UserInitializeInKeycloakMe
+export type UserInitializeInKeycloakOutput = Static<typeof responseSchema>
 
 const responseSchema = Type.Object({
   id: Type.String(),
