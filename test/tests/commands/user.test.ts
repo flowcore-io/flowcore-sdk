@@ -6,7 +6,7 @@ import { FetchMocker } from "../../fixtures/fetch.fixture.ts"
 describe("User", () => {
   const fetchMocker = new FetchMocker()
   const flowcoreClient = new FlowcoreClient({ getBearerToken: () => "BEARER_TOKEN" })
-  const fetchMockerBuilder = fetchMocker.mock("https://graph.api.flowcore.io")
+  const fetchMockerBuilder = fetchMocker.mock("https://user-2.api.flowcore.io")
 
   afterEach(() => {
     fetchMocker.assert()
@@ -16,88 +16,56 @@ describe("User", () => {
   })
 
   describe("UserInitializeInKeycloakCommand", () => {
-    it("should return initialized true when user exists", async () => {
+    it("should POST /api/users with an empty body and return user", async () => {
       // arrange
-      const userData = { id: "user123" }
+      const userData = {
+        id: "user123",
+        username: "user123",
+        email: "user123@example.com",
+        firstName: "User",
+        lastName: "Test",
+      }
 
-      fetchMockerBuilder.post("/graphql")
-        .matchBody({
-          query: `
-query UserIsInitializedIfDoesNotExist {
-  me {
-    id
-  }
-}
-`,
-          variables: {},
+      fetchMockerBuilder.post("/api/users")
+        .matchHeaders({
+          Authorization: "Bearer BEARER_TOKEN",
+          "Content-Type": "application/json",
         })
-        .respondWith(200, {
-          data: {
-            me: userData,
-          },
-        })
+        .matchBody({})
+        .respondWith(200, userData)
 
       // act
       const command = new UserInitializeInKeycloakCommand({})
       const response = await flowcoreClient.execute(command)
 
       // assert
-      assertEquals(response.isInitialized, true)
-      assertEquals(response.me, userData)
+      assertEquals(response, userData)
     })
 
-    it("should return initialized false when user does not exist", async () => {
+    it("should return the user response", async () => {
       // arrange
-      fetchMockerBuilder.post("/graphql")
-        .matchBody({
-          query: `
-query UserIsInitializedIfDoesNotExist {
-  me {
-    id
-  }
-}
-`,
-          variables: {},
+      const userData = {
+        id: "user123",
+        username: "user123",
+        email: "user123@example.com",
+        firstName: "User",
+        lastName: "Test",
+      }
+
+      fetchMockerBuilder.post("/api/users")
+        .matchHeaders({
+          Authorization: "Bearer BEARER_TOKEN",
+          "Content-Type": "application/json",
         })
-        .respondWith(200, {
-          data: {
-            me: null,
-          },
-        })
+        .matchBody({})
+        .respondWith(200, userData)
 
       // act
       const command = new UserInitializeInKeycloakCommand({})
       const response = await flowcoreClient.execute(command)
 
       // assert
-      assertEquals(response.isInitialized, false)
-      assertEquals(response.me, null)
-    })
-
-    it("should handle undefined me response", async () => {
-      // arrange
-      fetchMockerBuilder.post("/graphql")
-        .matchBody({
-          query: `
-query UserIsInitializedIfDoesNotExist {
-  me {
-    id
-  }
-}
-`,
-          variables: {},
-        })
-        .respondWith(200, {
-          data: {},
-        })
-
-      // act
-      const command = new UserInitializeInKeycloakCommand({})
-      const response = await flowcoreClient.execute(command)
-
-      // assert
-      assertEquals(response.isInitialized, false)
-      assertEquals(response.me, undefined)
+      assertEquals(response, userData)
     })
   })
 })
