@@ -3,7 +3,6 @@ import { Command } from "../../common/command.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 import type { Static } from "@sinclair/typebox"
 
-
 /**
  * The input for initializing user in Keycloak
  * No input parameters needed - checks current authenticated user
