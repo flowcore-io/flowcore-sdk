@@ -1,7 +1,7 @@
 import { Type } from "@sinclair/typebox"
 import { Command } from "../../common/command.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
-import type { Static } from "@sinclair/typebox"
+import type { Static, TObject, TString } from "@sinclair/typebox"
 
 /**
  * The input for initializing user in Keycloak
@@ -15,7 +15,13 @@ export type UserInitializeInKeycloakInput = Record<PropertyKey, never>
  */
 export type UserInitializeInKeycloakOutput = Static<typeof responseSchema>
 
-const responseSchema = Type.Object({
+const responseSchema: TObject<{
+  id: TString
+  username: TString
+  email: TString
+  firstName: TString
+  lastName: TString
+}> = Type.Object({
   id: Type.String(),
   username: Type.String(),
   email: Type.String(),
