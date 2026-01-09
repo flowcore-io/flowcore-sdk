@@ -1,5 +1,7 @@
-import { GraphQlCommand } from "../../common/command-graphql.ts"
-import { InvalidResponseException } from "../../exceptions/invalid-response.ts"
+import { Type } from "@sinclair/typebox"
+import { Command } from "../../common/command.ts"
+import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
+import type { Static, TObject, TString } from "@sinclair/typebox"
 
 /**
  * The input for initializing user in Keycloak
@@ -9,36 +11,66 @@ export type UserInitializeInKeycloakInput = Record<PropertyKey, never>
 
 /**
  * The output for initializing user in Keycloak
+ * (matches the REST API response)
  */
-export interface UserInitializeInKeycloakOutput {
-  /** Whether the user is initialized */
-  isInitialized: boolean
-  /** User data if available */
-  me?: unknown
-}
+export type UserInitializeInKeycloakOutput = Static<typeof responseSchema>
 
-const QUERY = `
-query UserIsInitializedIfDoesNotExist {
-  me {
-    id
-  }
-}
-`
+const responseSchema: TObject<{
+  id: TString
+  username: TString
+  email: TString
+  firstName: TString
+  lastName: TString
+}> = Type.Object({
+  id: Type.String(),
+  username: Type.String(),
+  email: Type.String(),
+  firstName: Type.String(),
+  lastName: Type.String(),
+})
 
 /**
- * Initialize user in Keycloak - checks if user exists and is initialized
+ * Finalize user initialization by setting Flowcore User ID in Keycloak.
+ *
+ * Calls `POST /api/users` on the user service with an empty JSON body.
+ * Requires a bearer token.
  */
-export class UserInitializeInKeycloakCommand extends GraphQlCommand<
+export class UserInitializeInKeycloakCommand extends Command<
   UserInitializeInKeycloakInput,
   UserInitializeInKeycloakOutput
 > {
   /**
-   * Get the body for the request
+   * The allowed modes for the command
+   */
+  protected override allowedModes: ("apiKey" | "bearer")[] = ["bearer"]
+
+  /**
+   * Get the base URL for the request
+   */
+  protected override getBaseUrl(): string {
+    return "https://user-2.api.flowcore.io"
+  }
+
+  /**
+   * Get the method
+   */
+  protected override getMethod(): string {
+    return "POST"
+  }
+
+  /**
+   * Get the path for the request
+   */
+  protected override getPath(): string {
+    return "/api/users"
+  }
+
+  /**
+   * Get the body for the request (must be an empty JSON object)
    */
   protected override getBody(): Record<string, unknown> {
     return {
-      query: QUERY,
-      variables: {},
+      // intentionally empty
     }
   }
 
@@ -46,28 +78,7 @@ export class UserInitializeInKeycloakCommand extends GraphQlCommand<
    * Parse the response
    */
   protected override parseResponse(rawResponse: unknown): UserInitializeInKeycloakOutput {
-    const response = rawResponse as {
-      data?: {
-        me?: {
-          id: string
-        } | null
-      }
-      errors?: Array<{ message: string }>
-    }
-
-    if (response.errors && response.errors.length > 0) {
-      throw new InvalidResponseException(
-        response.errors.map((e) => e.message).join(", "),
-        { graphql: response.errors.map((e) => e.message).join(", ") },
-      )
-    }
-
-    // If me exists and is not null i.e. flowcore_user_id is not null, user is initialized
-    const isInitialized = response.data?.me !== null && response.data?.me !== undefined
-
-    return {
-      isInitialized,
-      me: response.data?.me,
-    }
+    const response = parseResponseHelper(responseSchema, rawResponse)
+    return response
   }
 }
