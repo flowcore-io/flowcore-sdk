@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.65.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.64.3...v1.65.0) (2026-01-09)
+
+
+### Features
+
+* update UserInitializeInKeycloakCommand to use new response stru… ([361d377](https://github.com/flowcore-io/flowcore-sdk/commit/361d37741c34ea2207ca9c9dc4431fb389df8ce6))
+* update UserInitializeInKeycloakCommand to use new response structure and API endpoint ([0aa16a4](https://github.com/flowcore-io/flowcore-sdk/commit/0aa16a498c8ed20db881e1d227d5681410a9dfef))
+
 ## [1.64.3](https://github.com/flowcore-io/flowcore-sdk/compare/v1.64.2...v1.64.3) (2025-12-19)
 
 
