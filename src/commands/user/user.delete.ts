@@ -4,7 +4,7 @@ import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 import type { Static, TObject, TString } from "@sinclair/typebox"
 
 /**
- * The input for initializing user in Keycloak
+ * The input for deleting the current authenticated user
  * No input parameters needed - checks current authenticated user
  */
 export type UserDeleteInput = Record<PropertyKey, never>
