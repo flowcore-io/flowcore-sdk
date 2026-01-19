@@ -1,6 +1,6 @@
 import { assertEquals } from "@std/assert"
 import { afterAll, afterEach, describe, it } from "@std/testing/bdd"
-import { FlowcoreClient, UserInitializeInKeycloakCommand } from "../../../src/mod.ts"
+import { FlowcoreClient, UserDeleteCommand, UserInitializeInKeycloakCommand } from "../../../src/mod.ts"
 import { FetchMocker } from "../../fixtures/fetch.fixture.ts"
 
 describe("User", () => {
@@ -66,6 +66,28 @@ describe("User", () => {
 
       // assert
       assertEquals(response, userData)
+    })
+  })
+
+  describe("UserDeleteCommand", () => {
+    it("should DELETE /api/users with an empty body and return id", async () => {
+      // arrange
+      const responseData = { id: "user123" }
+
+      fetchMockerBuilder.delete("/api/users")
+        .matchHeaders({
+          Authorization: "Bearer BEARER_TOKEN",
+          "Content-Type": "application/json",
+        })
+        .matchBody({})
+        .respondWith(200, responseData)
+
+      // act
+      const command = new UserDeleteCommand({})
+      const response = await flowcoreClient.execute(command)
+
+      // assert
+      assertEquals(response, responseData)
     })
   })
 })
