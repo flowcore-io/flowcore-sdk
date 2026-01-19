@@ -70,11 +70,11 @@ describe("User", () => {
   })
 
   describe("UserDeleteCommand", () => {
-    it("should DELETE /api/users/ with an empty body and return id", async () => {
+    it("should DELETE /api/users with an empty body and return id", async () => {
       // arrange
       const responseData = { id: "user123" }
 
-      fetchMockerBuilder.delete("/api/users/")
+      fetchMockerBuilder.delete("/api/users")
         .matchHeaders({
           Authorization: "Bearer BEARER_TOKEN",
           "Content-Type": "application/json",
