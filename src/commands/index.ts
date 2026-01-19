@@ -87,6 +87,7 @@ export * from "./security/permissions.list.ts"
 
 // User
 export * from "./user/user.initialize-in-keycloak.ts"
+export * from "./user/user.delete.ts"
 export * from "./user/user.invite-to-tenant.ts"
 
 // Scenario
