@@ -10,8 +10,7 @@ import type { Static, TObject, TString } from "@sinclair/typebox"
 export type UserDeleteInput = Record<PropertyKey, never>
 
 /**
- * The output for initializing user in Keycloak
- * (matches the REST API response)
+ * The output for deleting the current authenticated user
  */
 export type UserDeleteOutput = Static<typeof responseSchema>
 
