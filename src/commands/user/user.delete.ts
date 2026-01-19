@@ -50,7 +50,7 @@ export class UserDeleteCommand extends Command<
    * Get the path for the request
    */
   protected override getPath(): string {
-    return `/api/users/`
+    return `/api/users`
   }
 
   /**
