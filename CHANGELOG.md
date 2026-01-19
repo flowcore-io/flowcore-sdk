@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.66.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.65.0...v1.66.0) (2026-01-19)
+
+
+### Features
+
+* add UserDeleteCommand and corresponding tests for user deletion functionality ([85fc50e](https://github.com/flowcore-io/flowcore-sdk/commit/85fc50ed90d5df49267ae0b25ab171bcae5117b3))
+* add UserDeleteCommand to handle deletion of the authenticated user ([a674ef8](https://github.com/flowcore-io/flowcore-sdk/commit/a674ef8a59bec94917dd8aefc6f31431afa9ffb2))
+* add UserDeleteCommand to handle deletion of the authenticated user ([96c931b](https://github.com/flowcore-io/flowcore-sdk/commit/96c931b3ff0d16be6b157f0f09f9fb5fffb7d6ab))
+
+
+### Bug Fixes
+
+* remove trailing slash from user deletion API endpoint and update corresponding test ([b1c1ea4](https://github.com/flowcore-io/flowcore-sdk/commit/b1c1ea467218ab97d2b4c6263ebe14eabe0eb94f))
+* update UserDeleteInput type description to clarify it represents the input for deleting the current authenticated user ([2f092dd](https://github.com/flowcore-io/flowcore-sdk/commit/2f092ddb96ea7cdbf88b4862453dbb0508e381c6))
+* update UserDeleteOutput type description to clarify it represents the output for deleting the authenticated user ([4c5ac23](https://github.com/flowcore-io/flowcore-sdk/commit/4c5ac23d29b178cbce56e75e60ca728db8a42598))
+
 ## [1.65.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.64.3...v1.65.0) (2026-01-09)
 
 
