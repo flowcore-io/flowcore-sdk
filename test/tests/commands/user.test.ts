@@ -1,10 +1,6 @@
 import { assertEquals } from "@std/assert"
 import { afterAll, afterEach, describe, it } from "@std/testing/bdd"
-import {
-  FlowcoreClient,
-  UserInitializeInKeycloakCommand,
-  UserInviteToTenantCommand,
-} from "../../../src/mod.ts"
+import { FlowcoreClient, UserInitializeInKeycloakCommand, UserInviteToTenantCommand } from "../../../src/mod.ts"
 import { FetchMocker } from "../../fixtures/fetch.fixture.ts"
 
 describe("User", () => {
