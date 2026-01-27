@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.67.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.66.0...v1.67.0) (2026-01-27)
+
+
+### Features
+
+* add UserInviteToTenantCommand to invite existing users to a tenant ([1d013a1](https://github.com/flowcore-io/flowcore-sdk/commit/1d013a1b2c35d3aeb46d709dd99961ff83076191))
+* add UserInviteToTenantCommand to invite existing users to a tenant ([4220e32](https://github.com/flowcore-io/flowcore-sdk/commit/4220e32d78dc4b1e730e7fbcbee37c3a2f3f6e1e))
+
+
+### Bug Fixes
+
+* remove duplicate command ([000a93d](https://github.com/flowcore-io/flowcore-sdk/commit/000a93df9fe2e53ef7ecf061c1fb5eaca81cb3d9))
+
 ## [1.66.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.65.0...v1.66.0) (2026-01-19)
 
 
