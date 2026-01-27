@@ -1,6 +1,11 @@
 import { assertEquals } from "@std/assert"
 import { afterAll, afterEach, describe, it } from "@std/testing/bdd"
-import { FlowcoreClient, UserDeleteCommand, UserInitializeInKeycloakCommand } from "../../../src/mod.ts"
+import {
+  FlowcoreClient,
+  UserDeleteCommand,
+  UserInitializeInKeycloakCommand,
+  UserInviteToTenantCommand,
+} from "../../../src/mod.ts"
 import { FetchMocker } from "../../fixtures/fetch.fixture.ts"
 
 describe("User", () => {
@@ -84,6 +89,38 @@ describe("User", () => {
 
       // act
       const command = new UserDeleteCommand({})
+      const response = await flowcoreClient.execute(command)
+
+      // assert
+      assertEquals(response, responseData)
+    })
+  })
+
+  describe("UserInviteToTenantCommand", () => {
+    it("should POST /api/users/invitations and return invitation response", async () => {
+      // arrange
+      const responseData = {
+        success: true,
+        tenantName: "acme",
+        invitedEmail: "invitee@example.com",
+      }
+
+      fetchMockerBuilder.post("/api/users/invitations")
+        .matchHeaders({
+          Authorization: "Bearer BEARER_TOKEN",
+          "Content-Type": "application/json",
+        })
+        .matchBody({
+          tenantName: "acme",
+          userEmail: "invitee@example.com",
+        })
+        .respondWith(200, responseData)
+
+      // act
+      const command = new UserInviteToTenantCommand({
+        tenantName: "acme",
+        userEmail: "invitee@example.com",
+      })
       const response = await flowcoreClient.execute(command)
 
       // assert
