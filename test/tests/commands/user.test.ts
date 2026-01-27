@@ -1,6 +1,10 @@
 import { assertEquals } from "@std/assert"
 import { afterAll, afterEach, describe, it } from "@std/testing/bdd"
-import { FlowcoreClient, UserInitializeInKeycloakCommand } from "../../../src/mod.ts"
+import {
+  FlowcoreClient,
+  UserInitializeInKeycloakCommand,
+  UserInviteToTenantCommand,
+} from "../../../src/mod.ts"
 import { FetchMocker } from "../../fixtures/fetch.fixture.ts"
 
 describe("User", () => {
@@ -66,6 +70,36 @@ describe("User", () => {
 
       // assert
       assertEquals(response, userData)
+    })
+  })
+
+  describe("UserInviteToTenantCommand", () => {
+    it("should POST /api/users/invitations and return invitation response", async () => {
+      // arrange
+      const requestBody = {
+        tenantName: "example-tenant",
+        userEmail: "user@example.com",
+      }
+      const responseData = {
+        success: true,
+        tenantName: requestBody.tenantName,
+        invitedEmail: requestBody.userEmail,
+      }
+
+      fetchMockerBuilder.post("/api/users/invitations")
+        .matchHeaders({
+          Authorization: "Bearer BEARER_TOKEN",
+          "Content-Type": "application/json",
+        })
+        .matchBody(requestBody)
+        .respondWith(200, responseData)
+
+      // act
+      const command = new UserInviteToTenantCommand(requestBody)
+      const response = await flowcoreClient.execute(command)
+
+      // assert
+      assertEquals(response, responseData)
     })
   })
 })
