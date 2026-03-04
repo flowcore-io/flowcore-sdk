@@ -1,4 +1,4 @@
-import { ClientError } from "../exceptions/client-error.ts"
+import type { ClientError } from "../exceptions/client-error.ts"
 import { CommandError } from "../exceptions/command-error.ts"
 import type { FlowcoreClient } from "./flowcore-client.ts"
 import { tenantCache } from "./tenant.cache.ts"

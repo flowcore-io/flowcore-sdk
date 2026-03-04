@@ -148,7 +148,16 @@ export type TenantPreview = Static<typeof TenantPreviewSchema>
 /**
  * The schema for a tenant instance
  */
-export const TenantInstanceSchema = Type.Object({
+export const TenantInstanceSchema: TObject<{
+  isDedicated: TBoolean
+  instance: TUnion<[
+    TNull,
+    TObject<{
+      status: TString
+      domain: TString
+    }>,
+  ]>
+}> = Type.Object({
   isDedicated: Type.Boolean(),
   instance: Type.Union([
     Type.Null(),
