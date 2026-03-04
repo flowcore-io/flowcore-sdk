@@ -1,7 +1,6 @@
 import { Type } from "@sinclair/typebox"
 import { assertEquals, assertRejects } from "@std/assert"
 import { afterAll, afterEach, describe, it } from "@std/testing/bdd"
-import type { Tenant } from "../../../src/contracts/tenant.ts"
 import { Command, CommandError, FlowcoreClient, InvalidResponseException } from "../../../src/mod.ts"
 import { parseResponseHelper } from "../../../src/utils/parse-response-helper.ts"
 import { FetchMocker } from "../../fixtures/fetch.fixture.ts"
@@ -66,18 +65,13 @@ describe("FlowcoreCommand", () => {
     // act
     const command = new CommandWithDedicatedSubdomain({ tenant: "test" })
 
-    fetchMockerBuilderTenant.get("/api/v1/tenants/by-name/test")
+    fetchMockerBuilderTenant.get("/api/v1/tenants/by-name/test/instance")
       .respondWith(
         200,
         {
-          id: "test",
-          name: "test",
-          displayName: "test",
-          description: "test",
-          websiteUrl: "https://test.com",
           isDedicated: false,
-          dedicated: null,
-        } satisfies Tenant,
+          instance: null,
+        },
       )
 
     fetchMocker.mock("https://test-command.api.flowcore.io").get("/test").respondWith(200, {
@@ -97,25 +91,16 @@ describe("FlowcoreCommand", () => {
     // act
     const command = new CommandWithDedicatedSubdomain({ tenant: "test" })
 
-    fetchMockerBuilderTenant.get("/api/v1/tenants/by-name/test")
+    fetchMockerBuilderTenant.get("/api/v1/tenants/by-name/test/instance")
       .respondWith(
         200,
         {
-          id: "test",
-          name: "test",
-          displayName: "test",
-          description: "test",
-          websiteUrl: "https://test.com",
           isDedicated: true,
-          dedicated: {
-            configuration: {
-              domain: "dedicated.test.com",
-              configurationRepoUrl: "https://github.com/test/test",
-              configurationRepoCredentials: "test",
-            },
+          instance: {
             status: "ready",
+            domain: "dedicated.test.com",
           },
-        } satisfies Tenant,
+        },
       )
 
     fetchMocker.mock("https://test.dedicated.test.com").get("/test").respondWith(200, {
