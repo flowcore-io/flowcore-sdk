@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.68.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.67.0...v1.68.0) (2026-03-04)
+
+
+### Features
+
+* add TenantInstanceFetchCommand and fix dedicated URL resolution ([c9cb49b](https://github.com/flowcore-io/flowcore-sdk/commit/c9cb49b970198c5465771d8dbe895b0c40fcfa57))
+* add TenantInstanceFetchCommand and fix dedicated URL resolution ([f87338c](https://github.com/flowcore-io/flowcore-sdk/commit/f87338cd05b6bc97169655c495fca16bc9019338))
+
+
+### Bug Fixes
+
+* formatting - reorder imports for deno fmt ([b42610b](https://github.com/flowcore-io/flowcore-sdk/commit/b42610b93365e7207eba3a136f4bf6467cd6ba32))
+* lint errors - add explicit type annotation and fix import type ([7ba55c2](https://github.com/flowcore-io/flowcore-sdk/commit/7ba55c2427b7daac93e42e53cb98f3f40ca27812))
+
 ## [1.67.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.66.0...v1.67.0) (2026-01-27)
 
 
