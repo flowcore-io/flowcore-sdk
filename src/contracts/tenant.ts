@@ -44,7 +44,7 @@ export const TenantSchema: TObject<{
       configuration: TObject<{
         domain: TString
         configurationRepoUrl: TString
-        configurationRepoCredentials: TString
+        configurationRepoCredentials: TUnion<[TString, TNull]>
       }>
     }>,
   ]>
@@ -67,7 +67,7 @@ export const TenantSchema: TObject<{
       configuration: Type.Object({
         domain: Type.String(),
         configurationRepoUrl: Type.String(),
-        configurationRepoCredentials: Type.String(),
+        configurationRepoCredentials: Type.Union([Type.String(), Type.Null()]),
       }),
     }),
   ]),
@@ -144,3 +144,31 @@ export const TenantPreviewSchema: TObject = Type.Object({
  * The type for a public tenant preview
  */
 export type TenantPreview = Static<typeof TenantPreviewSchema>
+
+/**
+ * The schema for a tenant instance
+ */
+export const TenantInstanceSchema: TObject<{
+  isDedicated: TBoolean
+  instance: TUnion<[
+    TNull,
+    TObject<{
+      status: TString
+      domain: TString
+    }>,
+  ]>
+}> = Type.Object({
+  isDedicated: Type.Boolean(),
+  instance: Type.Union([
+    Type.Null(),
+    Type.Object({
+      status: Type.String(),
+      domain: Type.String(),
+    }),
+  ]),
+})
+
+/**
+ * The type for a tenant instance
+ */
+export type TenantInstance = Static<typeof TenantInstanceSchema>

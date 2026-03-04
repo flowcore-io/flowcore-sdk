@@ -1,5 +1,4 @@
-import type { Tenant } from "../contracts/tenant.ts"
-import { ClientError } from "../exceptions/client-error.ts"
+import type { ClientError } from "../exceptions/client-error.ts"
 import { CommandError } from "../exceptions/command-error.ts"
 import type { FlowcoreClient } from "./flowcore-client.ts"
 import { tenantCache } from "./tenant.cache.ts"
@@ -70,19 +69,10 @@ export abstract class Command<Input, Output> {
     let tenant = tenantCache.get(inputTenant)
 
     if (!tenant) {
-      // Dynamically import TenantFetchCommand only when needed
-      const { TenantFetchCommand } = await import("../commands/tenant/tenant.fetch.ts")
+      // Dynamically import TenantInstanceFetchCommand only when needed
+      const { TenantInstanceFetchCommand } = await import("../commands/tenant/tenant-instance.fetch.ts")
 
-      tenant = await client.execute(new TenantFetchCommand({ tenant: inputTenant }))
-        .catch((error) => {
-          if (error instanceof ClientError && error.status === 403) {
-            return {
-              isDedicated: false,
-              dedicated: null,
-            } as unknown as Tenant // Cast needed as we are not returning the full Tenant shape
-          }
-          throw error
-        })
+      tenant = await client.execute(new TenantInstanceFetchCommand({ tenant: inputTenant }))
       tenantCache.set(inputTenant, tenant)
     }
 
@@ -90,11 +80,11 @@ export abstract class Command<Input, Output> {
       return null
     }
 
-    if (!tenant.dedicated?.configuration.domain) {
+    if (!tenant.instance?.domain) {
       throw new CommandError(this.constructor.name, `Tenant ${inputTenant} does not have a dedicated domain configured`)
     }
 
-    return `https://${this.dedicatedSubdomain}.${tenant.dedicated.configuration.domain}`
+    return `https://${this.dedicatedSubdomain}.${tenant.instance.domain}`
   }
 
   /**

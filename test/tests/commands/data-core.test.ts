@@ -1,7 +1,6 @@
 import { assertEquals, assertRejects } from "@std/assert"
 import { afterAll, afterEach, describe, it } from "@std/testing/bdd"
 import { tenantCache } from "../../../src/common/tenant.cache.ts"
-import type { Tenant } from "../../../src/contracts/tenant.ts"
 import {
   type DataCore,
   DataCoreFetchCommand,
@@ -189,18 +188,13 @@ describe("DataCore", () => {
       isFlowcoreManaged: false,
     }
 
-    fetchMockerBuilderTenant.get(`/api/v1/tenants/by-name/${dataCore.tenant}`)
+    fetchMockerBuilderTenant.get(`/api/v1/tenants/by-name/${dataCore.tenant}/instance`)
       .respondWith(
         200,
         {
-          id: dataCore.tenantId,
-          name: dataCore.tenant,
-          displayName: dataCore.tenant,
-          description: dataCore.tenant,
-          websiteUrl: "https://test.com",
           isDedicated: false,
-          dedicated: null,
-        } satisfies Tenant,
+          instance: null,
+        },
       )
 
     fetchMockerBuilderDeleteManager.delete(`/api/v1/data-cores/${dataCore.id}/request-delete`)
@@ -238,18 +232,13 @@ describe("DataCore", () => {
       isFlowcoreManaged: false,
     }
 
-    fetchMockerBuilderTenant.get(`/api/v1/tenants/by-name/${dataCore.tenant}`)
+    fetchMockerBuilderTenant.get(`/api/v1/tenants/by-name/${dataCore.tenant}/instance`)
       .respondWith(
         200,
         {
-          id: dataCore.tenantId,
-          name: dataCore.tenant,
-          displayName: dataCore.tenant,
-          description: dataCore.tenant,
-          websiteUrl: "https://test.com",
           isDedicated: false,
-          dedicated: null,
-        } satisfies Tenant,
+          instance: null,
+        },
       )
 
     fetchMockerBuilderDeleteManager.delete(`/api/v1/data-cores/${dataCore.id}/request-delete`)

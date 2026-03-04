@@ -2,9 +2,9 @@ import { LocalCache } from "../utils/local-cache.ts"
 
 type DedicatedTenant = {
   isDedicated: boolean
-  dedicated: {
-    status: "ready" | "degraded" | "offline"
-    configuration: { domain: string }
+  instance: {
+    status: string
+    domain: string
   } | null
 }
 
