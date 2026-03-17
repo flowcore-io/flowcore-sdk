@@ -1,18 +1,46 @@
-import { type Static, Type } from "@sinclair/typebox"
+import {
+  type Static,
+  type TArray,
+  type TBoolean,
+  type TInteger,
+  type TLiteral,
+  type TNull,
+  type TNumber,
+  type TObject,
+  type TOptional,
+  type TRecord,
+  type TString,
+  type TUnion,
+  type TUnknown,
+  Type,
+} from "@sinclair/typebox"
 
 // ── Shared types ──
 
-const SizeClassEnum = Type.Union([Type.Literal("small"), Type.Literal("medium"), Type.Literal("high")])
+type TSizeClass = TUnion<[TLiteral<"small">, TLiteral<"medium">, TLiteral<"high">]>
+const SizeClassEnum: TSizeClass = Type.Union([Type.Literal("small"), Type.Literal("medium"), Type.Literal("high")])
 
+type TStringRecord = TRecord<TString, TString>
+type TUnknownRecord = TRecord<TString, TUnknown>
+type TNullableString = TUnion<[TString, TNull]>
 
 // ── Config building blocks ──
 
-const EndpointConfigSchema = Type.Object({
+type TEndpointConfig = TObject<{
+  url: TString
+  authHeaders: TOptional<TStringRecord>
+}>
+const EndpointConfigSchema: TEndpointConfig = Type.Object({
   url: Type.String(),
   authHeaders: Type.Optional(Type.Record(Type.String(), Type.String())),
 })
 
-const BackoffConfigSchema = Type.Optional(
+type TBackoffConfig = TOptional<TObject<{
+  initialMs: TOptional<TInteger>
+  maxMs: TOptional<TInteger>
+  multiplier: TOptional<TNumber>
+}>>
+const BackoffConfigSchema: TBackoffConfig = Type.Optional(
   Type.Object({
     initialMs: Type.Optional(Type.Integer()),
     maxMs: Type.Optional(Type.Integer()),
@@ -20,14 +48,27 @@ const BackoffConfigSchema = Type.Optional(
   }),
 )
 
-const TimeoutConfigSchema = Type.Optional(
+type TTimeoutConfig = TOptional<TObject<{
+  deliveryMs: TOptional<TInteger>
+  fetchMs: TOptional<TInteger>
+}>>
+const TimeoutConfigSchema: TTimeoutConfig = Type.Optional(
   Type.Object({
     deliveryMs: Type.Optional(Type.Integer()),
     fetchMs: Type.Optional(Type.Integer()),
   }),
 )
 
-const SourceConfigSchema = Type.Object({
+type TSourceConfig = TObject<{
+  flowType: TString
+  eventTypes: TArray<TString>
+  endpoints: TArray<TEndpointConfig>
+  batchSize: TOptional<TInteger>
+  maxInFlight: TOptional<TInteger>
+  backoff: TBackoffConfig
+  timeouts: TTimeoutConfig
+}>
+const SourceConfigSchema: TSourceConfig = Type.Object({
   flowType: Type.String(),
   eventTypes: Type.Array(Type.String()),
   endpoints: Type.Array(EndpointConfigSchema),
@@ -37,23 +78,40 @@ const SourceConfigSchema = Type.Object({
   timeouts: TimeoutConfigSchema,
 })
 
-const DataSourceConfigSchema = Type.Object({
+type TDataSourceConfig = TObject<{
+  tenant: TString
+  dataCore: TString
+}>
+const DataSourceConfigSchema: TDataSourceConfig = Type.Object({
   tenant: Type.String(),
   dataCore: Type.String(),
 })
 
-const AuthConfigSchema = Type.Object({
+type TAuthConfig = TObject<{
+  apiKey: TString
+}>
+const AuthConfigSchema: TAuthConfig = Type.Object({
   apiKey: Type.String(),
 })
 
+type TPathwayConfig = TObject<{
+  sources: TArray<TSourceConfig>
+}>
+
+type TPumpConfig = TObject<{
+  sources: TArray<TSourceConfig>
+  dataSource: TDataSourceConfig
+  auth: TOptional<TAuthConfig>
+}>
+
 /** User-facing pathway config — what the API accepts on create/update */
-export const PathwayConfigSchema = Type.Object({
+export const PathwayConfigSchema: TPathwayConfig = Type.Object({
   sources: Type.Array(SourceConfigSchema),
 })
 export type PathwayConfig = Static<typeof PathwayConfigSchema>
 
 /** Rendered pump config — what the worker receives (CP injects dataSource + auth) */
-export const PumpConfigSchema = Type.Object({
+export const PumpConfigSchema: TPumpConfig = Type.Object({
   sources: Type.Array(SourceConfigSchema),
   dataSource: DataSourceConfigSchema,
   auth: Type.Optional(AuthConfigSchema),
@@ -62,7 +120,19 @@ export type PumpConfig = Static<typeof PumpConfigSchema>
 
 // ── Pathways ──
 
-export const DataPathwaySchema = Type.Object({
+export const DataPathwaySchema: TObject<{
+  id: TString
+  tenant: TString
+  dataCore: TString
+  sizeClass: TSizeClass
+  enabled: TBoolean
+  priority: TInteger
+  version: TInteger
+  labels: TStringRecord
+  config: TOptional<TPathwayConfig>
+  createdAt: TString
+  updatedAt: TString
+}> = Type.Object({
   id: Type.String(),
   tenant: Type.String(),
   dataCore: Type.String(),
@@ -77,13 +147,19 @@ export const DataPathwaySchema = Type.Object({
 })
 export type DataPathway = Static<typeof DataPathwaySchema>
 
-export const DataPathwayListSchema = Type.Object({
+export const DataPathwayListSchema: TObject<{
+  pathways: TArray<typeof DataPathwaySchema>
+  total: TInteger
+}> = Type.Object({
   pathways: Type.Array(DataPathwaySchema),
   total: Type.Integer(),
 })
 export type DataPathwayList = Static<typeof DataPathwayListSchema>
 
-export const DataPathwayMutationResponseSchema = Type.Object({
+export const DataPathwayMutationResponseSchema: TObject<{
+  pathwayId: TString
+  status: TString
+}> = Type.Object({
   pathwayId: Type.String(),
   status: Type.String(),
 })
@@ -91,7 +167,15 @@ export type DataPathwayMutationResponse = Static<typeof DataPathwayMutationRespo
 
 // ── Slots ──
 
-export const DataPathwaySlotSchema = Type.Object({
+export const DataPathwaySlotSchema: TObject<{
+  id: TString
+  podUnitId: TString
+  class: TSizeClass
+  labels: TStringRecord
+  lastSeen: TString
+  createdAt: TString
+  updatedAt: TString
+}> = Type.Object({
   id: Type.String(),
   podUnitId: Type.String(),
   class: SizeClassEnum,
@@ -102,13 +186,19 @@ export const DataPathwaySlotSchema = Type.Object({
 })
 export type DataPathwaySlot = Static<typeof DataPathwaySlotSchema>
 
-export const DataPathwaySlotListSchema = Type.Object({
+export const DataPathwaySlotListSchema: TObject<{
+  slots: TArray<typeof DataPathwaySlotSchema>
+  total: TInteger
+}> = Type.Object({
   slots: Type.Array(DataPathwaySlotSchema),
   total: Type.Integer(),
 })
 export type DataPathwaySlotList = Static<typeof DataPathwaySlotListSchema>
 
-export const DataPathwaySlotMutationResponseSchema = Type.Object({
+export const DataPathwaySlotMutationResponseSchema: TObject<{
+  slotId: TString
+  status: TString
+}> = Type.Object({
   slotId: Type.String(),
   status: Type.String(),
 })
@@ -116,7 +206,17 @@ export type DataPathwaySlotMutationResponse = Static<typeof DataPathwaySlotMutat
 
 // ── Assignments ──
 
-export const DataPathwayAssignmentSchema = Type.Object({
+export const DataPathwayAssignmentSchema: TObject<{
+  id: TString
+  pathwayId: TString
+  slotId: TString
+  generation: TInteger
+  leaseTTL: TString
+  status: TString
+  config: TPumpConfig
+  createdAt: TString
+  updatedAt: TString
+}> = Type.Object({
   id: Type.String(),
   pathwayId: Type.String(),
   slotId: Type.String(),
@@ -129,7 +229,16 @@ export const DataPathwayAssignmentSchema = Type.Object({
 })
 export type DataPathwayAssignment = Static<typeof DataPathwayAssignmentSchema>
 
-const AssignmentNextInnerSchema = Type.Object({
+type TAssignmentNextInner = TObject<{
+  assignmentId: TString
+  pathwayId: TString
+  slotId: TString
+  generation: TInteger
+  config: TPumpConfig
+  leaseTTL: TString
+  status: TString
+}>
+const AssignmentNextInnerSchema: TAssignmentNextInner = Type.Object({
   assignmentId: Type.String(),
   pathwayId: Type.String(),
   slotId: Type.String(),
@@ -139,25 +248,44 @@ const AssignmentNextInnerSchema = Type.Object({
   status: Type.String(),
 })
 
-export const DataPathwayAssignmentNextSchema = Type.Object({
+export const DataPathwayAssignmentNextSchema: TObject<{
+  assignment: TUnion<[TAssignmentNextInner, TNull]>
+}> = Type.Object({
   assignment: Type.Union([AssignmentNextInnerSchema, Type.Null()]),
 })
 export type DataPathwayAssignmentNext = Static<typeof DataPathwayAssignmentNextSchema>
 
-export const DataPathwayAssignmentListSchema = Type.Object({
+export const DataPathwayAssignmentListSchema: TObject<{
+  assignments: TArray<typeof DataPathwayAssignmentSchema>
+  total: TInteger
+}> = Type.Object({
   assignments: Type.Array(DataPathwayAssignmentSchema),
   total: Type.Integer(),
 })
 export type DataPathwayAssignmentList = Static<typeof DataPathwayAssignmentListSchema>
 
-export const DataPathwayExpireLeasesResponseSchema = Type.Object({
+export const DataPathwayExpireLeasesResponseSchema: TObject<{
+  expired: TInteger
+}> = Type.Object({
   expired: Type.Integer(),
 })
 export type DataPathwayExpireLeasesResponse = Static<typeof DataPathwayExpireLeasesResponseSchema>
 
 // ── Commands ──
 
-export const DataPathwayCommandSchema = Type.Object({
+export const DataPathwayCommandSchema: TObject<{
+  id: TString
+  restartRequestId: TNullableString
+  assignmentId: TString
+  type: TString
+  generation: TInteger
+  position: TUnion<[TUnknownRecord, TNull]>
+  stopAt: TNullableString
+  timeoutMs: TUnion<[TInteger, TNull]>
+  phase: TString
+  reason: TNullableString
+  createdAt: TString
+}> = Type.Object({
   id: Type.String(),
   restartRequestId: Type.Union([Type.String(), Type.Null()]),
   assignmentId: Type.String(),
@@ -172,12 +300,17 @@ export const DataPathwayCommandSchema = Type.Object({
 })
 export type DataPathwayCommand = Static<typeof DataPathwayCommandSchema>
 
-export const DataPathwayCommandListSchema = Type.Object({
+export const DataPathwayCommandListSchema: TObject<{
+  commands: TArray<typeof DataPathwayCommandSchema>
+}> = Type.Object({
   commands: Type.Array(DataPathwayCommandSchema),
 })
 export type DataPathwayCommandList = Static<typeof DataPathwayCommandListSchema>
 
-export const DataPathwayCommandResponseSchema = Type.Object({
+export const DataPathwayCommandResponseSchema: TObject<{
+  commandId: TString
+  phase: TString
+}> = Type.Object({
   commandId: Type.String(),
   phase: Type.String(),
 })
@@ -185,14 +318,28 @@ export type DataPathwayCommandResponse = Static<typeof DataPathwayCommandRespons
 
 // ── Restarts ──
 
-export const DataPathwayRestartRequestResponseSchema = Type.Object({
+export const DataPathwayRestartRequestResponseSchema: TObject<{
+  restartRequestId: TString
+  acceptedTargets: TArray<TString>
+  skippedTargets: TArray<TString>
+}> = Type.Object({
   restartRequestId: Type.String(),
   acceptedTargets: Type.Array(Type.String()),
   skippedTargets: Type.Array(Type.String()),
 })
 export type DataPathwayRestartRequestResponse = Static<typeof DataPathwayRestartRequestResponseSchema>
 
-export const DataPathwayRestartRequestSchema = Type.Object({
+export const DataPathwayRestartRequestSchema: TObject<{
+  id: TString
+  targets: TUnknownRecord
+  mode: TString
+  position: TUnknownRecord
+  status: TString
+  requestedBy: TString
+  reason: TNullableString
+  createdAt: TString
+  updatedAt: TString
+}> = Type.Object({
   id: Type.String(),
   targets: Type.Record(Type.String(), Type.Unknown()),
   mode: Type.String(),
@@ -207,18 +354,27 @@ export type DataPathwayRestartRequest = Static<typeof DataPathwayRestartRequestS
 
 // ── Capacity ──
 
-const SlotCountSchema = Type.Object({
+type TSlotCount = TObject<{ free: TInteger; used: TInteger }>
+const SlotCountSchema: TSlotCount = Type.Object({
   free: Type.Integer(),
   used: Type.Integer(),
 })
 
-const ThreeClassIntegersSchema = Type.Object({
+type TThreeClassIntegers = TObject<{ small: TInteger; medium: TInteger; high: TInteger }>
+const ThreeClassIntegersSchema: TThreeClassIntegers = Type.Object({
   small: Type.Integer(),
   medium: Type.Integer(),
   high: Type.Integer(),
 })
 
-export const DataPathwayCapacitySchema = Type.Object({
+export const DataPathwayCapacitySchema: TObject<{
+  slots: TObject<{
+    small: TSlotCount
+    medium: TSlotCount
+    high: TSlotCount
+  }>
+  pendingAssignments: TThreeClassIntegers
+}> = Type.Object({
   slots: Type.Object({
     small: SlotCountSchema,
     medium: SlotCountSchema,
@@ -230,7 +386,12 @@ export type DataPathwayCapacity = Static<typeof DataPathwayCapacitySchema>
 
 // ── Quotas ──
 
-export const DataPathwayQuotaSchema = Type.Object({
+export const DataPathwayQuotaSchema: TObject<{
+  tenant: TString
+  maxSlots: TThreeClassIntegers
+  createdAt: TString
+  updatedAt: TString
+}> = Type.Object({
   tenant: Type.String(),
   maxSlots: ThreeClassIntegersSchema,
   createdAt: Type.String(),
@@ -238,20 +399,30 @@ export const DataPathwayQuotaSchema = Type.Object({
 })
 export type DataPathwayQuota = Static<typeof DataPathwayQuotaSchema>
 
-export const DataPathwayQuotaWithUsageSchema = Type.Object({
+export const DataPathwayQuotaWithUsageSchema: TObject<{
+  tenant: TString
+  maxSlots: TThreeClassIntegers
+  used: TThreeClassIntegers
+}> = Type.Object({
   tenant: Type.String(),
   maxSlots: ThreeClassIntegersSchema,
   used: ThreeClassIntegersSchema,
 })
 export type DataPathwayQuotaWithUsage = Static<typeof DataPathwayQuotaWithUsageSchema>
 
-export const DataPathwayQuotaListSchema = Type.Object({
+export const DataPathwayQuotaListSchema: TObject<{
+  quotas: TArray<typeof DataPathwayQuotaSchema>
+  total: TInteger
+}> = Type.Object({
   quotas: Type.Array(DataPathwayQuotaSchema),
   total: Type.Integer(),
 })
 export type DataPathwayQuotaList = Static<typeof DataPathwayQuotaListSchema>
 
-export const DataPathwayQuotaSetResponseSchema = Type.Object({
+export const DataPathwayQuotaSetResponseSchema: TObject<{
+  tenant: TString
+  status: TString
+}> = Type.Object({
   tenant: Type.String(),
   status: Type.String(),
 })
@@ -259,18 +430,24 @@ export type DataPathwayQuotaSetResponse = Static<typeof DataPathwayQuotaSetRespo
 
 // ── Pump State ──
 
-const PumpStateValueSchema = Type.Object({
+type TPumpStateValue = TObject<{ timeBucket: TString; eventId: TOptional<TString> }>
+const PumpStateValueSchema: TPumpStateValue = Type.Object({
   timeBucket: Type.String(),
   eventId: Type.Optional(Type.String()),
 })
 
-export const DataPathwayPumpStateSchema = Type.Object({
+export const DataPathwayPumpStateSchema: TObject<{
+  assignmentId: TString
+  state: TUnion<[TPumpStateValue, TNull]>
+}> = Type.Object({
   assignmentId: Type.String(),
   state: Type.Union([PumpStateValueSchema, Type.Null()]),
 })
 export type DataPathwayPumpState = Static<typeof DataPathwayPumpStateSchema>
 
-export const DataPathwayPumpStateSaveResponseSchema = Type.Object({
+export const DataPathwayPumpStateSaveResponseSchema: TObject<{
+  status: TString
+}> = Type.Object({
   status: Type.String(),
 })
 export type DataPathwayPumpStateSaveResponse = Static<typeof DataPathwayPumpStateSaveResponseSchema>
