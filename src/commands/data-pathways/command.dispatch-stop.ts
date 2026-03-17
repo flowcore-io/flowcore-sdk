@@ -12,7 +12,8 @@ export interface DataPathwayCommandDispatchStopInput {
   timeoutMs?: number
 }
 
-export class DataPathwayCommandDispatchStopCommand extends Command<DataPathwayCommandDispatchStopInput, DataPathwayCommandResponse> {
+export class DataPathwayCommandDispatchStopCommand
+  extends Command<DataPathwayCommandDispatchStopInput, DataPathwayCommandResponse> {
   protected override retryOnFailure: boolean = false
   protected override allowedModes: ("apiKey" | "bearer")[] = ["bearer"]
 

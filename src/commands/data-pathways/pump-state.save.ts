@@ -1,5 +1,8 @@
 import { Command } from "../../common/command.ts"
-import { type DataPathwayPumpStateSaveResponse, DataPathwayPumpStateSaveResponseSchema } from "../../contracts/data-pathways.ts"
+import {
+  type DataPathwayPumpStateSaveResponse,
+  DataPathwayPumpStateSaveResponseSchema,
+} from "../../contracts/data-pathways.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 
 export interface DataPathwayPumpStateSaveInput {
@@ -10,7 +13,8 @@ export interface DataPathwayPumpStateSaveInput {
   }
 }
 
-export class DataPathwayPumpStateSaveCommand extends Command<DataPathwayPumpStateSaveInput, DataPathwayPumpStateSaveResponse> {
+export class DataPathwayPumpStateSaveCommand
+  extends Command<DataPathwayPumpStateSaveInput, DataPathwayPumpStateSaveResponse> {
   protected override retryOnFailure: boolean = false
   protected override allowedModes: ("apiKey" | "bearer")[] = ["apiKey"]
 

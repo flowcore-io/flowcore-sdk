@@ -1,10 +1,14 @@
 import { Command } from "../../common/command.ts"
-import { type DataPathwayExpireLeasesResponse, DataPathwayExpireLeasesResponseSchema } from "../../contracts/data-pathways.ts"
+import {
+  type DataPathwayExpireLeasesResponse,
+  DataPathwayExpireLeasesResponseSchema,
+} from "../../contracts/data-pathways.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 
 export type DataPathwayAssignmentExpireLeasesInput = Record<string, never>
 
-export class DataPathwayAssignmentExpireLeasesCommand extends Command<DataPathwayAssignmentExpireLeasesInput, DataPathwayExpireLeasesResponse> {
+export class DataPathwayAssignmentExpireLeasesCommand
+  extends Command<DataPathwayAssignmentExpireLeasesInput, DataPathwayExpireLeasesResponse> {
   protected override retryOnFailure: boolean = false
   protected override allowedModes: ("apiKey" | "bearer")[] = ["apiKey"]
 

@@ -7,7 +7,8 @@ export interface DataPathwayAssignmentNextInput {
   class: "small" | "medium" | "high"
 }
 
-export class DataPathwayAssignmentNextCommand extends Command<DataPathwayAssignmentNextInput, DataPathwayAssignmentNext> {
+export class DataPathwayAssignmentNextCommand
+  extends Command<DataPathwayAssignmentNextInput, DataPathwayAssignmentNext> {
   protected override retryOnFailure: boolean = false
   protected override allowedModes: ("apiKey" | "bearer")[] = ["apiKey"]
 

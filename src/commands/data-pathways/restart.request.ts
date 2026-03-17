@@ -1,5 +1,8 @@
 import { Command } from "../../common/command.ts"
-import { type DataPathwayRestartRequestResponse, DataPathwayRestartRequestResponseSchema } from "../../contracts/data-pathways.ts"
+import {
+  type DataPathwayRestartRequestResponse,
+  DataPathwayRestartRequestResponseSchema,
+} from "../../contracts/data-pathways.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 
 export interface DataPathwayRestartRequestInput {
@@ -22,7 +25,8 @@ export interface DataPathwayRestartRequestInput {
   reason?: string
 }
 
-export class DataPathwayRestartRequestCommand extends Command<DataPathwayRestartRequestInput, DataPathwayRestartRequestResponse> {
+export class DataPathwayRestartRequestCommand
+  extends Command<DataPathwayRestartRequestInput, DataPathwayRestartRequestResponse> {
   protected override retryOnFailure: boolean = false
   protected override allowedModes: ("apiKey" | "bearer")[] = ["bearer"]
 

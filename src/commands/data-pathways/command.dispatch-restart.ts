@@ -16,7 +16,8 @@ export interface DataPathwayCommandDispatchRestartInput {
   timeoutMs?: number
 }
 
-export class DataPathwayCommandDispatchRestartCommand extends Command<DataPathwayCommandDispatchRestartInput, DataPathwayCommandResponse> {
+export class DataPathwayCommandDispatchRestartCommand
+  extends Command<DataPathwayCommandDispatchRestartInput, DataPathwayCommandResponse> {
   protected override retryOnFailure: boolean = false
   protected override allowedModes: ("apiKey" | "bearer")[] = ["bearer"]
 

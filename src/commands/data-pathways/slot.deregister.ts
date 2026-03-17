@@ -1,5 +1,8 @@
 import { Command } from "../../common/command.ts"
-import { type DataPathwaySlotMutationResponse, DataPathwaySlotMutationResponseSchema } from "../../contracts/data-pathways.ts"
+import {
+  type DataPathwaySlotMutationResponse,
+  DataPathwaySlotMutationResponseSchema,
+} from "../../contracts/data-pathways.ts"
 import type { ClientError } from "../../exceptions/client-error.ts"
 import { NotFoundException } from "../../exceptions/not-found.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
@@ -9,7 +12,8 @@ export interface DataPathwaySlotDeregisterInput {
   reason?: string
 }
 
-export class DataPathwaySlotDeregisterCommand extends Command<DataPathwaySlotDeregisterInput, DataPathwaySlotMutationResponse> {
+export class DataPathwaySlotDeregisterCommand
+  extends Command<DataPathwaySlotDeregisterInput, DataPathwaySlotMutationResponse> {
   protected override retryOnFailure: boolean = false
   protected override allowedModes: ("apiKey" | "bearer")[] = ["apiKey"]
 

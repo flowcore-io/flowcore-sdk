@@ -1,5 +1,8 @@
 import { Command } from "../../common/command.ts"
-import { type DataPathwaySlotMutationResponse, DataPathwaySlotMutationResponseSchema } from "../../contracts/data-pathways.ts"
+import {
+  type DataPathwaySlotMutationResponse,
+  DataPathwaySlotMutationResponseSchema,
+} from "../../contracts/data-pathways.ts"
 import type { ClientError } from "../../exceptions/client-error.ts"
 import { NotFoundException } from "../../exceptions/not-found.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
@@ -8,7 +11,8 @@ export interface DataPathwaySlotHeartbeatInput {
   id: string
 }
 
-export class DataPathwaySlotHeartbeatCommand extends Command<DataPathwaySlotHeartbeatInput, DataPathwaySlotMutationResponse> {
+export class DataPathwaySlotHeartbeatCommand
+  extends Command<DataPathwaySlotHeartbeatInput, DataPathwaySlotMutationResponse> {
   protected override retryOnFailure: boolean = false
   protected override allowedModes: ("apiKey" | "bearer")[] = ["apiKey"]
 

@@ -10,7 +10,8 @@ export interface DataPathwayAssignmentListInput {
   offset?: number
 }
 
-export class DataPathwayAssignmentListCommand extends Command<DataPathwayAssignmentListInput, DataPathwayAssignmentList> {
+export class DataPathwayAssignmentListCommand
+  extends Command<DataPathwayAssignmentListInput, DataPathwayAssignmentList> {
   protected override allowedModes: ("apiKey" | "bearer")[] = ["bearer"]
 
   protected override getMethod(): string {

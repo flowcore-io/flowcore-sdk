@@ -1,5 +1,8 @@
 import { Command } from "../../common/command.ts"
-import { type DataPathwaySlotMutationResponse, DataPathwaySlotMutationResponseSchema } from "../../contracts/data-pathways.ts"
+import {
+  type DataPathwaySlotMutationResponse,
+  DataPathwaySlotMutationResponseSchema,
+} from "../../contracts/data-pathways.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 
 export interface DataPathwaySlotRegisterInput {
@@ -10,7 +13,8 @@ export interface DataPathwaySlotRegisterInput {
   labels?: Record<string, string>
 }
 
-export class DataPathwaySlotRegisterCommand extends Command<DataPathwaySlotRegisterInput, DataPathwaySlotMutationResponse> {
+export class DataPathwaySlotRegisterCommand
+  extends Command<DataPathwaySlotRegisterInput, DataPathwaySlotMutationResponse> {
   protected override retryOnFailure: boolean = false
   protected override allowedModes: ("apiKey" | "bearer")[] = ["apiKey"]
 

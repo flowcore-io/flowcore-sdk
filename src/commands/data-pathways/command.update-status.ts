@@ -11,7 +11,8 @@ export interface DataPathwayCommandUpdateStatusInput {
   details?: string
 }
 
-export class DataPathwayCommandUpdateStatusCommand extends Command<DataPathwayCommandUpdateStatusInput, DataPathwayCommandResponse> {
+export class DataPathwayCommandUpdateStatusCommand
+  extends Command<DataPathwayCommandUpdateStatusInput, DataPathwayCommandResponse> {
   protected override retryOnFailure: boolean = false
   protected override allowedModes: ("apiKey" | "bearer")[] = ["apiKey"]
 
@@ -34,7 +35,10 @@ export class DataPathwayCommandUpdateStatusCommand extends Command<DataPathwayCo
 
   protected override handleClientError(error: ClientError): void {
     if (error.status === 404) {
-      throw new NotFoundException("DataPathwayCommand", { assignmentId: this.input.assignmentId, commandId: this.input.commandId })
+      throw new NotFoundException("DataPathwayCommand", {
+        assignmentId: this.input.assignmentId,
+        commandId: this.input.commandId,
+      })
     }
     throw error
   }
