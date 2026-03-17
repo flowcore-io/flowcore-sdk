@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.70.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.69.1...v1.70.0) (2026-03-17)
+
+
+### Features
+
+* typed PathwayConfig and PumpConfig schemas for data-pathways ([8996804](https://github.com/flowcore-io/flowcore-sdk/commit/8996804a46aeffe1a588aeba0eeab2517e00ef13))
+
 ## [1.69.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.69.0...v1.69.1) (2026-03-17)
 
 
