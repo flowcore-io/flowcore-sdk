@@ -17,6 +17,10 @@ export class DataPathwayAssignmentHeartbeatCommand extends Command<DataPathwayAs
   protected override retryOnFailure: boolean = false
   protected override allowedModes: ("apiKey" | "bearer")[] = ["apiKey"]
 
+  protected override getMethod(): string {
+    return "POST"
+  }
+
   protected override getBaseUrl(): string {
     return "https://data-pathways.api.flowcore.io"
   }
