@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.69.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.68.0...v1.69.0) (2026-03-17)
+
+
+### Features
+
+* add Data Pathways SDK commands ([cd6633c](https://github.com/flowcore-io/flowcore-sdk/commit/cd6633c8afc92572039470d7ed7ee07f65d508f2))
+* add Data Pathways SDK commands ([e0e4f70](https://github.com/flowcore-io/flowcore-sdk/commit/e0e4f70ea181c727741342397c1a25ae28964de9))
+
+
+### Bug Fixes
+
+* add explicit getMethod() override to POST commands ([aa0127e](https://github.com/flowcore-io/flowcore-sdk/commit/aa0127e0a7dd8a864ba45bce85d2e266eabdbb16))
+* add explicit TypeBox type annotations for JSR no-slow-types lint ([a0182a9](https://github.com/flowcore-io/flowcore-sdk/commit/a0182a917f7dd5ac50d3fcbdb9e36972fe347d8e))
+* apply deno fmt formatting ([b0780ba](https://github.com/flowcore-io/flowcore-sdk/commit/b0780baaf49eb704d6f7568d5d6670980e227cc3))
+
 ## [1.68.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.67.0...v1.68.0) (2026-03-04)
 
 
