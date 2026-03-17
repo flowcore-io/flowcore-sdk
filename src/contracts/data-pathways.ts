@@ -35,11 +35,13 @@ const EndpointConfigSchema: TEndpointConfig = Type.Object({
   authHeaders: Type.Optional(Type.Record(Type.String(), Type.String())),
 })
 
-type TBackoffConfig = TOptional<TObject<{
-  initialMs: TOptional<TInteger>
-  maxMs: TOptional<TInteger>
-  multiplier: TOptional<TNumber>
-}>>
+type TBackoffConfig = TOptional<
+  TObject<{
+    initialMs: TOptional<TInteger>
+    maxMs: TOptional<TInteger>
+    multiplier: TOptional<TNumber>
+  }>
+>
 const BackoffConfigSchema: TBackoffConfig = Type.Optional(
   Type.Object({
     initialMs: Type.Optional(Type.Integer()),
@@ -48,10 +50,12 @@ const BackoffConfigSchema: TBackoffConfig = Type.Optional(
   }),
 )
 
-type TTimeoutConfig = TOptional<TObject<{
-  deliveryMs: TOptional<TInteger>
-  fetchMs: TOptional<TInteger>
-}>>
+type TTimeoutConfig = TOptional<
+  TObject<{
+    deliveryMs: TOptional<TInteger>
+    fetchMs: TOptional<TInteger>
+  }>
+>
 const TimeoutConfigSchema: TTimeoutConfig = Type.Optional(
   Type.Object({
     deliveryMs: Type.Optional(Type.Integer()),
