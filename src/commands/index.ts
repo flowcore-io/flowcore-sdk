@@ -105,6 +105,9 @@ export * from "./legacy-scenario/legacy-scenario.list.ts"
 export * from "./legacy-scenario/legacy-scenario-adapter.fetch-state.ts"
 export * from "./legacy-scenario/legacy-scenario-adapter.restart.ts"
 
+// Data Pathways
+export * from "./data-pathways/index.ts"
+
 // Identity and Access Management
 export * from "./iam/permissions/get-user-permissions.ts"
 
