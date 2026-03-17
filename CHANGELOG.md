@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.69.1](https://github.com/flowcore-io/flowcore-sdk/compare/v1.69.0...v1.69.1) (2026-03-17)
+
+
+### Bug Fixes
+
+* apply deno fmt to documentation files ([2c69a9c](https://github.com/flowcore-io/flowcore-sdk/commit/2c69a9c30ac9e9dc3ef45b7f4c31914eb7b0ae11))
+
 ## [1.69.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.68.0...v1.69.0) (2026-03-17)
 
 
