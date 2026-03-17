@@ -68,7 +68,15 @@ describe("DataPathways", () => {
       priority: 0,
       version: 1,
       labels: {},
-      config: {},
+      config: {
+        sources: [
+          {
+            flowType: "orders",
+            eventTypes: ["order.created"],
+            endpoints: [{ url: "https://example.com/webhook" }],
+          },
+        ],
+      },
       createdAt: "2025-01-01T00:00:00Z",
       updatedAt: "2025-01-01T00:00:00Z",
     }
@@ -186,13 +194,24 @@ describe("DataPathways", () => {
     const slotId = crypto.randomUUID()
     const assignmentId = crypto.randomUUID()
     const pathwayId = crypto.randomUUID()
+    const pumpConfig = {
+      sources: [
+        {
+          flowType: "orders",
+          eventTypes: ["order.created"],
+          endpoints: [{ url: "https://example.com/webhook" }],
+        },
+      ],
+      dataSource: { tenant: "t1", dataCore: "dc1" },
+      auth: { apiKey: "key-123" },
+    }
     const response = {
       assignment: {
         assignmentId,
         pathwayId,
         slotId,
         generation: 1,
-        config: {},
+        config: pumpConfig,
         leaseTTL: "2025-01-01T01:00:00Z",
         status: "active",
       },
@@ -270,7 +289,16 @@ describe("DataPathways", () => {
       generation: 1,
       leaseTTL: "2025-01-01T01:00:00Z",
       status: "active",
-      config: {},
+      config: {
+        sources: [
+          {
+            flowType: "orders",
+            eventTypes: ["order.created"],
+            endpoints: [{ url: "https://example.com/webhook" }],
+          },
+        ],
+        dataSource: { tenant: "t1", dataCore: "dc1" },
+      },
       createdAt: "2025-01-01T00:00:00Z",
       updatedAt: "2025-01-01T00:00:00Z",
     }

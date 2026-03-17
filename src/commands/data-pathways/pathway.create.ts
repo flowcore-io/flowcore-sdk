@@ -1,5 +1,9 @@
 import { Command } from "../../common/command.ts"
-import { type DataPathwayMutationResponse, DataPathwayMutationResponseSchema } from "../../contracts/data-pathways.ts"
+import {
+  type DataPathwayMutationResponse,
+  DataPathwayMutationResponseSchema,
+  type PathwayConfig,
+} from "../../contracts/data-pathways.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 
 export interface DataPathwayCreateInput {
@@ -11,7 +15,7 @@ export interface DataPathwayCreateInput {
   priority?: number
   version?: number
   labels?: Record<string, string>
-  config?: Record<string, unknown>
+  config?: PathwayConfig
 }
 
 export class DataPathwayCreateCommand extends Command<DataPathwayCreateInput, DataPathwayMutationResponse> {

@@ -5,6 +5,7 @@ import {
   type TInteger,
   type TLiteral,
   type TNull,
+  type TNumber,
   type TObject,
   type TOptional,
   type TRecord,
@@ -23,6 +24,104 @@ type TStringRecord = TRecord<TString, TString>
 type TUnknownRecord = TRecord<TString, TUnknown>
 type TNullableString = TUnion<[TString, TNull]>
 
+// ── Config building blocks ──
+
+type TEndpointConfig = TObject<{
+  url: TString
+  authHeaders: TOptional<TStringRecord>
+}>
+const EndpointConfigSchema: TEndpointConfig = Type.Object({
+  url: Type.String(),
+  authHeaders: Type.Optional(Type.Record(Type.String(), Type.String())),
+})
+
+type TBackoffConfig = TOptional<
+  TObject<{
+    initialMs: TOptional<TInteger>
+    maxMs: TOptional<TInteger>
+    multiplier: TOptional<TNumber>
+  }>
+>
+const BackoffConfigSchema: TBackoffConfig = Type.Optional(
+  Type.Object({
+    initialMs: Type.Optional(Type.Integer()),
+    maxMs: Type.Optional(Type.Integer()),
+    multiplier: Type.Optional(Type.Number()),
+  }),
+)
+
+type TTimeoutConfig = TOptional<
+  TObject<{
+    deliveryMs: TOptional<TInteger>
+    fetchMs: TOptional<TInteger>
+  }>
+>
+const TimeoutConfigSchema: TTimeoutConfig = Type.Optional(
+  Type.Object({
+    deliveryMs: Type.Optional(Type.Integer()),
+    fetchMs: Type.Optional(Type.Integer()),
+  }),
+)
+
+type TSourceConfig = TObject<{
+  flowType: TString
+  eventTypes: TArray<TString>
+  endpoints: TArray<TEndpointConfig>
+  batchSize: TOptional<TInteger>
+  maxInFlight: TOptional<TInteger>
+  backoff: TBackoffConfig
+  timeouts: TTimeoutConfig
+}>
+const SourceConfigSchema: TSourceConfig = Type.Object({
+  flowType: Type.String(),
+  eventTypes: Type.Array(Type.String()),
+  endpoints: Type.Array(EndpointConfigSchema),
+  batchSize: Type.Optional(Type.Integer()),
+  maxInFlight: Type.Optional(Type.Integer()),
+  backoff: BackoffConfigSchema,
+  timeouts: TimeoutConfigSchema,
+})
+
+type TDataSourceConfig = TObject<{
+  tenant: TString
+  dataCore: TString
+}>
+const DataSourceConfigSchema: TDataSourceConfig = Type.Object({
+  tenant: Type.String(),
+  dataCore: Type.String(),
+})
+
+type TAuthConfig = TObject<{
+  apiKey: TString
+}>
+const AuthConfigSchema: TAuthConfig = Type.Object({
+  apiKey: Type.String(),
+})
+
+type TPathwayConfig = TObject<{
+  sources: TArray<TSourceConfig>
+}>
+
+type TPumpConfig = TObject<{
+  sources: TArray<TSourceConfig>
+  dataSource: TDataSourceConfig
+  auth: TOptional<TAuthConfig>
+}>
+
+/** User-facing pathway config — what the API accepts on create/update */
+export const PathwayConfigSchema: TPathwayConfig = Type.Object({
+  sources: Type.Array(SourceConfigSchema),
+})
+export type PathwayConfig = Static<typeof PathwayConfigSchema>
+
+/** Rendered pump config — what the worker receives (CP injects dataSource + auth) */
+export const PumpConfigSchema: TPumpConfig = Type.Object({
+  sources: Type.Array(SourceConfigSchema),
+  dataSource: DataSourceConfigSchema,
+  auth: Type.Optional(AuthConfigSchema),
+})
+export type PumpConfig = Static<typeof PumpConfigSchema>
+
 // ── Pathways ──
 
 export const DataPathwaySchema: TObject<{
@@ -34,7 +133,7 @@ export const DataPathwaySchema: TObject<{
   priority: TInteger
   version: TInteger
   labels: TStringRecord
-  config: TUnknownRecord
+  config: TOptional<TPathwayConfig>
   createdAt: TString
   updatedAt: TString
 }> = Type.Object({
@@ -46,7 +145,7 @@ export const DataPathwaySchema: TObject<{
   priority: Type.Integer(),
   version: Type.Integer(),
   labels: Type.Record(Type.String(), Type.String()),
-  config: Type.Record(Type.String(), Type.Unknown()),
+  config: Type.Optional(PathwayConfigSchema),
   createdAt: Type.String(),
   updatedAt: Type.String(),
 })
@@ -118,7 +217,7 @@ export const DataPathwayAssignmentSchema: TObject<{
   generation: TInteger
   leaseTTL: TString
   status: TString
-  config: TUnknownRecord
+  config: TPumpConfig
   createdAt: TString
   updatedAt: TString
 }> = Type.Object({
@@ -128,7 +227,7 @@ export const DataPathwayAssignmentSchema: TObject<{
   generation: Type.Integer(),
   leaseTTL: Type.String(),
   status: Type.String(),
-  config: Type.Record(Type.String(), Type.Unknown()),
+  config: PumpConfigSchema,
   createdAt: Type.String(),
   updatedAt: Type.String(),
 })
@@ -139,7 +238,7 @@ type TAssignmentNextInner = TObject<{
   pathwayId: TString
   slotId: TString
   generation: TInteger
-  config: TUnknownRecord
+  config: TPumpConfig
   leaseTTL: TString
   status: TString
 }>
@@ -148,7 +247,7 @@ const AssignmentNextInnerSchema: TAssignmentNextInner = Type.Object({
   pathwayId: Type.String(),
   slotId: Type.String(),
   generation: Type.Integer(),
-  config: Type.Record(Type.String(), Type.Unknown()),
+  config: PumpConfigSchema,
   leaseTTL: Type.String(),
   status: Type.String(),
 })
@@ -266,7 +365,7 @@ const SlotCountSchema: TSlotCount = Type.Object({
 })
 
 type TThreeClassIntegers = TObject<{ small: TInteger; medium: TInteger; high: TInteger }>
-const PendingAssignmentsSchema: TThreeClassIntegers = Type.Object({
+const ThreeClassIntegersSchema: TThreeClassIntegers = Type.Object({
   small: Type.Integer(),
   medium: Type.Integer(),
   high: Type.Integer(),
@@ -285,17 +384,11 @@ export const DataPathwayCapacitySchema: TObject<{
     medium: SlotCountSchema,
     high: SlotCountSchema,
   }),
-  pendingAssignments: PendingAssignmentsSchema,
+  pendingAssignments: ThreeClassIntegersSchema,
 })
 export type DataPathwayCapacity = Static<typeof DataPathwayCapacitySchema>
 
 // ── Quotas ──
-
-const MaxSlotsSchema: TThreeClassIntegers = Type.Object({
-  small: Type.Integer(),
-  medium: Type.Integer(),
-  high: Type.Integer(),
-})
 
 export const DataPathwayQuotaSchema: TObject<{
   tenant: TString
@@ -304,7 +397,7 @@ export const DataPathwayQuotaSchema: TObject<{
   updatedAt: TString
 }> = Type.Object({
   tenant: Type.String(),
-  maxSlots: MaxSlotsSchema,
+  maxSlots: ThreeClassIntegersSchema,
   createdAt: Type.String(),
   updatedAt: Type.String(),
 })
@@ -316,8 +409,8 @@ export const DataPathwayQuotaWithUsageSchema: TObject<{
   used: TThreeClassIntegers
 }> = Type.Object({
   tenant: Type.String(),
-  maxSlots: MaxSlotsSchema,
-  used: MaxSlotsSchema,
+  maxSlots: ThreeClassIntegersSchema,
+  used: ThreeClassIntegersSchema,
 })
 export type DataPathwayQuotaWithUsage = Static<typeof DataPathwayQuotaWithUsageSchema>
 
