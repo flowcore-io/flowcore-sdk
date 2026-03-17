@@ -49,4 +49,6 @@ export type {
   DataPathwaySlot,
   DataPathwaySlotList,
   DataPathwaySlotMutationResponse,
+  PathwayConfig,
+  PumpConfig,
 } from "./data-pathways.ts"
