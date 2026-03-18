@@ -20,10 +20,6 @@ export class DataPathwayHealthCheckCommand extends Command<DataPathwayHealthChec
     return "/api/v1/health"
   }
 
-  protected override getBody(): Record<string, unknown> {
-    return {}
-  }
-
   protected override parseResponse(rawResponse: unknown): DataPathwayHealth {
     return parseResponseHelper(DataPathwayHealthSchema, rawResponse)
   }
