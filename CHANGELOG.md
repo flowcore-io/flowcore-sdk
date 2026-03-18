@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.71.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.70.0...v1.71.0) (2026-03-18)
+
+
+### Features
+
+* add data-pathways delete and health check commands ([#192](https://github.com/flowcore-io/flowcore-sdk/issues/192)) ([380a9bb](https://github.com/flowcore-io/flowcore-sdk/commit/380a9bbe0aeba178b470527eed3f01489617378c))
+
+
+### Bug Fixes
+
+* **ci:** exclude release-please manifest from deno fmt ([c74ff4c](https://github.com/flowcore-io/flowcore-sdk/commit/c74ff4c71d4a605eb856e1c0a1efb6e95f9a674e))
+* **ci:** move release-please config out of .github/workflows ([b8fb1eb](https://github.com/flowcore-io/flowcore-sdk/commit/b8fb1ebebf3fbb1690775e400c8ba90a8783e3b2))
+
 ## [1.70.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.69.1...v1.70.0) (2026-03-17)
 
 
