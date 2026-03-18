@@ -3,6 +3,7 @@ export * from "./pathway.create.ts"
 export * from "./pathway.fetch.ts"
 export * from "./pathway.list.ts"
 export * from "./pathway.disable.ts"
+export * from "./pathway.delete.ts"
 
 // Slots
 export * from "./slot.register.ts"
@@ -40,3 +41,6 @@ export * from "./quota.list.ts"
 // Pump State
 export * from "./pump-state.fetch.ts"
 export * from "./pump-state.save.ts"
+
+// Health
+export * from "./health.check.ts"

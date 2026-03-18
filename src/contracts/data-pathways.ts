@@ -455,3 +455,16 @@ export const DataPathwayPumpStateSaveResponseSchema: TObject<{
   status: Type.String(),
 })
 export type DataPathwayPumpStateSaveResponse = Static<typeof DataPathwayPumpStateSaveResponseSchema>
+
+// ── Health ──
+
+export const DataPathwayHealthSchema: TObject<{
+  status: TUnion<[TLiteral<"healthy">, TLiteral<"unhealthy">]>
+  checks: TObject<{ db: TUnion<[TLiteral<"ok">, TLiteral<"error">]> }>
+  uptime: TNumber
+}> = Type.Object({
+  status: Type.Union([Type.Literal("healthy"), Type.Literal("unhealthy")]),
+  checks: Type.Object({ db: Type.Union([Type.Literal("ok"), Type.Literal("error")]) }),
+  uptime: Type.Number(),
+})
+export type DataPathwayHealth = Static<typeof DataPathwayHealthSchema>
