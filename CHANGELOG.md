@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.74.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.73.0...v1.74.0) (2026-03-23)
+
+
+### Features
+
+* add DataPathwayMetricsFetchCommand and throughput metrics support ([feaeedd](https://github.com/flowcore-io/flowcore-sdk/commit/feaeedd6301bec394cc0fe11e7bc90f832fee14d))
+
 ## [1.73.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.72.0...v1.73.0) (2026-03-23)
 
 
