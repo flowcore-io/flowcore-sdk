@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.75.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.74.0...v1.75.0) (2026-03-23)
+
+
+### Features
+
+* add healthy flag and totals to throughput metrics schema ([88b214e](https://github.com/flowcore-io/flowcore-sdk/commit/88b214eb3df9e24deffe162a44467cd8cff38554))
+
 ## [1.74.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.73.0...v1.74.0) (2026-03-23)
 
 
