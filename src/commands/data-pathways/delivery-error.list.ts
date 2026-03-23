@@ -9,7 +9,8 @@ export interface DataPathwayDeliveryErrorListInput {
   sort?: "asc" | "desc"
 }
 
-export class DataPathwayDeliveryErrorListCommand extends Command<DataPathwayDeliveryErrorListInput, DataPathwayDeliveryErrorList> {
+export class DataPathwayDeliveryErrorListCommand
+  extends Command<DataPathwayDeliveryErrorListInput, DataPathwayDeliveryErrorList> {
   protected override allowedModes: ("apiKey" | "bearer")[] = ["bearer"]
 
   protected override getMethod(): string {
