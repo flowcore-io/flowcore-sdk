@@ -492,6 +492,86 @@ export const DataPathwayDeliveryErrorListSchema: TObject<{
 })
 export type DataPathwayDeliveryErrorList = Static<typeof DataPathwayDeliveryErrorListSchema>
 
+// ── Pathway Metrics ──
+
+type TThroughputRecentResult = TObject<{
+  status: TNumber
+  durationMs: TNumber
+  success: TBoolean
+  ageMs: TNumber
+}>
+const ThroughputRecentResultSchema: TThroughputRecentResult = Type.Object({
+  status: Type.Number(),
+  durationMs: Type.Number(),
+  success: Type.Boolean(),
+  ageMs: Type.Number(),
+})
+
+type TThroughputFlowType = TObject<{
+  eventsPerSecond: TNumber
+  successRate: TNumber
+  avgDurationMs: TNumber
+  recentResults: TArray<TThroughputRecentResult>
+}>
+const ThroughputFlowTypeSchema: TThroughputFlowType = Type.Object({
+  eventsPerSecond: Type.Number(),
+  successRate: Type.Number(),
+  avgDurationMs: Type.Number(),
+  recentResults: Type.Array(ThroughputRecentResultSchema),
+})
+
+type TThroughputEndpoint = TObject<{
+  eventsPerSecond: TNumber
+  successRate: TNumber
+  flowTypes: TRecord<TString, TThroughputFlowType>
+}>
+const ThroughputEndpointSchema: TThroughputEndpoint = Type.Object({
+  eventsPerSecond: Type.Number(),
+  successRate: Type.Number(),
+  flowTypes: Type.Record(Type.String(), ThroughputFlowTypeSchema),
+})
+
+type TThroughputGlobal = TObject<{
+  eventsPerSecond: TNumber
+  totalRecorded: TNumber
+  windowSeconds: TNumber
+}>
+
+type TThroughputSnapshot = TObject<{
+  global: TThroughputGlobal
+  endpoints: TRecord<TString, TThroughputEndpoint>
+}>
+const ThroughputSnapshotSchema: TThroughputSnapshot = Type.Object({
+  global: Type.Object({
+    eventsPerSecond: Type.Number(),
+    totalRecorded: Type.Number(),
+    windowSeconds: Type.Number(),
+  }),
+  endpoints: Type.Record(Type.String(), ThroughputEndpointSchema),
+})
+
+type TMetricsAssignmentEntry = TObject<{
+  assignmentId: TString
+  status: TString
+  throughput: TUnion<[TThroughputSnapshot, TNull]>
+  updatedAt: TString
+}>
+const MetricsAssignmentEntrySchema: TMetricsAssignmentEntry = Type.Object({
+  assignmentId: Type.String(),
+  status: Type.String(),
+  throughput: Type.Union([ThroughputSnapshotSchema, Type.Null()]),
+  updatedAt: Type.String(),
+})
+
+export const DataPathwayMetricsSchema: TObject<{
+  pathwayId: TString
+  assignments: TArray<TMetricsAssignmentEntry>
+}> = Type.Object({
+  pathwayId: Type.String(),
+  assignments: Type.Array(MetricsAssignmentEntrySchema),
+})
+export type DataPathwayMetrics = Static<typeof DataPathwayMetricsSchema>
+
 // ── Health ──
 
 export const DataPathwayHealthSchema: TObject<{

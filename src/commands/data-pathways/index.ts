@@ -4,6 +4,7 @@ export * from "./pathway.fetch.ts"
 export * from "./pathway.list.ts"
 export * from "./pathway.disable.ts"
 export * from "./pathway.delete.ts"
+export * from "./pathway.metrics.fetch.ts"
 
 // Slots
 export * from "./slot.register.ts"

@@ -10,6 +10,25 @@ export interface DataPathwayAssignmentHeartbeatInput {
     deliveryErrorsTotal?: number
     bufferDepth?: number
     lagSeconds?: number
+    throughput?: {
+      global: { eventsPerSecond: number; totalRecorded: number; windowSeconds: number }
+      endpoints: Record<
+        string,
+        {
+          eventsPerSecond: number
+          successRate: number
+          flowTypes: Record<
+            string,
+            {
+              eventsPerSecond: number
+              successRate: number
+              avgDurationMs: number
+              recentResults: Array<{ status: number; durationMs: number; success: boolean; ageMs: number }>
+            }
+          >
+        }
+      >
+    }
   }
 }
 
