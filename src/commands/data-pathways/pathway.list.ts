@@ -9,6 +9,7 @@ export interface DataPathwayListInput {
   priority?: number
   limit?: number
   offset?: number
+  sort?: "asc" | "desc"
 }
 
 export class DataPathwayListCommand extends Command<DataPathwayListInput, DataPathwayList> {
@@ -30,6 +31,7 @@ export class DataPathwayListCommand extends Command<DataPathwayListInput, DataPa
     if (this.input.priority !== undefined) queryParams.set("priority", String(this.input.priority))
     if (this.input.limit !== undefined) queryParams.set("limit", String(this.input.limit))
     if (this.input.offset !== undefined) queryParams.set("offset", String(this.input.offset))
+    if (this.input.sort) queryParams.set("sort", this.input.sort)
     const qs = queryParams.toString()
     return `/api/v1/pathways${qs ? `?${qs}` : ""}`
   }

@@ -8,6 +8,7 @@ export interface DataPathwayAssignmentListInput {
   pathwayId?: string
   limit?: number
   offset?: number
+  sort?: "asc" | "desc"
 }
 
 export class DataPathwayAssignmentListCommand
@@ -29,6 +30,7 @@ export class DataPathwayAssignmentListCommand
     if (this.input.pathwayId) queryParams.set("pathwayId", this.input.pathwayId)
     if (this.input.limit !== undefined) queryParams.set("limit", String(this.input.limit))
     if (this.input.offset !== undefined) queryParams.set("offset", String(this.input.offset))
+    if (this.input.sort) queryParams.set("sort", this.input.sort)
     const qs = queryParams.toString()
     return `/api/v1/assignments${qs ? `?${qs}` : ""}`
   }
