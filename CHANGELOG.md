@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.73.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.72.0...v1.73.0) (2026-03-23)
+
+
+### Features
+
+* add DataPathwayDeliveryErrorListCommand for querying delivery errors ([e934336](https://github.com/flowcore-io/flowcore-sdk/commit/e934336d9cff3e2561a268dd8842af638ae3e27d))
+
 ## [1.72.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.71.0...v1.72.0) (2026-03-23)
 
 
