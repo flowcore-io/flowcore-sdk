@@ -507,27 +507,45 @@ const ThroughputRecentResultSchema: TThroughputRecentResult = Type.Object({
   ageMs: Type.Number(),
 })
 
+type TNullableNumber = TUnion<[TNumber, TNull]>
+
 type TThroughputFlowType = TObject<{
   eventsPerSecond: TNumber
   successRate: TNumber
   avgDurationMs: TNumber
+  totalDelivered: TNumber
+  totalFailed: TNumber
+  lastDeliveryAgeMs: TNullableNumber
+  healthy: TBoolean
   recentResults: TArray<TThroughputRecentResult>
 }>
 const ThroughputFlowTypeSchema: TThroughputFlowType = Type.Object({
   eventsPerSecond: Type.Number(),
   successRate: Type.Number(),
   avgDurationMs: Type.Number(),
+  totalDelivered: Type.Number(),
+  totalFailed: Type.Number(),
+  lastDeliveryAgeMs: Type.Union([Type.Number(), Type.Null()]),
+  healthy: Type.Boolean(),
   recentResults: Type.Array(ThroughputRecentResultSchema),
 })
 
 type TThroughputEndpoint = TObject<{
   eventsPerSecond: TNumber
   successRate: TNumber
+  totalDelivered: TNumber
+  totalFailed: TNumber
+  lastDeliveryAgeMs: TNullableNumber
+  healthy: TBoolean
   flowTypes: TRecord<TString, TThroughputFlowType>
 }>
 const ThroughputEndpointSchema: TThroughputEndpoint = Type.Object({
   eventsPerSecond: Type.Number(),
   successRate: Type.Number(),
+  totalDelivered: Type.Number(),
+  totalFailed: Type.Number(),
+  lastDeliveryAgeMs: Type.Union([Type.Number(), Type.Null()]),
+  healthy: Type.Boolean(),
   flowTypes: Type.Record(Type.String(), ThroughputFlowTypeSchema),
 })
 

@@ -17,12 +17,20 @@ export interface DataPathwayAssignmentHeartbeatInput {
         {
           eventsPerSecond: number
           successRate: number
+          totalDelivered: number
+          totalFailed: number
+          lastDeliveryAgeMs: number | null
+          healthy: boolean
           flowTypes: Record<
             string,
             {
               eventsPerSecond: number
               successRate: number
               avgDurationMs: number
+              totalDelivered: number
+              totalFailed: number
+              lastDeliveryAgeMs: number | null
+              healthy: boolean
               recentResults: Array<{ status: number; durationMs: number; success: boolean; ageMs: number }>
             }
           >
