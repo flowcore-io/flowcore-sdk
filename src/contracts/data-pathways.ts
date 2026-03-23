@@ -456,6 +456,42 @@ export const DataPathwayPumpStateSaveResponseSchema: TObject<{
 })
 export type DataPathwayPumpStateSaveResponse = Static<typeof DataPathwayPumpStateSaveResponseSchema>
 
+// ── Delivery Errors ──
+
+export const DataPathwayDeliveryErrorEntrySchema: TObject<{
+  id: TString
+  pathwayId: TString
+  assignmentId: TString
+  endpointUrl: TString
+  httpStatus: TUnion<[TInteger, TNull]>
+  errorMessage: TString
+  responseBody: TUnion<[TString, TNull]>
+  flowType: TUnion<[TString, TNull]>
+  batchSize: TUnion<[TInteger, TNull]>
+  createdAt: TString
+}> = Type.Object({
+  id: Type.String(),
+  pathwayId: Type.String(),
+  assignmentId: Type.String(),
+  endpointUrl: Type.String(),
+  httpStatus: Type.Union([Type.Integer(), Type.Null()]),
+  errorMessage: Type.String(),
+  responseBody: Type.Union([Type.String(), Type.Null()]),
+  flowType: Type.Union([Type.String(), Type.Null()]),
+  batchSize: Type.Union([Type.Integer(), Type.Null()]),
+  createdAt: Type.String(),
+})
+export type DataPathwayDeliveryErrorEntry = Static<typeof DataPathwayDeliveryErrorEntrySchema>
+
+export const DataPathwayDeliveryErrorListSchema: TObject<{
+  errors: TArray<typeof DataPathwayDeliveryErrorEntrySchema>
+  total: TInteger
+}> = Type.Object({
+  errors: Type.Array(DataPathwayDeliveryErrorEntrySchema),
+  total: Type.Integer(),
+})
+export type DataPathwayDeliveryErrorList = Static<typeof DataPathwayDeliveryErrorListSchema>
+
 // ── Health ──
 
 export const DataPathwayHealthSchema: TObject<{

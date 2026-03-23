@@ -42,5 +42,8 @@ export * from "./quota.list.ts"
 export * from "./pump-state.fetch.ts"
 export * from "./pump-state.save.ts"
 
+// Delivery Errors
+export * from "./delivery-error.list.ts"
+
 // Health
 export * from "./health.check.ts"
