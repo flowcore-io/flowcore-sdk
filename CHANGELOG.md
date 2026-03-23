@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.72.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.71.0...v1.72.0) (2026-03-23)
+
+
+### Features
+
+* add sort param to data-pathways list commands ([13a5c36](https://github.com/flowcore-io/flowcore-sdk/commit/13a5c36093f784106e2d0bfb27f311843aec0d83))
+
 ## [1.71.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.70.0...v1.71.0) (2026-03-18)
 
 
