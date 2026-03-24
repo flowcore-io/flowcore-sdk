@@ -456,18 +456,20 @@ export const DataPathwayPumpStateSaveResponseSchema: TObject<{
 })
 export type DataPathwayPumpStateSaveResponse = Static<typeof DataPathwayPumpStateSaveResponseSchema>
 
-// ── Delivery Errors ──
+// ── Delivery Log ──
 
-export const DataPathwayDeliveryErrorEntrySchema: TObject<{
+export const DataPathwayDeliveryLogEntrySchema: TObject<{
   id: TString
   pathwayId: TString
   assignmentId: TString
   endpointUrl: TString
   httpStatus: TUnion<[TInteger, TNull]>
-  errorMessage: TString
+  success: TBoolean
+  batchSize: TUnion<[TInteger, TNull]>
+  durationMs: TUnion<[TInteger, TNull]>
+  errorMessage: TUnion<[TString, TNull]>
   responseBody: TUnion<[TString, TNull]>
   flowType: TUnion<[TString, TNull]>
-  batchSize: TUnion<[TInteger, TNull]>
   createdAt: TString
 }> = Type.Object({
   id: Type.String(),
@@ -475,22 +477,24 @@ export const DataPathwayDeliveryErrorEntrySchema: TObject<{
   assignmentId: Type.String(),
   endpointUrl: Type.String(),
   httpStatus: Type.Union([Type.Integer(), Type.Null()]),
-  errorMessage: Type.String(),
+  success: Type.Boolean(),
+  batchSize: Type.Union([Type.Integer(), Type.Null()]),
+  durationMs: Type.Union([Type.Integer(), Type.Null()]),
+  errorMessage: Type.Union([Type.String(), Type.Null()]),
   responseBody: Type.Union([Type.String(), Type.Null()]),
   flowType: Type.Union([Type.String(), Type.Null()]),
-  batchSize: Type.Union([Type.Integer(), Type.Null()]),
   createdAt: Type.String(),
 })
-export type DataPathwayDeliveryErrorEntry = Static<typeof DataPathwayDeliveryErrorEntrySchema>
+export type DataPathwayDeliveryLogEntry = Static<typeof DataPathwayDeliveryLogEntrySchema>
 
-export const DataPathwayDeliveryErrorListSchema: TObject<{
-  errors: TArray<typeof DataPathwayDeliveryErrorEntrySchema>
+export const DataPathwayDeliveryLogListSchema: TObject<{
+  entries: TArray<typeof DataPathwayDeliveryLogEntrySchema>
   total: TInteger
 }> = Type.Object({
-  errors: Type.Array(DataPathwayDeliveryErrorEntrySchema),
+  entries: Type.Array(DataPathwayDeliveryLogEntrySchema),
   total: Type.Integer(),
 })
-export type DataPathwayDeliveryErrorList = Static<typeof DataPathwayDeliveryErrorListSchema>
+export type DataPathwayDeliveryLogList = Static<typeof DataPathwayDeliveryLogListSchema>
 
 // ── Pathway Metrics ──
 
