@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.76.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.75.0...v1.76.0) (2026-03-24)
+
+
+### Features
+
+* rename delivery-error to delivery-log with success tracking ([bbf2879](https://github.com/flowcore-io/flowcore-sdk/commit/bbf2879d9bef5cbbedd2485bce652905e6b1f4b9))
+
 ## [1.75.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.74.0...v1.75.0) (2026-03-23)
 
 
