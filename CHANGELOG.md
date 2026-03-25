@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.77.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.76.0...v1.77.0) (2026-03-25)
+
+
+### Features
+
+* add virtual pathway support to data pathways SDK ([12b47bc](https://github.com/flowcore-io/flowcore-sdk/commit/12b47bc109b87d8669bb1c1b9baefec533875c1e))
+
 ## [1.76.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.75.0...v1.76.0) (2026-03-24)
 
 
