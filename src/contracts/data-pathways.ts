@@ -122,6 +122,23 @@ export const PumpConfigSchema: TPumpConfig = Type.Object({
 })
 export type PumpConfig = Static<typeof PumpConfigSchema>
 
+// ── Virtual pathway config ──
+
+type TPathwayType = TOptional<TUnion<[TLiteral<"managed">, TLiteral<"virtual">]>>
+const PathwayTypeSchema: TPathwayType = Type.Optional(Type.Union([Type.Literal("managed"), Type.Literal("virtual")]))
+
+type TVirtualConfig = TObject<{
+  resetUrl: TString
+  authHeaders: TOptional<TStringRecord>
+  flowTypes: TOptional<TArray<TString>>
+}>
+const VirtualConfigSchema: TVirtualConfig = Type.Object({
+  resetUrl: Type.String(),
+  authHeaders: Type.Optional(Type.Record(Type.String(), Type.String())),
+  flowTypes: Type.Optional(Type.Array(Type.String())),
+})
+export type VirtualConfig = Static<typeof VirtualConfigSchema>
+
 // ── Pathways ──
 
 export const DataPathwaySchema: TObject<{
@@ -129,11 +146,13 @@ export const DataPathwaySchema: TObject<{
   tenant: TString
   dataCore: TString
   sizeClass: TSizeClass
+  type: TPathwayType
   enabled: TBoolean
   priority: TInteger
   version: TInteger
   labels: TStringRecord
   config: TOptional<TPathwayConfig>
+  virtualConfig: TOptional<TVirtualConfig>
   createdAt: TString
   updatedAt: TString
 }> = Type.Object({
@@ -141,11 +160,13 @@ export const DataPathwaySchema: TObject<{
   tenant: Type.String(),
   dataCore: Type.String(),
   sizeClass: SizeClassEnum,
+  type: PathwayTypeSchema,
   enabled: Type.Boolean(),
   priority: Type.Integer(),
   version: Type.Integer(),
   labels: Type.Record(Type.String(), Type.String()),
   config: Type.Optional(PathwayConfigSchema),
+  virtualConfig: Type.Optional(VirtualConfigSchema),
   createdAt: Type.String(),
   updatedAt: Type.String(),
 })
@@ -322,14 +343,27 @@ export type DataPathwayCommandResponse = Static<typeof DataPathwayCommandRespons
 
 // ── Restarts ──
 
+type TVirtualResetResult = TObject<{
+  pathwayId: TString
+  success: TBoolean
+  httpStatus: TUnion<[TInteger, TNull]>
+}>
+const VirtualResetResultSchema: TVirtualResetResult = Type.Object({
+  pathwayId: Type.String(),
+  success: Type.Boolean(),
+  httpStatus: Type.Union([Type.Integer(), Type.Null()]),
+})
+
 export const DataPathwayRestartRequestResponseSchema: TObject<{
   restartRequestId: TString
   acceptedTargets: TArray<TString>
   skippedTargets: TArray<TString>
+  virtualResults: TOptional<TArray<TVirtualResetResult>>
 }> = Type.Object({
   restartRequestId: Type.String(),
   acceptedTargets: Type.Array(Type.String()),
   skippedTargets: Type.Array(Type.String()),
+  virtualResults: Type.Optional(Type.Array(VirtualResetResultSchema)),
 })
 export type DataPathwayRestartRequestResponse = Static<typeof DataPathwayRestartRequestResponseSchema>
 

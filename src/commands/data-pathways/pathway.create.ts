@@ -3,6 +3,7 @@ import {
   type DataPathwayMutationResponse,
   DataPathwayMutationResponseSchema,
   type PathwayConfig,
+  type VirtualConfig,
 } from "../../contracts/data-pathways.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 
@@ -16,6 +17,8 @@ export interface DataPathwayCreateInput {
   version?: number
   labels?: Record<string, string>
   config?: PathwayConfig
+  type?: "managed" | "virtual"
+  virtualConfig?: VirtualConfig
 }
 
 export class DataPathwayCreateCommand extends Command<DataPathwayCreateInput, DataPathwayMutationResponse> {

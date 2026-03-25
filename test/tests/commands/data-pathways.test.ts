@@ -57,6 +57,67 @@ describe("DataPathways", () => {
     assertEquals(result, response)
   })
 
+  it("should create a virtual pathway", async () => {
+    const id = crypto.randomUUID()
+    const response = { pathwayId: id, status: "created" }
+
+    base.put(`/api/v1/pathways/${id}`)
+      .matchBody({
+        tenant: "t1",
+        dataCore: "dc1",
+        sizeClass: "small",
+        type: "virtual",
+        virtualConfig: {
+          resetUrl: "https://example.com/reset",
+          authHeaders: { "x-secret": "abc" },
+          flowTypes: ["pathway.0", "restart.0"],
+        },
+      })
+      .respondWith(200, response)
+
+    const result = await bearerClient.execute(
+      new DataPathwayCreateCommand({
+        id,
+        tenant: "t1",
+        dataCore: "dc1",
+        sizeClass: "small",
+        type: "virtual",
+        virtualConfig: {
+          resetUrl: "https://example.com/reset",
+          authHeaders: { "x-secret": "abc" },
+          flowTypes: ["pathway.0", "restart.0"],
+        },
+      }),
+    )
+    assertEquals(result, response)
+  })
+
+  it("should fetch a virtual pathway with virtualConfig", async () => {
+    const id = crypto.randomUUID()
+    const pathway = {
+      id,
+      tenant: "t1",
+      dataCore: "dc1",
+      sizeClass: "small" as const,
+      type: "virtual" as const,
+      enabled: true,
+      priority: 0,
+      version: 1,
+      labels: {},
+      virtualConfig: {
+        resetUrl: "https://example.com/reset",
+        flowTypes: ["pathway.0"],
+      },
+      createdAt: "2025-01-01T00:00:00Z",
+      updatedAt: "2025-01-01T00:00:00Z",
+    }
+
+    base.get(`/api/v1/pathways/${id}`).respondWith(200, pathway)
+
+    const result = await bearerClient.execute(new DataPathwayFetchCommand({ id }))
+    assertEquals(result, pathway)
+  })
+
   it("should fetch a pathway", async () => {
     const id = crypto.randomUUID()
     const pathway = {
@@ -412,6 +473,36 @@ describe("DataPathways", () => {
     const result = await bearerClient.execute(
       new DataPathwayRestartRequestCommand({
         targets: { pathwayIds: ["pathway-1"] },
+        position: { timeBucket: "2025-01-01T00:00:00Z" },
+        requestedBy: "admin",
+      }),
+    )
+    assertEquals(result, response)
+  })
+
+  it("should request a restart with virtual results", async () => {
+    const restartRequestId = crypto.randomUUID()
+    const virtualPathwayId = crypto.randomUUID()
+    const response = {
+      restartRequestId,
+      acceptedTargets: [virtualPathwayId],
+      skippedTargets: [],
+      virtualResults: [
+        { pathwayId: virtualPathwayId, success: true, httpStatus: 200 },
+      ],
+    }
+
+    base.post("/api/v1/restarts/request")
+      .matchBody({
+        targets: { pathwayIds: [virtualPathwayId] },
+        position: { timeBucket: "2025-01-01T00:00:00Z" },
+        requestedBy: "admin",
+      })
+      .respondWith(200, response)
+
+    const result = await bearerClient.execute(
+      new DataPathwayRestartRequestCommand({
+        targets: { pathwayIds: [virtualPathwayId] },
         position: { timeBucket: "2025-01-01T00:00:00Z" },
         requestedBy: "admin",
       }),

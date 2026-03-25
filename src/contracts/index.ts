@@ -51,4 +51,5 @@ export type {
   DataPathwaySlotMutationResponse,
   PathwayConfig,
   PumpConfig,
+  VirtualConfig,
 } from "./data-pathways.ts"
