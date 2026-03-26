@@ -46,5 +46,9 @@ export * from "./pump-state.save.ts"
 // Delivery Log
 export * from "./delivery-log.list.ts"
 
+// Pump Pulse
+export * from "./pump-pulse.send.ts"
+export * from "./pump-status.fetch.ts"
+
 // Health
 export * from "./health.check.ts"

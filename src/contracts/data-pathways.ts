@@ -640,3 +640,45 @@ export const DataPathwayHealthSchema: TObject<{
   uptime: Type.Number(),
 })
 export type DataPathwayHealth = Static<typeof DataPathwayHealthSchema>
+
+// ── Pump Pulse ──
+
+export const DataPathwayPumpPulseResponseSchema = Type.Object({
+  status: Type.String(),
+})
+export type DataPathwayPumpPulseResponse = Static<typeof DataPathwayPumpPulseResponseSchema>
+
+const PumpPulseEntrySchema = Type.Object({
+  flowType: Type.String(),
+  timeBucket: Type.String(),
+  eventId: Type.Union([Type.String(), Type.Null()]),
+  isLive: Type.Boolean(),
+  buffer: Type.Object({
+    depth: Type.Number(),
+    reserved: Type.Number(),
+    sizeBytes: Type.Number(),
+  }),
+  counters: Type.Object({
+    acknowledged: Type.Number(),
+    failed: Type.Number(),
+    pulled: Type.Number(),
+  }),
+  uptimeMs: Type.Number(),
+  lastPulseAgeMs: Type.Number(),
+  healthy: Type.Boolean(),
+})
+
+const PumpStatusAssignmentSchema = Type.Object({
+  id: Type.String(),
+  status: Type.String(),
+  leaseRemainingMs: Type.Number(),
+  lastHeartbeatAgeMs: Type.Number(),
+  metrics: Type.Unknown(),
+})
+
+export const DataPathwayPumpStatusSchema = Type.Object({
+  pathwayId: Type.String(),
+  pulses: Type.Array(PumpPulseEntrySchema),
+  assignment: Type.Union([PumpStatusAssignmentSchema, Type.Null()]),
+})
+export type DataPathwayPumpStatus = Static<typeof DataPathwayPumpStatusSchema>
