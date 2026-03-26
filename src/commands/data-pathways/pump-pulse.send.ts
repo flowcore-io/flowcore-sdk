@@ -1,9 +1,6 @@
 import { Command } from "../../common/command.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
-import {
-  type DataPathwayPumpPulseResponse,
-  DataPathwayPumpPulseResponseSchema,
-} from "../../contracts/data-pathways.ts"
+import { type DataPathwayPumpPulseResponse, DataPathwayPumpPulseResponseSchema } from "../../contracts/data-pathways.ts"
 
 export interface SendPumpPulseInput {
   pathwayId: string
