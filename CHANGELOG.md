@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.78.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.77.0...v1.78.0) (2026-03-26)
+
+
+### Features
+
+* add pump pulse and pump status commands for data pathways ([a7c26c8](https://github.com/flowcore-io/flowcore-sdk/commit/a7c26c85160967744adbed6512d99c5a624753be))
+
+
+### Bug Fixes
+
+* add explicit type annotations for JSR public API compliance ([528d2cd](https://github.com/flowcore-io/flowcore-sdk/commit/528d2cd923cd4b200a5c91346f4ac3aedddb37f1))
+* format pump pulse/status command files ([5063949](https://github.com/flowcore-io/flowcore-sdk/commit/50639494e3dc5082b099736de27915ffc026d55e))
+* remove unused deno-lint-ignore directive in pump-status.fetch ([6766c16](https://github.com/flowcore-io/flowcore-sdk/commit/6766c16ae0d5f0b9add4f8d664d7b432abc9a976))
+
 ## [1.77.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.76.0...v1.77.0) (2026-03-25)
 
 
