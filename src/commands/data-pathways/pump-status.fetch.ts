@@ -27,7 +27,6 @@ export class FetchPumpStatusCommand extends Command<FetchPumpStatusInput, DataPa
     return `/api/v1/pathways/${this.input.pathwayId}/pump-status`
   }
 
-  // deno-lint-ignore no-unused-vars
   protected override getBody(): Record<string, unknown> | undefined {
     return undefined
   }
