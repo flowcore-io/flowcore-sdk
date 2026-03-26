@@ -643,7 +643,9 @@ export type DataPathwayHealth = Static<typeof DataPathwayHealthSchema>
 
 // ── Pump Pulse ──
 
-export const DataPathwayPumpPulseResponseSchema = Type.Object({
+export const DataPathwayPumpPulseResponseSchema: TObject<{
+  status: TString
+}> = Type.Object({
   status: Type.String(),
 })
 export type DataPathwayPumpPulseResponse = Static<typeof DataPathwayPumpPulseResponseSchema>
@@ -676,7 +678,7 @@ const PumpStatusAssignmentSchema = Type.Object({
   metrics: Type.Unknown(),
 })
 
-export const DataPathwayPumpStatusSchema = Type.Object({
+export const DataPathwayPumpStatusSchema: TObject = Type.Object({
   pathwayId: Type.String(),
   pulses: Type.Array(PumpPulseEntrySchema),
   assignment: Type.Union([PumpStatusAssignmentSchema, Type.Null()]),
