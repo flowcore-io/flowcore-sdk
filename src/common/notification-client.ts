@@ -65,7 +65,7 @@ interface NotificationClientAuthOptionsBearer {
 
 interface NotificationClientAuthOptionsApiKey {
   apiKey: string
-  apiKeyId: string
+  apiKeyId?: string
 }
 
 type NotificationClientAuthOptions =
@@ -150,10 +150,12 @@ export class NotificationClient {
     } else {
       flowcoreClient = new FlowcoreClient({
         apiKey: this.authOptions.apiKey,
-        apiKeyId: this.authOptions.apiKeyId,
+        ...(this.authOptions.apiKeyId ? { apiKeyId: this.authOptions.apiKeyId } : {}),
       })
       urlParams.set("api_key", this.authOptions.apiKey)
-      urlParams.set("api_key_id", this.authOptions.apiKeyId)
+      if (this.authOptions.apiKeyId) {
+        urlParams.set("api_key_id", this.authOptions.apiKeyId)
+      }
     }
 
     const dataCore = await flowcoreClient.execute(
