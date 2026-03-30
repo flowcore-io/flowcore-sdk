@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.79.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.78.0...v1.79.0) (2026-03-30)
+
+
+### Features
+
+* support fc_ API keys in notification client without apiKeyId ([#202](https://github.com/flowcore-io/flowcore-sdk/issues/202)) ([e01b868](https://github.com/flowcore-io/flowcore-sdk/commit/e01b86892d1b22d4c4ab08e28fbf99e7da3f325c))
+
 ## [1.78.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.77.0...v1.78.0) (2026-03-26)
 
 
