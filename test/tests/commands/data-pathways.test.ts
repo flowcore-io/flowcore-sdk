@@ -68,8 +68,6 @@ describe("DataPathways", () => {
         sizeClass: "small",
         type: "virtual",
         virtualConfig: {
-          resetUrl: "https://example.com/reset",
-          authHeaders: { "x-secret": "abc" },
           flowTypes: ["pathway.0", "restart.0"],
         },
       })
@@ -83,8 +81,6 @@ describe("DataPathways", () => {
         sizeClass: "small",
         type: "virtual",
         virtualConfig: {
-          resetUrl: "https://example.com/reset",
-          authHeaders: { "x-secret": "abc" },
           flowTypes: ["pathway.0", "restart.0"],
         },
       }),
@@ -105,7 +101,6 @@ describe("DataPathways", () => {
       version: 1,
       labels: {},
       virtualConfig: {
-        resetUrl: "https://example.com/reset",
         flowTypes: ["pathway.0"],
       },
       createdAt: "2025-01-01T00:00:00Z",
@@ -480,16 +475,13 @@ describe("DataPathways", () => {
     assertEquals(result, response)
   })
 
-  it("should request a restart with virtual results", async () => {
+  it("should request a restart targeting virtual pathway", async () => {
     const restartRequestId = crypto.randomUUID()
     const virtualPathwayId = crypto.randomUUID()
     const response = {
       restartRequestId,
       acceptedTargets: [virtualPathwayId],
       skippedTargets: [],
-      virtualResults: [
-        { pathwayId: virtualPathwayId, success: true, httpStatus: 200 },
-      ],
     }
 
     base.post("/api/v1/restarts/request")
