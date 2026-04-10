@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.79.0...v2.0.0) (2026-04-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* align VirtualConfig with data-pathways v2 poll-based command queue ([#204](https://github.com/flowcore-io/flowcore-sdk/issues/204))
+
+### Features
+
+* align VirtualConfig with data-pathways v2 poll-based command queue ([#204](https://github.com/flowcore-io/flowcore-sdk/issues/204)) ([1b6470d](https://github.com/flowcore-io/flowcore-sdk/commit/1b6470dff1f4c8987997a93e8a5fad21067f61d0))
+
 ## [1.79.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.78.0...v1.79.0) (2026-03-30)
 
 
