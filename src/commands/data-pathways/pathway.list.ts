@@ -5,6 +5,7 @@ import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 export interface DataPathwayListInput {
   tenant?: string
   sizeClass?: "small" | "medium" | "high"
+  type?: "managed" | "virtual"
   enabled?: boolean
   priority?: number
   limit?: number
@@ -27,6 +28,7 @@ export class DataPathwayListCommand extends Command<DataPathwayListInput, DataPa
     const queryParams = new URLSearchParams()
     if (this.input.tenant) queryParams.set("tenant", this.input.tenant)
     if (this.input.sizeClass) queryParams.set("sizeClass", this.input.sizeClass)
+    if (this.input.type) queryParams.set("type", this.input.type)
     if (this.input.enabled !== undefined) queryParams.set("enabled", String(this.input.enabled))
     if (this.input.priority !== undefined) queryParams.set("priority", String(this.input.priority))
     if (this.input.limit !== undefined) queryParams.set("limit", String(this.input.limit))

@@ -5,7 +5,8 @@ import { NotFoundException } from "../../exceptions/not-found.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 
 export interface DataPathwayPumpStateFetchInput {
-  assignmentId: string
+  pathwayId: string
+  flowType: string
 }
 
 export class DataPathwayPumpStateFetchCommand extends Command<DataPathwayPumpStateFetchInput, DataPathwayPumpState> {
@@ -20,7 +21,7 @@ export class DataPathwayPumpStateFetchCommand extends Command<DataPathwayPumpSta
   }
 
   protected override getPath(): string {
-    return `/api/v1/pump-states/${this.input.assignmentId}`
+    return `/api/v1/pump-states/${this.input.pathwayId}/${encodeURIComponent(this.input.flowType)}`
   }
 
   protected override parseResponse(rawResponse: unknown): DataPathwayPumpState {
@@ -29,7 +30,10 @@ export class DataPathwayPumpStateFetchCommand extends Command<DataPathwayPumpSta
 
   protected override handleClientError(error: ClientError): void {
     if (error.status === 404) {
-      throw new NotFoundException("DataPathwayPumpState", { assignmentId: this.input.assignmentId })
+      throw new NotFoundException("DataPathwayPumpState", {
+        pathwayId: this.input.pathwayId,
+        flowType: this.input.flowType,
+      })
     }
     throw error
   }

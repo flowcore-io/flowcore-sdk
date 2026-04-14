@@ -8,12 +8,18 @@ import {
   DataPathwayAssignmentListCommand,
   DataPathwayAssignmentNextCommand,
   DataPathwayCapacityFetchCommand,
+  DataPathwayCommandDispatchConfigUpdateCommand,
   DataPathwayCommandDispatchRestartCommand,
   DataPathwayCommandDispatchStopCommand,
+  DataPathwayCommandFetchCommand,
+  DataPathwayCommandPendingByPathwayCommand,
   DataPathwayCommandPendingCommand,
+  DataPathwayCommandUpdateStatusByPathwayCommand,
   DataPathwayCommandUpdateStatusCommand,
   DataPathwayCreateCommand,
+  DataPathwayDeliveryLogBatchCommand,
   DataPathwayDisableCommand,
+  DataPathwayFetchByNameCommand,
   DataPathwayFetchCommand,
   DataPathwayListCommand,
   DataPathwayPumpStateFetchCommand,
@@ -28,6 +34,7 @@ import {
   DataPathwaySlotHeartbeatCommand,
   DataPathwaySlotListCommand,
   DataPathwaySlotRegisterCommand,
+  DataPathwayUpsertByNameCommand,
   FlowcoreClient,
 } from "../../../src/mod.ts"
 import { FetchMocker } from "../../fixtures/fetch.fixture.ts"
@@ -582,33 +589,195 @@ describe("DataPathways", () => {
 
   // ── Pump State ──
 
-  it("should fetch pump state", async () => {
-    const assignmentId = crypto.randomUUID()
+  it("should fetch pump state by pathway + flowType", async () => {
+    const pathwayId = crypto.randomUUID()
+    const flowType = "data.0"
     const response = {
-      assignmentId,
+      pathwayId,
+      flowType,
       state: { timeBucket: "2025-01-01T00:00:00Z", eventId: "evt-1" },
     }
 
-    base.get(`/api/v1/pump-states/${assignmentId}`).respondWith(200, response)
+    base.get(`/api/v1/pump-states/${pathwayId}/${flowType}`).respondWith(200, response)
 
     const result = await apiKeyClient.execute(
-      new DataPathwayPumpStateFetchCommand({ assignmentId }),
+      new DataPathwayPumpStateFetchCommand({ pathwayId, flowType }),
     )
     assertEquals(result, response)
   })
 
-  it("should save pump state", async () => {
-    const assignmentId = crypto.randomUUID()
+  it("should save pump state by pathway + flowType", async () => {
+    const pathwayId = crypto.randomUUID()
+    const flowType = "data.0"
     const response = { status: "saved" }
 
-    base.post(`/api/v1/pump-states/${assignmentId}`)
+    base.post(`/api/v1/pump-states/${pathwayId}/${flowType}`)
       .matchBody({ state: { timeBucket: "2025-01-01T00:00:00Z" } })
       .respondWith(200, response)
 
     const result = await apiKeyClient.execute(
       new DataPathwayPumpStateSaveCommand({
-        assignmentId,
+        pathwayId,
+        flowType,
         state: { timeBucket: "2025-01-01T00:00:00Z" },
+      }),
+    )
+    assertEquals(result, response)
+  })
+
+  // ── Command Fetch (GET /api/v1/commands/:commandId) ──
+
+  it("should fetch a command by id", async () => {
+    const commandId = crypto.randomUUID()
+    const assignmentId = crypto.randomUUID()
+    const response = {
+      id: commandId,
+      restartRequestId: null,
+      assignmentId,
+      pathwayId: null,
+      type: "stop",
+      generation: 1,
+      position: null,
+      stopAt: null,
+      timeoutMs: null,
+      phase: "dispatched",
+      reason: "test stop",
+      details: null,
+      config: null,
+      sourceFlowTypes: null,
+      createdAt: "2025-01-01T00:00:00Z",
+      updatedAt: "2025-01-01T00:00:00Z",
+    }
+
+    base.get(`/api/v1/commands/${commandId}`).respondWith(200, response)
+
+    const result = await bearerClient.execute(
+      new DataPathwayCommandFetchCommand({ commandId }),
+    )
+    assertEquals(result, response)
+  })
+
+  // ── Commands: dispatch config update ──
+
+  it("should dispatch config update command", async () => {
+    const assignmentId = crypto.randomUUID()
+    const response = { commandId: crypto.randomUUID(), phase: "dispatched" }
+
+    base.post(`/api/v1/assignments/${assignmentId}/commands/config-update`)
+      .matchBody({ generation: 1, config: { foo: "bar" } })
+      .respondWith(200, response)
+
+    const result = await bearerClient.execute(
+      new DataPathwayCommandDispatchConfigUpdateCommand({
+        assignmentId,
+        generation: 1,
+        config: { foo: "bar" },
+      }),
+    )
+    assertEquals(result, response)
+  })
+
+  // ── Virtual pathway command polling ──
+
+  it("should fetch pending commands by pathway", async () => {
+    const pathwayId = crypto.randomUUID()
+    const response = { commands: [] }
+
+    base.get(`/api/v1/pathways/${pathwayId}/commands/pending`).respondWith(200, response)
+
+    const result = await apiKeyClient.execute(
+      new DataPathwayCommandPendingByPathwayCommand({ pathwayId }),
+    )
+    assertEquals(result, response)
+  })
+
+  it("should update command status by pathway", async () => {
+    const pathwayId = crypto.randomUUID()
+    const commandId = crypto.randomUUID()
+    const response = { commandId, phase: "acknowledged" }
+
+    base.post(`/api/v1/pathways/${pathwayId}/commands/${commandId}/status`)
+      .matchBody({ phase: "acknowledged" })
+      .respondWith(200, response)
+
+    const result = await apiKeyClient.execute(
+      new DataPathwayCommandUpdateStatusByPathwayCommand({
+        pathwayId,
+        commandId,
+        phase: "acknowledged",
+      }),
+    )
+    assertEquals(result, response)
+  })
+
+  // ── Pathway by-name ──
+
+  it("should fetch pathway by name", async () => {
+    const name = "my-pathway"
+    const tenant = "test-tenant"
+    const response = {
+      id: crypto.randomUUID(),
+      tenant,
+      name,
+      dataCore: "dc-1",
+      sizeClass: "small" as const,
+      type: "virtual" as const,
+      enabled: true,
+      priority: 0,
+      version: 1,
+      labels: {},
+      config: { sources: [] },
+      createdAt: "2025-01-01T00:00:00Z",
+      updatedAt: "2025-01-01T00:00:00Z",
+    }
+
+    base.get(`/api/v1/pathways/by-name/${name}`)
+      .matchSearchParams({ tenant })
+      .respondWith(200, response)
+
+    const result = await apiKeyClient.execute(
+      new DataPathwayFetchByNameCommand({ name, tenant }),
+    )
+    assertEquals(result, response)
+  })
+
+  it("should upsert pathway by name", async () => {
+    const name = "my-pathway"
+    const response = { pathwayId: crypto.randomUUID(), status: "created" as const }
+
+    base.put(`/api/v1/pathways/by-name/${name}`)
+      .matchBody({ tenant: "test-tenant", dataCore: "dc-1", type: "virtual" })
+      .respondWith(200, response)
+
+    const result = await apiKeyClient.execute(
+      new DataPathwayUpsertByNameCommand({
+        name,
+        tenant: "test-tenant",
+        dataCore: "dc-1",
+        type: "virtual",
+      }),
+    )
+    assertEquals(result, response)
+  })
+
+  // ── Delivery log batch ──
+
+  it("should upload delivery log batch", async () => {
+    const pathwayId = crypto.randomUUID()
+    const assignmentId = crypto.randomUUID()
+    const response = { inserted: 1 }
+
+    base.post("/api/v1/delivery-log/batch")
+      .respondWith(200, response)
+
+    const result = await apiKeyClient.execute(
+      new DataPathwayDeliveryLogBatchCommand({
+        entries: [{
+          pathwayId,
+          assignmentId,
+          endpointUrl: "https://example.com/webhook",
+          success: true,
+        }],
       }),
     )
     assertEquals(result, response)
