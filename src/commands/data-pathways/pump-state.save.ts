@@ -6,7 +6,8 @@ import {
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 
 export interface DataPathwayPumpStateSaveInput {
-  assignmentId: string
+  pathwayId: string
+  flowType: string
   state: {
     timeBucket: string
     eventId?: string
@@ -27,7 +28,7 @@ export class DataPathwayPumpStateSaveCommand
   }
 
   protected override getPath(): string {
-    return `/api/v1/pump-states/${this.input.assignmentId}`
+    return `/api/v1/pump-states/${this.input.pathwayId}/${encodeURIComponent(this.input.flowType)}`
   }
 
   protected override getBody(): Record<string, unknown> {
