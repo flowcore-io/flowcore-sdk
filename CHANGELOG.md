@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.1](https://github.com/flowcore-io/flowcore-sdk/compare/v3.0.0...v3.0.1) (2026-04-14)
+
+
+### Bug Fixes
+
+* make RoleSchema archived field optional to match IAM API response ([499df87](https://github.com/flowcore-io/flowcore-sdk/commit/499df87745e11761f54534960dd86979bb66c518))
+
 ## [3.0.0](https://github.com/flowcore-io/flowcore-sdk/compare/v2.0.0...v3.0.0) (2026-04-14)
 
 
