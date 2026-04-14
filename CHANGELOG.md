@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0](https://github.com/flowcore-io/flowcore-sdk/compare/v2.0.0...v3.0.0) (2026-04-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* sync data-pathways SDK commands with control plane API ([#206](https://github.com/flowcore-io/flowcore-sdk/issues/206))
+
+### Features
+
+* sync data-pathways SDK commands with control plane API ([#206](https://github.com/flowcore-io/flowcore-sdk/issues/206)) ([8fc57c6](https://github.com/flowcore-io/flowcore-sdk/commit/8fc57c64a6f60dd7865bf1279be5fffdba9f4f9b))
+
 ## [2.0.0](https://github.com/flowcore-io/flowcore-sdk/compare/v1.79.0...v2.0.0) (2026-04-10)
 
 
