@@ -341,7 +341,24 @@ export const DataPathwayCommandResponseSchema: TObject<{
 })
 export type DataPathwayCommandResponse = Static<typeof DataPathwayCommandResponseSchema>
 
-export const DataPathwayCommandDetailSchema = Type.Object({
+export const DataPathwayCommandDetailSchema: TObject<{
+  id: TString
+  restartRequestId: TNullableString
+  assignmentId: TNullableString
+  pathwayId: TNullableString
+  type: TString
+  generation: TUnion<[TInteger, TNull]>
+  position: TUnion<[TUnknownRecord, TNull]>
+  stopAt: TNullableString
+  timeoutMs: TUnion<[TInteger, TNull]>
+  phase: TString
+  reason: TNullableString
+  details: TNullableString
+  config: TUnion<[TUnknownRecord, TNull]>
+  sourceFlowTypes: TUnion<[TArray<TString>, TNull]>
+  createdAt: TString
+  updatedAt: TString
+}> = Type.Object({
   id: Type.String(),
   restartRequestId: Type.Union([Type.String(), Type.Null()]),
   assignmentId: Type.Union([Type.String(), Type.Null()]),
@@ -539,7 +556,18 @@ export const DataPathwayDeliveryLogListSchema: TObject<{
 })
 export type DataPathwayDeliveryLogList = Static<typeof DataPathwayDeliveryLogListSchema>
 
-export const DataPathwayDeliveryLogBatchEntrySchema = Type.Object({
+export const DataPathwayDeliveryLogBatchEntrySchema: TObject<{
+  pathwayId: TString
+  assignmentId: TString
+  endpointUrl: TString
+  flowType: TOptional<TString>
+  httpStatus: TOptional<TInteger>
+  success: TBoolean
+  batchSize: TOptional<TInteger>
+  durationMs: TOptional<TInteger>
+  errorMessage: TOptional<TString>
+  responseBody: TOptional<TString>
+}> = Type.Object({
   pathwayId: Type.String(),
   assignmentId: Type.String(),
   endpointUrl: Type.String(),

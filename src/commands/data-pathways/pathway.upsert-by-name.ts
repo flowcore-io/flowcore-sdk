@@ -1,10 +1,11 @@
 import { Command } from "../../common/command.ts"
-import {
-  type PathwayConfig,
-  type VirtualConfig,
+import type {
+  PathwayConfig,
+  VirtualConfig,
 } from "../../contracts/data-pathways.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
-import { type Static, type TLiteral, type TObject, type TString, type TUnion, Type } from "@sinclair/typebox"
+import type { Static, TLiteral, TObject, TString, TUnion } from "@sinclair/typebox"
+import { Type } from "@sinclair/typebox"
 
 type TUpsertResponse = TObject<{
   pathwayId: TString
