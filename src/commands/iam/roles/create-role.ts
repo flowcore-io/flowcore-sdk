@@ -11,14 +11,14 @@ export const RoleSchema: TObject<{
   name: TString
   description: TOptional<TString>
   flowcoreManaged: TOptional<TBoolean>
-  archived: TBoolean
+  archived: TOptional<TBoolean>
 }> = Type.Object({
   id: Type.String(),
   organizationId: Type.String(),
   name: Type.String(),
   description: Type.Optional(Type.String()),
   flowcoreManaged: Type.Optional(Type.Boolean({ default: false })),
-  archived: Type.Boolean(),
+  archived: Type.Optional(Type.Boolean()),
 })
 
 /**

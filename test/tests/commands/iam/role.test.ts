@@ -133,6 +133,38 @@ describe("Role commands", () => {
       assertEquals(response, [])
     })
 
+    it("should handle roles without archived field", async () => {
+      // arrange
+      const tenantId = crypto.randomUUID()
+      const organizationId = crypto.randomUUID()
+
+      const mockResponse = [
+        {
+          id: crypto.randomUUID(),
+          name: "Owner",
+          description: "Owner role",
+          organizationId,
+          flowcoreManaged: true,
+        },
+      ]
+
+      fetchMockerBuilder.get("/api/v1/roles/")
+        .matchSearchParams({})
+        .matchHeaders({
+          "authorization": "Bearer BEARER_TOKEN",
+        })
+        .respondWith(200, mockResponse)
+
+      // act
+      const command = new RoleListCommand({ organizationId: tenantId })
+      const response = await flowcoreClient.execute(command, true)
+
+      // assert
+      assertEquals(response.length, 1)
+      assertEquals(response[0].name, "Owner")
+      assertEquals(response[0].archived, undefined)
+    })
+
     it("should handle large role lists", async () => {
       // arrange
       const tenantId = crypto.randomUUID()
