@@ -1,8 +1,5 @@
 import { Command } from "../../common/command.ts"
-import type {
-  PathwayConfig,
-  VirtualConfig,
-} from "../../contracts/data-pathways.ts"
+import type { PathwayConfig, VirtualConfig } from "../../contracts/data-pathways.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 import type { Static, TLiteral, TObject, TString, TUnion } from "@sinclair/typebox"
 import { Type } from "@sinclair/typebox"

@@ -24,7 +24,6 @@ import {
   DataPathwayListCommand,
   DataPathwayPumpStateFetchCommand,
   DataPathwayPumpStateSaveCommand,
-  DataPathwayUpsertByNameCommand,
   DataPathwayQuotaFetchCommand,
   DataPathwayQuotaListCommand,
   DataPathwayQuotaSetCommand,
@@ -35,6 +34,7 @@ import {
   DataPathwaySlotHeartbeatCommand,
   DataPathwaySlotListCommand,
   DataPathwaySlotRegisterCommand,
+  DataPathwayUpsertByNameCommand,
   FlowcoreClient,
 } from "../../../src/mod.ts"
 import { FetchMocker } from "../../fixtures/fetch.fixture.ts"
