@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.1.0](https://github.com/flowcore-io/flowcore-sdk/compare/v3.0.1...v3.1.0) (2026-04-15)
+
+
+### Features
+
+* **iam:** add PolicyValidateCommand for POST /api/v1/policies/validate ([#209](https://github.com/flowcore-io/flowcore-sdk/issues/209)) ([e9062ba](https://github.com/flowcore-io/flowcore-sdk/commit/e9062ba02c36cb06c4592e2aeeb25eb8dc804d19))
+
+
+### Bug Fixes
+
+* **ci:** replace sergeysova/jq-action@v2 with inline jq ([#211](https://github.com/flowcore-io/flowcore-sdk/issues/211)) ([63ee739](https://github.com/flowcore-io/flowcore-sdk/commit/63ee739a501dd78a675035ba60ad79bf2e336474))
+
 ## [3.0.1](https://github.com/flowcore-io/flowcore-sdk/compare/v3.0.0...v3.0.1) (2026-04-14)
 
 
