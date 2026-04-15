@@ -113,6 +113,7 @@ export * from "./iam/permissions/get-user-permissions.ts"
 
 export * from "./iam/policies/create-policy.ts"
 export * from "./iam/policies/get-policy.ts"
+export * from "./iam/policies/validate-policy.ts"
 export * from "./iam/policies/id/archive-policy.ts"
 export * from "./iam/policies/id/get-policy.ts"
 export * from "./iam/policies/id/update-policy.ts"
