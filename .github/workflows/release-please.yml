@@ -18,10 +18,8 @@ jobs:
           private-key: ${{ secrets.RELEASE_PLEASE_APP_PRIVATE_KEY }}
       - uses: actions/checkout@v3
       - name: Extract package name from deno.json
-        uses: sergeysova/jq-action@v2
         id: package
-        with:
-          cmd: "jq .name deno.json -r"
+        run: echo "value=$(jq -r .name deno.json)" >> "$GITHUB_OUTPUT"
       - name: Setup Deno2 environment
         uses: denoland/setup-deno@v2
         with:
