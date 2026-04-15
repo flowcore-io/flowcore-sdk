@@ -1,4 +1,13 @@
-import { type Static, type TNull, type TObject, type TString, type TUnion, Type } from "@sinclair/typebox"
+import {
+  type Static,
+  type TBoolean,
+  type TNull,
+  type TObject,
+  type TOptional,
+  type TString,
+  type TUnion,
+  Type,
+} from "@sinclair/typebox"
 
 /**
  * The schema for an api key
@@ -53,3 +62,21 @@ export const ApiKeyWithValueSchema: TObject<{
  * The type for an api key with value
  */
 export type ApiKeyWithValue = Static<typeof ApiKeyWithValueSchema>
+
+/**
+ * The schema for an api key validation response
+ */
+export const ApiKeyValidationSchema: TObject<{
+  valid: TBoolean
+  apiKeyId: TOptional<TString>
+  tenantId: TOptional<TString>
+}> = Type.Object({
+  valid: Type.Boolean(),
+  apiKeyId: Type.Optional(Type.String()),
+  tenantId: Type.Optional(Type.String()),
+})
+
+/**
+ * The type for an api key validation response
+ */
+export type ApiKeyValidation = Static<typeof ApiKeyValidationSchema>
