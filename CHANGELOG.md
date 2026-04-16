@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.0](https://github.com/flowcore-io/flowcore-sdk/compare/v3.1.0...v3.2.0) (2026-04-16)
+
+
+### Features
+
+* trigger tenant-store command release ([#213](https://github.com/flowcore-io/flowcore-sdk/issues/213)) ([67dcaa0](https://github.com/flowcore-io/flowcore-sdk/commit/67dcaa0a41f544f2961f57c14e827d023b413f6a))
+
 ## [3.1.0](https://github.com/flowcore-io/flowcore-sdk/compare/v3.0.1...v3.1.0) (2026-04-15)
 
 
