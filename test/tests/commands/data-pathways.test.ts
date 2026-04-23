@@ -22,7 +22,9 @@ import {
   DataPathwayFetchByNameCommand,
   DataPathwayFetchCommand,
   DataPathwayListCommand,
+  DataPathwayPumpStateFetchBySourceCommand,
   DataPathwayPumpStateFetchCommand,
+  DataPathwayPumpStateSaveBySourceCommand,
   DataPathwayPumpStateSaveCommand,
   DataPathwayQuotaFetchCommand,
   DataPathwayQuotaListCommand,
@@ -619,6 +621,43 @@ describe("DataPathways", () => {
       new DataPathwayPumpStateSaveCommand({
         pathwayId,
         flowType,
+        state: { timeBucket: "2025-01-01T00:00:00Z" },
+      }),
+    )
+    assertEquals(result, response)
+  })
+
+  it("should fetch pump state by pathway + sourceId", async () => {
+    const pathwayId = crypto.randomUUID()
+    const sourceId = crypto.randomUUID()
+    const response = {
+      pathwayId,
+      sourceId,
+      flowType: "data.0",
+      state: { timeBucket: "2025-01-01T00:00:00Z", eventId: "evt-1" },
+    }
+
+    base.get(`/api/v1/pump-states/${pathwayId}/sources/${sourceId}`).respondWith(200, response)
+
+    const result = await apiKeyClient.execute(
+      new DataPathwayPumpStateFetchBySourceCommand({ pathwayId, sourceId }),
+    )
+    assertEquals(result, response)
+  })
+
+  it("should save pump state by pathway + sourceId", async () => {
+    const pathwayId = crypto.randomUUID()
+    const sourceId = crypto.randomUUID()
+    const response = { status: "ok" }
+
+    base.put(`/api/v1/pump-states/${pathwayId}/sources/${sourceId}`)
+      .matchBody({ state: { timeBucket: "2025-01-01T00:00:00Z" } })
+      .respondWith(200, response)
+
+    const result = await apiKeyClient.execute(
+      new DataPathwayPumpStateSaveBySourceCommand({
+        pathwayId,
+        sourceId,
         state: { timeBucket: "2025-01-01T00:00:00Z" },
       }),
     )

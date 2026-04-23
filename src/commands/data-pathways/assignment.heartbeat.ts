@@ -21,9 +21,11 @@ export interface DataPathwayAssignmentHeartbeatInput {
           totalFailed: number
           lastDeliveryAgeMs: number | null
           healthy: boolean
-          flowTypes: Record<
+          sources: Record<
             string,
             {
+              flowType: string
+              name?: string
               eventsPerSecond: number
               successRate: number
               avgDurationMs: number
