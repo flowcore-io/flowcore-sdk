@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.0](https://github.com/flowcore-io/flowcore-sdk/compare/v3.2.0...v3.3.0) (2026-04-23)
+
+
+### Features
+
+* **data-pathways:** source id/name + delivery-log sourceId/eventType ([#215](https://github.com/flowcore-io/flowcore-sdk/issues/215)) ([7d44549](https://github.com/flowcore-io/flowcore-sdk/commit/7d445496148cfd1872b667f25d19f22321c1a2de))
+
 ## [3.2.0](https://github.com/flowcore-io/flowcore-sdk/compare/v3.1.0...v3.2.0) (2026-04-16)
 
 
