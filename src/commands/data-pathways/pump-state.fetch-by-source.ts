@@ -1,8 +1,5 @@
 import { Command } from "../../common/command.ts"
-import {
-  type DataPathwayPumpStateBySource,
-  DataPathwayPumpStateBySourceSchema,
-} from "../../contracts/data-pathways.ts"
+import { type DataPathwayPumpStateBySource, DataPathwayPumpStateBySourceSchema } from "../../contracts/data-pathways.ts"
 import type { ClientError } from "../../exceptions/client-error.ts"
 import { NotFoundException } from "../../exceptions/not-found.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
