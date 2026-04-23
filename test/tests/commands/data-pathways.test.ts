@@ -782,4 +782,29 @@ describe("DataPathways", () => {
     )
     assertEquals(result, response)
   })
+
+  it("should accept sourceId and eventType on delivery log batch entries", async () => {
+    const pathwayId = crypto.randomUUID()
+    const assignmentId = crypto.randomUUID()
+    const sourceId = crypto.randomUUID()
+    const response = { inserted: 1 }
+
+    base.post("/api/v1/delivery-log/batch")
+      .respondWith(200, response)
+
+    const result = await apiKeyClient.execute(
+      new DataPathwayDeliveryLogBatchCommand({
+        entries: [{
+          pathwayId,
+          assignmentId,
+          endpointUrl: "https://example.com/webhook",
+          success: true,
+          flowType: "analytics",
+          sourceId,
+          eventType: "pat.created.0",
+        }],
+      }),
+    )
+    assertEquals(result, response)
+  })
 })

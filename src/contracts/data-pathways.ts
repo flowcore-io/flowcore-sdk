@@ -64,6 +64,8 @@ const TimeoutConfigSchema: TTimeoutConfig = Type.Optional(
 )
 
 type TSourceConfig = TObject<{
+  id: TOptional<TString>
+  name: TOptional<TString>
   flowType: TString
   eventTypes: TArray<TString>
   endpoints: TArray<TEndpointConfig>
@@ -73,6 +75,8 @@ type TSourceConfig = TObject<{
   timeouts: TTimeoutConfig
 }>
 const SourceConfigSchema: TSourceConfig = Type.Object({
+  id: Type.Optional(Type.String()),
+  name: Type.Optional(Type.String()),
   flowType: Type.String(),
   eventTypes: Type.Array(Type.String()),
   endpoints: Type.Array(EndpointConfigSchema),
@@ -530,6 +534,8 @@ export const DataPathwayDeliveryLogEntrySchema: TObject<{
   errorMessage: TUnion<[TString, TNull]>
   responseBody: TUnion<[TString, TNull]>
   flowType: TUnion<[TString, TNull]>
+  sourceId: TUnion<[TString, TNull]>
+  eventType: TUnion<[TString, TNull]>
   createdAt: TString
 }> = Type.Object({
   id: Type.String(),
@@ -543,6 +549,8 @@ export const DataPathwayDeliveryLogEntrySchema: TObject<{
   errorMessage: Type.Union([Type.String(), Type.Null()]),
   responseBody: Type.Union([Type.String(), Type.Null()]),
   flowType: Type.Union([Type.String(), Type.Null()]),
+  sourceId: Type.Union([Type.String(), Type.Null()]),
+  eventType: Type.Union([Type.String(), Type.Null()]),
   createdAt: Type.String(),
 })
 export type DataPathwayDeliveryLogEntry = Static<typeof DataPathwayDeliveryLogEntrySchema>
@@ -561,6 +569,8 @@ export const DataPathwayDeliveryLogBatchEntrySchema: TObject<{
   assignmentId: TString
   endpointUrl: TString
   flowType: TOptional<TString>
+  sourceId: TOptional<TString>
+  eventType: TOptional<TString>
   httpStatus: TOptional<TInteger>
   success: TBoolean
   batchSize: TOptional<TInteger>
@@ -572,6 +582,8 @@ export const DataPathwayDeliveryLogBatchEntrySchema: TObject<{
   assignmentId: Type.String(),
   endpointUrl: Type.String(),
   flowType: Type.Optional(Type.String()),
+  sourceId: Type.Optional(Type.String()),
+  eventType: Type.Optional(Type.String()),
   httpStatus: Type.Optional(Type.Integer()),
   success: Type.Boolean(),
   batchSize: Type.Optional(Type.Integer()),
