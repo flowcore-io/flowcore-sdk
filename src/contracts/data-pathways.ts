@@ -513,6 +513,19 @@ export const DataPathwayPumpStateSchema: TObject<{
 })
 export type DataPathwayPumpState = Static<typeof DataPathwayPumpStateSchema>
 
+export const DataPathwayPumpStateBySourceSchema: TObject<{
+  pathwayId: TString
+  sourceId: TString
+  flowType: TUnion<[TString, TNull]>
+  state: TUnion<[TPumpStateValue, TNull]>
+}> = Type.Object({
+  pathwayId: Type.String(),
+  sourceId: Type.String(),
+  flowType: Type.Union([Type.String(), Type.Null()]),
+  state: Type.Union([PumpStateValueSchema, Type.Null()]),
+})
+export type DataPathwayPumpStateBySource = Static<typeof DataPathwayPumpStateBySourceSchema>
+
 export const DataPathwayPumpStateSaveResponseSchema: TObject<{
   status: TString
 }> = Type.Object({
@@ -617,7 +630,9 @@ const ThroughputRecentResultSchema: TThroughputRecentResult = Type.Object({
 
 type TNullableNumber = TUnion<[TNumber, TNull]>
 
-type TThroughputFlowType = TObject<{
+type TThroughputSource = TObject<{
+  flowType: TString
+  name: TOptional<TString>
   eventsPerSecond: TNumber
   successRate: TNumber
   avgDurationMs: TNumber
@@ -627,7 +642,9 @@ type TThroughputFlowType = TObject<{
   healthy: TBoolean
   recentResults: TArray<TThroughputRecentResult>
 }>
-const ThroughputFlowTypeSchema: TThroughputFlowType = Type.Object({
+const ThroughputSourceSchema: TThroughputSource = Type.Object({
+  flowType: Type.String(),
+  name: Type.Optional(Type.String()),
   eventsPerSecond: Type.Number(),
   successRate: Type.Number(),
   avgDurationMs: Type.Number(),
@@ -645,7 +662,7 @@ type TThroughputEndpoint = TObject<{
   totalFailed: TNumber
   lastDeliveryAgeMs: TNullableNumber
   healthy: TBoolean
-  flowTypes: TRecord<TString, TThroughputFlowType>
+  sources: TRecord<TString, TThroughputSource>
 }>
 const ThroughputEndpointSchema: TThroughputEndpoint = Type.Object({
   eventsPerSecond: Type.Number(),
@@ -654,7 +671,7 @@ const ThroughputEndpointSchema: TThroughputEndpoint = Type.Object({
   totalFailed: Type.Number(),
   lastDeliveryAgeMs: Type.Union([Type.Number(), Type.Null()]),
   healthy: Type.Boolean(),
-  flowTypes: Type.Record(Type.String(), ThroughputFlowTypeSchema),
+  sources: Type.Record(Type.String(), ThroughputSourceSchema),
 })
 
 type TThroughputGlobal = TObject<{

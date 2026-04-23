@@ -50,6 +50,8 @@ export * from "./quota.list.ts"
 // Pump State
 export * from "./pump-state.fetch.ts"
 export * from "./pump-state.save.ts"
+export * from "./pump-state.fetch-by-source.ts"
+export * from "./pump-state.save-by-source.ts"
 
 // Delivery Log
 export * from "./delivery-log.list.ts"
