@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.1.0](https://github.com/flowcore-io/flowcore-sdk/compare/v4.0.0...v4.1.0) (2026-04-24)
+
+
+### Features
+
+* **data-pathways:** add optional sourceId to SendPumpPulseCommand ([#219](https://github.com/flowcore-io/flowcore-sdk/issues/219)) ([2eee75a](https://github.com/flowcore-io/flowcore-sdk/commit/2eee75a645a0124c7fbe131a108e2215290d0e88))
+
 ## [4.0.0](https://github.com/flowcore-io/flowcore-sdk/compare/v3.3.0...v4.0.0) (2026-04-23)
 
 
