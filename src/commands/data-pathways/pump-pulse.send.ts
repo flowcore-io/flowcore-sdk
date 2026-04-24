@@ -4,6 +4,7 @@ import { type DataPathwayPumpPulseResponse, DataPathwayPumpPulseResponseSchema }
 
 export interface SendPumpPulseInput {
   pathwayId: string
+  sourceId?: string
   flowType: string
   timeBucket: string
   eventId: string | null
