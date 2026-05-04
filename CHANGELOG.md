@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.2.0](https://github.com/flowcore-io/flowcore-sdk/compare/v4.1.0...v4.2.0) (2026-05-04)
+
+
+### Features
+
+* **aws-marketplace:** add AWS Marketplace customer resolve and link delete commands ([24fa10d](https://github.com/flowcore-io/flowcore-sdk/commit/24fa10d837dd4212afeceb38e88d687409615990))
+* **aws-marketplace:** add AWS Marketplace link creation command ([17c368a](https://github.com/flowcore-io/flowcore-sdk/commit/17c368abc022db3b39a0ba053bdfc62f79050075))
+* **aws-marketplace:** add AWS Marketplace link fetch and list commands ([20b52d3](https://github.com/flowcore-io/flowcore-sdk/commit/20b52d3ef80094778778c1ce3bb962668e740e67))
+* **aws-marketplace:** add AWS Marketplace schemas and types for customer, product, and link management ([4e0bf83](https://github.com/flowcore-io/flowcore-sdk/commit/4e0bf8327353a630372d55b28632ddfeb140386f))
+* **aws-marketplace:** add AWS Marketplace types and commands tests ([bf6e2d5](https://github.com/flowcore-io/flowcore-sdk/commit/bf6e2d53cf6a977687348ffc6cedca1aae13d4d8))
+
 ## [4.1.0](https://github.com/flowcore-io/flowcore-sdk/compare/v4.0.0...v4.1.0) (2026-04-24)
 
 
