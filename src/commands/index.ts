@@ -24,6 +24,13 @@ export * from "./api-key/api-key.list.ts"
 export * from "./api-key/api-key.validate.ts"
 export * from "./api-key/api-key.validate-with-tenant-id.ts"
 
+// AWS Marketplace
+export * from "./aws-marketplace/aws-marketplace-customer.resolve.ts"
+export * from "./aws-marketplace/aws-marketplace-link.create.ts"
+export * from "./aws-marketplace/aws-marketplace-link.delete.ts"
+export * from "./aws-marketplace/aws-marketplace-link.fetch.ts"
+export * from "./aws-marketplace/aws-marketplace-link.list.ts"
+
 // Secret
 export * from "./secret/secret.create.ts"
 export * from "./secret/secret.delete.ts"
