@@ -1,6 +1,18 @@
 export * from "./ai-agent-coordinator-stream.ts"
 export * from "./ai-agent-coordinator.ts"
 export type { ApiKey, ApiKeyValidation, ApiKeyWithValue } from "./api-key.ts"
+export type {
+  AwsMarketplaceCustomer,
+  AwsMarketplaceCustomerResolve,
+  AwsMarketplaceDedicatedClusterType,
+  AwsMarketplaceLink,
+  AwsMarketplaceLinkCreate,
+  AwsMarketplaceLinkDelete,
+  AwsMarketplaceLinkFetch,
+  AwsMarketplaceLinkList,
+  AwsMarketplaceProductMode,
+  AwsMarketplaceProductProperties,
+} from "./aws-marketplace.ts"
 export type { DataCore } from "./data-core.ts"
 export type {
   EventType,
