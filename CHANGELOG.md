@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.2.1](https://github.com/flowcore-io/flowcore-sdk/compare/v4.2.0...v4.2.1) (2026-05-05)
+
+
+### Bug Fixes
+
+* yeah I did it ([20fb2d0](https://github.com/flowcore-io/flowcore-sdk/commit/20fb2d00185c9efa605b90db1bccea01d00ac5cf))
+
 ## [4.2.0](https://github.com/flowcore-io/flowcore-sdk/compare/v4.1.0...v4.2.0) (2026-05-04)
 
 
