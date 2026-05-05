@@ -110,20 +110,20 @@ export const TenantListItemSchema: TObject<{
 export type TenantListItem = Static<typeof TenantListItemSchema>
 
 /**
- * The schema for a tenant user
+ * The schema for a tenant user.
  */
 export const TenantUserSchema: TObject<{
   id: TString
   username: TString
   email: TString
-  firstName: TString
-  lastName: TString
+  firstName: TUnion<[TString, TNull]>
+  lastName: TUnion<[TString, TNull]>
 }> = Type.Object({
   id: Type.String(),
   username: Type.String(),
   email: Type.String(),
-  firstName: Type.String(),
-  lastName: Type.String(),
+  firstName: Type.Union([Type.String(), Type.Null()]),
+  lastName: Type.Union([Type.String(), Type.Null()]),
 })
 
 /**
