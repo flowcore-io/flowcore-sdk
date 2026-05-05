@@ -110,7 +110,7 @@ export const TenantListItemSchema: TObject<{
 export type TenantListItem = Static<typeof TenantListItemSchema>
 
 /**
- * The schema for a tenant user
+ * The schema for a tenant user.
  */
 export const TenantUserSchema: TObject<{
   id: TString
