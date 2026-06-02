@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.2.2](https://github.com/flowcore-io/flowcore-sdk/compare/v4.2.1...v4.2.2) (2026-06-02)
+
+
+### Bug Fixes
+
+* demote websocket lifecycle logs ([33a57de](https://github.com/flowcore-io/flowcore-sdk/commit/33a57de4f233f8b93b3a4b6c94e8b93d24858b81))
+
 ## [4.2.1](https://github.com/flowcore-io/flowcore-sdk/compare/v4.2.0...v4.2.1) (2026-05-05)
 
 
