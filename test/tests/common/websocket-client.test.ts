@@ -15,7 +15,7 @@ import {
   WebSocketClient, // Renamed client
   type WebSocketClientOptions,
 } from "../../../src/mod.ts"
-import { defaultLogger } from "../../../src/utils/logger.ts"
+import { defaultLogger, type Logger } from "../../../src/utils/logger.ts"
 
 // --- Mock WebSocket Definition (MinimalWebSocket) ---
 interface MockMinimalWebSocket {
@@ -34,6 +34,22 @@ interface MockMinimalWebSocket {
 }
 
 let mockWebSocketInstances: MockMinimalWebSocket[] = []
+
+function createRecordingLogger(): Logger & { calls: Record<keyof Logger, string[]> } {
+  const calls: Record<keyof Logger, string[]> = {
+    debug: [],
+    info: [],
+    warn: [],
+    error: [],
+  }
+  return {
+    calls,
+    debug: (message) => calls.debug.push(message),
+    info: (message) => calls.info.push(message),
+    warn: (message) => calls.warn.push(message),
+    error: (message) => calls.error.push(String(message)),
+  }
+}
 
 function mockWebSocketFactory(url: string): MockMinimalWebSocket {
   const instance: MockMinimalWebSocket = {
@@ -250,6 +266,37 @@ describe("WebSocketClient", () => { // Updated describe block
 
     assertEquals(client.isOpen, false)
     assertEquals(completed, true)
+  })
+
+  it("normal connection lifecycle logs should use debug, not info", async () => {
+    const logger = createRecordingLogger()
+    client = createClient(authOptionsBearer, { logger })
+    activeStream = await client.connect(testCommand)
+    assertExists(activeStream, "activeStream should be defined after connect")
+    assertExists(mockWebSocketInstances[0])
+
+    mockWebSocketInstances[0]._triggerOpen()
+    await delay(0)
+    mockWebSocketInstances[0]._triggerClose(1000, "Normal closure")
+    await delay(10)
+
+    assertEquals(
+      logger.calls.debug.some((message) => message.startsWith("Attempting to connect stream:")),
+      true,
+    )
+    assertEquals(
+      logger.calls.debug.some((message) => message.startsWith("WebSocket connection opened:")),
+      true,
+    )
+    assertEquals(
+      logger.calls.debug.some((message) => message.startsWith("WebSocket connection closed:")),
+      true,
+    )
+    assertEquals(
+      logger.calls.debug.includes("Completing internal subject due to close event."),
+      true,
+    )
+    assertEquals(logger.calls.info.length, 0)
   })
 
   it("should attempt reconnect on unexpected close and succeed", async () => {
