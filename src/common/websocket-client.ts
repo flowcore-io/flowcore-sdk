@@ -121,7 +121,7 @@ export class WebSocketClient {
     command: WebSocketCommand<Config, SendPayload>,
   ): Promise<ActiveStreamInterface<SendPayload>> {
     if (this._isConnecting || this._isOpen) {
-      this.logger.info("Disconnecting existing stream before starting new one.")
+      this.logger.debug("Disconnecting existing stream before starting new one.")
       this.disconnect() // Ensure clean state
       // Add a small delay to allow disconnect process to settle if needed
       await new Promise((resolve) => setTimeout(resolve, 50))
@@ -135,7 +135,7 @@ export class WebSocketClient {
     // Use override URL if set, otherwise use command's base URL
     const baseUrl = this.overrideBaseUrl ?? command.getWebSocketBaseUrl()
     const pathSegment = command.getWebSocketPathSegment(config) // Get path segment from command
-    this.logger.info(`Attempting to connect stream: ${baseUrl}${pathSegment}`)
+    this.logger.debug(`Attempting to connect stream: ${baseUrl}${pathSegment}`)
 
     try {
       const urlParams = new URLSearchParams()
@@ -189,7 +189,7 @@ export class WebSocketClient {
       const logUrl = baseUrl && pathSegment
         ? `${baseUrl.replace(/\/?$/, "/")}${pathSegment.replace(/^\/?/, "")}`
         : "(unknown URL)"
-      this.logger.info(`WebSocket connection opened: ${logUrl}`)
+      this.logger.debug(`WebSocket connection opened: ${logUrl}`)
       this.reconnectInterval = this.options.reconnectInterval
       this.reconnectAttempts = 0
     }
@@ -233,14 +233,14 @@ export class WebSocketClient {
       const logUrl = baseUrl && pathSegment
         ? `${baseUrl.replace(/\/?$/, "/")}${pathSegment.replace(/^\/?/, "")}`
         : "(unknown URL)"
-      this.logger.info(
+      this.logger.debug(
         `WebSocket connection closed: ${logUrl} Code [${event.code}], Reason: ${event.reason || "No reason given"}
 . Was open: ${wasOpen}`,
       )
       if (wasOpen && event.code !== 1000 && this.currentCommand) { // Only reconnect if command is still set
         this.attemptReconnect()
       } else {
-        this.logger.info(`Completing internal subject due to close event.`)
+        this.logger.debug(`Completing internal subject due to close event.`)
         this.internalSubject.complete() // Complete subject on final close
         this.currentCommand = null // Clear state
         this.currentConfig = null
@@ -310,7 +310,7 @@ export class WebSocketClient {
     setTimeout(async () => { // Keep timeout async
       // Check if disconnect was called while waiting
       if (!this.currentCommand || !this.currentConfig) {
-        this.logger.info("Reconnect cancelled as disconnect was called.")
+        this.logger.debug("Reconnect cancelled as disconnect was called.")
         this._isConnecting = false // Ensure flag is reset
         if (!this.internalSubject.closed) this.internalSubject.complete()
         return
@@ -379,7 +379,7 @@ export class WebSocketClient {
    * Closes the WebSocket connection gracefully.
    */
   disconnect() {
-    this.logger.info("Disconnect called by user.")
+    this.logger.debug("Disconnect called by user.")
     const commandToClear = this.currentCommand // Store ref before clearing
     this.currentCommand = null // Prevent reconnects
     this.currentConfig = null
@@ -398,7 +398,7 @@ export class WebSocketClient {
 
     // Complete the subject if it hasn't been completed by onclose
     if (commandToClear && !this.internalSubject.closed) {
-      this.logger.info("Completing internal subject due to disconnect call.")
+      this.logger.debug("Completing internal subject due to disconnect call.")
       this.internalSubject.complete()
     }
   }
