@@ -1,5 +1,5 @@
-import { assertEquals, assertRejects } from "@std/assert"
-import { afterAll, afterEach, describe, it } from "@std/testing/bdd"
+import { assertEquals, assertRejects } from "@test/compat/assert"
+import { afterAll, afterEach, describe, it } from "bun:test"
 import {
   type Artifact,
   ArtifactGetCommand,
@@ -79,7 +79,6 @@ describe("AiAgentCoordinator Commands", () => {
 
         // assert
         assertRejects(
-          // deno-lint-ignore require-await
           async () => {
             throw responsePromise // Re-throw the caught error for assertRejects
           },
@@ -142,7 +141,6 @@ describe("AiAgentCoordinator Commands", () => {
 
         // assert
         assertRejects(
-          // deno-lint-ignore require-await
           async () => {
             throw responsePromise // Re-throw the caught error for assertRejects
           },

@@ -1,5 +1,5 @@
-import { assertEquals } from "@std/assert"
-import { afterAll, describe, it } from "@std/testing/bdd"
+import { assertEquals } from "@test/compat/assert"
+import { afterAll, describe, it } from "bun:test"
 import { FlowcoreClient } from "../../../../src/mod.ts"
 import { UserPermissionsCommand } from "../../../../src/commands/iam/permissions/get-user-permissions.ts"
 import { FetchMocker } from "../../../fixtures/fetch.fixture.ts"

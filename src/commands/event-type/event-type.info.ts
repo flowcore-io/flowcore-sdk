@@ -74,7 +74,7 @@ export class EventTypeInfoCommand extends CustomCommand<EventTypeInfoInput, Even
     const minLastEventLimit = Math.max(lastEventsLimit, lastEventsLimit * 3)
 
     for (const timeBucket of lastTimeBucketResponse.timeBuckets) {
-      let cursor: string | undefined = undefined
+      let cursor: string | undefined
 
       do {
         const eventListResponse: EventListOutput = await client.execute(

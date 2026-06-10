@@ -23,8 +23,7 @@ export class DataPathwayAssignmentCompleteCommand extends Command<DataPathwayAss
     return `/api/v1/assignments/complete`
   }
 
-  // deno-lint-ignore no-unused-vars
-  protected override parseResponse(rawResponse: unknown): null {
+  protected override parseResponse(_rawResponse: unknown): null {
     return null
   }
 }

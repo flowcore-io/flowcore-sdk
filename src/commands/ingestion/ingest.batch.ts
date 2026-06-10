@@ -3,7 +3,7 @@ import { Command } from "../../common/command.ts"
 import type { IngestEventInput } from "../../contracts/event.ts"
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 
-export interface IngestBatchInput<T extends unknown> extends Omit<IngestEventInput<T>, "eventData"> {
+export interface IngestBatchInput<T> extends Omit<IngestEventInput<T>, "eventData"> {
   events: IngestEventInput<T>["eventData"][]
 }
 
@@ -28,7 +28,7 @@ const responseSchema = Type.Object({
 /**
  * Ingest a batch of events
  */
-export class IngestBatchCommand<T extends unknown> extends Command<IngestBatchInput<T>, IngestBatchOutput> {
+export class IngestBatchCommand<T> extends Command<IngestBatchInput<T>, IngestBatchOutput> {
   /**
    * The dedicated subdomain for the command
    */

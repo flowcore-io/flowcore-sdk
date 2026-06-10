@@ -22,10 +22,6 @@ export type ConversationDeleteCommandOutput = ConversationDeleteResponse
  */
 export class ConversationDeleteCommand
   extends BaseCommandClass<ConversationDeleteCommandInput, ConversationDeleteCommandOutput> {
-  constructor(input: ConversationDeleteCommandInput) {
-    super(input)
-  }
-
   protected override getBaseUrl(): string {
     return baseUrl
   }
@@ -42,7 +38,7 @@ export class ConversationDeleteCommand
 
   protected override parseResponse(response: unknown): ConversationDeleteCommandOutput {
     const data = response as ConversationDeleteResponse
-    if (data && data.message) {
+    if (data?.message) {
       return data
     } else {
       throw new Error("Invalid response format for ConversationDeleteCommand")

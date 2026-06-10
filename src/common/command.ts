@@ -172,7 +172,6 @@ export abstract class Command<Input, Output> {
   /**
    * Wait for the response
    */
-  // deno-lint-ignore require-await
   protected async processResponse(_client: FlowcoreClient, response: Output): Promise<Output> {
     return response
   }

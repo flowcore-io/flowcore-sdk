@@ -1,5 +1,5 @@
-import { assertArrayIncludes, assertObjectMatch } from "@std/assert"
-import { type Stub, stub } from "@std/testing/mock"
+import { assertArrayIncludes, assertObjectMatch } from "@test/compat/assert"
+import { type Stub, stub } from "@test/compat/mock"
 
 type Method = "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "OPTIONS" | "HEAD" | "TRACE" | "CONNECT"
 
@@ -24,9 +24,9 @@ export class FetchMocker {
   private fetchStub: Stub
   private mocks: Map<string, FetchMockBuilder> = new Map()
 
-  constructor(private options: FetchMockerOptions = {}) {
+  constructor(_options: FetchMockerOptions = {}) {
     this.originalFetch = globalThis.fetch
-    this.fetchStub = stub(globalThis, "fetch", this.mockedFetch.bind(this))
+    this.fetchStub = stub(globalThis, "fetch", this.mockedFetch.bind(this) as typeof globalThis.fetch)
   }
 
   public clear() {
@@ -285,40 +285,4 @@ const urlParamsToObject = (urlParams: URLSearchParams) => {
     }
   }
   return obj
-}
-
-function deepCompare(a: unknown, b: unknown): boolean {
-  // Handle null/undefined
-  if (a === b) {
-    return true
-  }
-  if (a === null || b === null || a === undefined || b === undefined) {
-    return false
-  }
-
-  // Handle arrays (order doesn't matter)
-  if (Array.isArray(a) && Array.isArray(b)) {
-    if (a.length !== b.length) {
-      return false
-    }
-    return a.every((item) => b.some((bItem) => deepCompare(item, bItem)))
-  }
-
-  // Handle objects
-  if (typeof a === "object" && typeof b === "object") {
-    const keysA = Object.keys(a as object)
-    const keysB = Object.keys(b as object)
-
-    if (keysA.length !== keysB.length) {
-      return false
-    }
-
-    return keysA.every((key) => {
-      return (
-        keysB.includes(key) && deepCompare((a as Record<string, unknown>)[key], (b as Record<string, unknown>)[key])
-      )
-    })
-  }
-
-  return a === b
 }

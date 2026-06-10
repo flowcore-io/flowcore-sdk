@@ -4,7 +4,7 @@ on:
       - main
 
 env:
-  NODE_VERSION: ">=18.12.1"
+  BUN_VERSION: "1.3.14"
 
 name: release-please
 jobs:
@@ -17,15 +17,15 @@ jobs:
           app-id: ${{ vars.RELEASE_PLEASE_APP_ID }}
           private-key: ${{ secrets.RELEASE_PLEASE_APP_PRIVATE_KEY }}
       - uses: actions/checkout@v3
-      - name: Extract package name from deno.json
+      - name: Extract package name from package.json
         id: package
-        run: echo "value=$(jq -r .name deno.json)" >> "$GITHUB_OUTPUT"
-      - name: Setup Deno2 environment
-        uses: denoland/setup-deno@v2
+        run: echo "value=$(jq -r .name package.json)" >> "$GITHUB_OUTPUT"
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          deno-version: v2.x
-      - name: Deno install
-        run: deno install --frozen-lockfile
+          bun-version: ${{ env.BUN_VERSION }}
+      - name: Install
+        run: bun install --frozen-lockfile
       - name: Show package name
         run: 'echo "version ${{ steps.package.outputs.value }}"'
       - uses: googleapis/release-please-action@v4

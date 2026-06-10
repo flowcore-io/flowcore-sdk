@@ -24,10 +24,6 @@ export type ContextRemoveItemCommandOutput = ContextUpdateResponse
  */
 export class ContextRemoveItemCommand
   extends BaseCommandClass<ContextRemoveItemCommandInput, ContextRemoveItemCommandOutput> {
-  constructor(input: ContextRemoveItemCommandInput) {
-    super(input)
-  }
-
   protected override getBaseUrl(): string {
     return baseUrl
   }
@@ -46,7 +42,7 @@ export class ContextRemoveItemCommand
 
   protected override parseResponse(response: unknown): ContextRemoveItemCommandOutput {
     const data = response as ContextUpdateResponse
-    if (data && Array.isArray(data.context)) {
+    if (data?.context && Array.isArray(data.context)) {
       return data
     } else {
       throw new Error("Invalid response format for ContextRemoveItemCommand")

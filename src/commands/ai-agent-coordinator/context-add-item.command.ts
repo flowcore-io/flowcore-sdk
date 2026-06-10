@@ -23,10 +23,6 @@ export type ContextAddItemCommandOutput = ContextUpdateResponse
  * Command to add one or more items to the context of a specific conversation.
  */
 export class ContextAddItemCommand extends BaseCommandClass<ContextAddItemCommandInput, ContextAddItemCommandOutput> {
-  constructor(input: ContextAddItemCommandInput) {
-    super(input)
-  }
-
   protected override getBaseUrl(): string {
     return baseUrl
   }
@@ -48,7 +44,7 @@ export class ContextAddItemCommand extends BaseCommandClass<ContextAddItemComman
   protected override parseResponse(response: unknown): ContextAddItemCommandOutput {
     const data = response as ContextUpdateResponse
     // Add more robust checking if necessary
-    if (data && Array.isArray(data.context)) {
+    if (data?.context && Array.isArray(data.context)) {
       return data
     } else {
       throw new Error("Invalid response format for ContextAddItemCommand")

@@ -1,5 +1,6 @@
 import { Buffer } from "node:buffer"
 import { Subject } from "rxjs"
+import { WebSocket as NodeWebSocket } from "ws"
 import type { StreamChunk } from "../contracts/ai-agent-coordinator-stream.ts"
 import { defaultLogger, type Logger } from "../utils/logger.ts"
 import type { ClientOptions } from "./flowcore-client.ts"
@@ -42,6 +43,7 @@ interface MinimalWebSocket {
 
 // WebSocket constructor type
 type WebSocketFactory = (url: string) => MinimalWebSocket
+const WebSocketConstructor = globalThis.WebSocket ?? NodeWebSocket
 
 /**
  * Generic client for managing a single, persistent WebSocket connection based on a command.
@@ -79,7 +81,7 @@ export class WebSocketClient {
     this.options = { reconnectInterval: 1000, ...options }
     this.logger = options?.logger ?? defaultLogger
     this.reconnectInterval = this.options.reconnectInterval
-    this.webSocketFactory = webSocketFactory ?? ((url) => new WebSocket(url) as unknown as MinimalWebSocket)
+    this.webSocketFactory = webSocketFactory ?? ((url) => new WebSocketConstructor(url) as unknown as MinimalWebSocket)
     this.overrideBaseUrl = undefined // Initialize override URL
 
     if ("getBearerToken" in authOptions === false && ("apiKey" in authOptions === false)) {

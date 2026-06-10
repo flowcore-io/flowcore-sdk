@@ -58,39 +58,35 @@ export class OrganizationPoliciesCommand extends Command<
    * Parse the response
    */
   protected override parseResponse(rawResponse: unknown): Policy[] {
-    try {
-      // Handle empty responses
-      if (!rawResponse) {
-        return []
-      }
-
-      // If we get an array directly, try to parse each item
-      if (Array.isArray(rawResponse)) {
-        return rawResponse.map((item) => {
-          try {
-            return parseResponseHelper(PolicySchema, item)
-          } catch (_error: unknown) {
-            // Return a minimal valid policy object
-            return {
-              id: item.id || "unknown",
-              name: item.name || "Unknown Policy",
-              version: item.version || "1.0",
-              description: item.description || "",
-              flowcoreManaged: !!item.flowcoreManaged,
-              policyDocuments: item.policyDocuments || [],
-              organizationId: this.input.organizationId,
-              frn: item.frn ||
-                `frn::${this.input.organizationId}:policy/${item.id || "unknown"}`,
-              archived: item.archived === undefined ? false : !!item.archived,
-            }
-          }
-        })
-      }
-
-      // Try the normal parsing
-      return parseResponseHelper(Type.Array(PolicySchema), rawResponse)
-    } catch (error) {
-      throw error
+    // Handle empty responses
+    if (!rawResponse) {
+      return []
     }
+
+    // If we get an array directly, try to parse each item
+    if (Array.isArray(rawResponse)) {
+      return rawResponse.map((item) => {
+        try {
+          return parseResponseHelper(PolicySchema, item)
+        } catch (_error: unknown) {
+          // Return a minimal valid policy object
+          return {
+            id: item.id || "unknown",
+            name: item.name || "Unknown Policy",
+            version: item.version || "1.0",
+            description: item.description || "",
+            flowcoreManaged: !!item.flowcoreManaged,
+            policyDocuments: item.policyDocuments || [],
+            organizationId: this.input.organizationId,
+            frn: item.frn ||
+              `frn::${this.input.organizationId}:policy/${item.id || "unknown"}`,
+            archived: item.archived === undefined ? false : !!item.archived,
+          }
+        }
+      })
+    }
+
+    // Try the normal parsing
+    return parseResponseHelper(Type.Array(PolicySchema), rawResponse)
   }
 }

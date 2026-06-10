@@ -58,8 +58,7 @@ export class DataPathwayAssignmentHeartbeatCommand extends Command<DataPathwayAs
     return `/api/v1/assignments/heartbeat`
   }
 
-  // deno-lint-ignore no-unused-vars
-  protected override parseResponse(rawResponse: unknown): null {
+  protected override parseResponse(_rawResponse: unknown): null {
     return null
   }
 }
