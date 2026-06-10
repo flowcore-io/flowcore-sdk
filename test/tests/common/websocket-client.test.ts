@@ -421,6 +421,7 @@ describe("WebSocketClient", () => { // Updated describe block
     const testConversationId = "conv-456"
     const testConfig: ConversationStreamConfig = { conversationId: testConversationId }
     const command = new ConversationStreamCommand(testConfig)
+    client = createClient(authOptionsBearer)
 
     const _connectPromise = client.connect(command)
     // ... rest of the test ...

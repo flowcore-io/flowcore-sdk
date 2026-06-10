@@ -69,18 +69,20 @@ export class OrganizationPoliciesCommand extends Command<
         try {
           return parseResponseHelper(PolicySchema, item)
         } catch (_error: unknown) {
+          const policy = item as Record<string, unknown>
+          const id = typeof policy.id === "string" ? policy.id : "unknown"
+
           // Return a minimal valid policy object
           return {
-            id: item.id || "unknown",
-            name: item.name || "Unknown Policy",
-            version: item.version || "1.0",
-            description: item.description || "",
-            flowcoreManaged: !!item.flowcoreManaged,
-            policyDocuments: item.policyDocuments || [],
+            id,
+            name: typeof policy.name === "string" ? policy.name : "Unknown Policy",
+            version: typeof policy.version === "string" ? policy.version : "1.0",
+            description: typeof policy.description === "string" ? policy.description : "",
+            flowcoreManaged: Boolean(policy.flowcoreManaged),
+            policyDocuments: Array.isArray(policy.policyDocuments) ? policy.policyDocuments : [],
             organizationId: this.input.organizationId,
-            frn: item.frn ||
-              `frn::${this.input.organizationId}:policy/${item.id || "unknown"}`,
-            archived: item.archived === undefined ? false : !!item.archived,
+            frn: typeof policy.frn === "string" ? policy.frn : `frn::${this.input.organizationId}:policy/${id}`,
+            archived: policy.archived === undefined ? false : Boolean(policy.archived),
           }
         }
       })

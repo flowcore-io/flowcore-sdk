@@ -78,7 +78,7 @@ describe("AiAgentCoordinator Commands", () => {
         const responsePromise = await flowcoreClient.execute(command).catch((e) => e) // Catch error to assert
 
         // assert
-        assertRejects(
+        await assertRejects(
           async () => {
             throw responsePromise // Re-throw the caught error for assertRejects
           },
@@ -140,7 +140,7 @@ describe("AiAgentCoordinator Commands", () => {
         const responsePromise = await flowcoreClient.execute(command).catch((e) => e) // Catch error to assert
 
         // assert
-        assertRejects(
+        await assertRejects(
           async () => {
             throw responsePromise // Re-throw the caught error for assertRejects
           },

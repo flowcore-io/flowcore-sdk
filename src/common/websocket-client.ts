@@ -29,6 +29,8 @@ export type WebSocketClientOptions = {
 
 // Maximum reconnection interval in milliseconds
 const MAX_RECONNECT_INTERVAL = 30_000
+const WEBSOCKET_CLOSING = 2
+const WEBSOCKET_CLOSED = 3
 
 // Define the expected WebSocket interface subset used by the client
 interface MinimalWebSocket {
@@ -258,8 +260,8 @@ export class WebSocketClient {
         : "(unknown URL)"
       this.logger.error(`WebSocket encountered an error for stream: ${logUrl}.`)
       if (
-        this.webSocket.readyState !== WebSocket.CLOSED &&
-        this.webSocket.readyState !== WebSocket.CLOSING
+        this.webSocket.readyState !== WEBSOCKET_CLOSED &&
+        this.webSocket.readyState !== WEBSOCKET_CLOSING
       ) {
         this.webSocket.close(1011, "WebSocket error")
       }

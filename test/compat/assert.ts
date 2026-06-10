@@ -19,9 +19,17 @@ export function assertInstanceOf<T>(
 }
 
 export function assertObjectMatch(actual: unknown, expected: Record<string, unknown>, msg?: string): void {
-  expect(actual).toMatchObject(expected)
-  if (msg) {
-    assert.ok(true, msg)
+  try {
+    expect(actual).toMatchObject(expected)
+  } catch (error) {
+    if (msg) {
+      throw new assert.AssertionError({
+        message: msg,
+        actual,
+        expected,
+      })
+    }
+    throw error
   }
 }
 
