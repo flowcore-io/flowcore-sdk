@@ -1,6 +1,6 @@
 import { Type } from "@sinclair/typebox"
-import { assertEquals, assertRejects } from "@std/assert"
-import { afterAll, afterEach, describe, it } from "@std/testing/bdd"
+import { assertEquals, assertRejects } from "@test/compat/assert"
+import { afterAll, afterEach, describe, it } from "bun:test"
 import { Command, CommandError, FlowcoreClient, InvalidResponseException } from "../../../src/mod.ts"
 import { parseResponseHelper } from "../../../src/utils/parse-response-helper.ts"
 import { FetchMocker } from "../../fixtures/fetch.fixture.ts"

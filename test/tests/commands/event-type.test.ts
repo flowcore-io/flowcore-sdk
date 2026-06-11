@@ -1,5 +1,5 @@
-import { assertEquals, assertRejects } from "@std/assert"
-import { afterAll, afterEach, describe, it } from "@std/testing/bdd"
+import { assertEquals, assertRejects } from "@test/compat/assert"
+import { afterAll, afterEach, describe, it } from "bun:test"
 import { type EventType, EventTypeFetchCommand, FlowcoreClient, NotFoundException } from "../../../src/mod.ts"
 import { FetchMocker } from "../../fixtures/fetch.fixture.ts"
 

@@ -24,10 +24,6 @@ export type ConversationGetCommandOutput = Conversation
  */
 export class ConversationGetCommand
   extends BaseCommandClass<ConversationGetCommandInput, ConversationGetCommandOutput> {
-  constructor(input: ConversationGetCommandInput) {
-    super(input)
-  }
-
   protected override getBaseUrl(): string {
     return baseUrl
   }
@@ -42,7 +38,7 @@ export class ConversationGetCommand
 
   protected override parseResponse(response: unknown): ConversationGetCommandOutput {
     const data = response as Conversation
-    if (data && data.id) {
+    if (data?.id) {
       return data
     } else {
       throw new Error("Invalid response format for ConversationGetCommand")

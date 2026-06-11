@@ -1,5 +1,5 @@
-import { assertEquals, assertRejects } from "@std/assert"
-import { afterAll, describe, it } from "@std/testing/bdd"
+import { assertEquals, assertRejects } from "@test/compat/assert"
+import { afterAll, describe, it } from "bun:test"
 import { FlowcoreClient } from "../../../../src/mod.ts"
 import { LinkUserRoleCommand } from "../../../../src/commands/iam/role-associations/link-user-role.ts"
 import { UnlinkUserRoleCommand } from "../../../../src/commands/iam/role-associations/unlink-user-role.ts"

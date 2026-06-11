@@ -1,7 +1,6 @@
 export class LocalCache<T> {
   private cache: Map<string, T> = new Map()
-  // deno-lint-ignore no-explicit-any
-  private timers: Map<string, any> = new Map()
+  private timers: Map<string, ReturnType<typeof setTimeout>> = new Map()
 
   constructor(private readonly defaultTtlMs?: number) {}
 

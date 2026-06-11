@@ -1,4 +1,5 @@
 import type { Subject } from "rxjs"
+import { WebSocket as NodeWebSocket } from "ws"
 import { defaultLogger, type Logger } from "../utils/logger.ts"
 import { FlowcoreClient } from "./flowcore-client.ts"
 import { Buffer } from "node:buffer"
@@ -9,6 +10,7 @@ import type { EventType } from "../contracts/event-type.ts"
 import { EventTypeFetchCommand } from "../commands/event-type/event-type.fetch.ts"
 
 type BufferType = Uint8Array & { toString(): string }
+const WebSocketConstructor = globalThis.WebSocket ?? NodeWebSocket
 
 /**
  * Represents an event notification from the Flowcore system
@@ -185,7 +187,7 @@ export class NotificationClient {
       }
     }
 
-    this.webSocket = new WebSocket(`${this.url}?${urlParams.toString()}`)
+    this.webSocket = new WebSocketConstructor(`${this.url}?${urlParams.toString()}`) as unknown as WebSocket
 
     this.webSocket.onopen = () => {
       this._isOpen = true

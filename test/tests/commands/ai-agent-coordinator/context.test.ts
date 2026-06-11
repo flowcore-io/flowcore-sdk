@@ -1,5 +1,5 @@
-import { assertEquals } from "@std/assert"
-import { afterAll, afterEach, describe, it } from "@std/testing/bdd"
+import { assertEquals } from "@test/compat/assert"
+import { afterAll, afterEach, describe, it } from "bun:test"
 import {
   type AddContextItem,
   ContextAddItemCommand,
