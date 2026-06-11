@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.2.3](https://github.com/flowcore-io/flowcore-sdk/compare/v4.2.2...v4.2.3) (2026-06-11)
+
+
+### Bug Fixes
+
+* run bun validation after main merges ([#228](https://github.com/flowcore-io/flowcore-sdk/issues/228)) ([35eab15](https://github.com/flowcore-io/flowcore-sdk/commit/35eab1560cc13b0976187489973169dbcaeeeab8))
+
 ## [4.2.2](https://github.com/flowcore-io/flowcore-sdk/compare/v4.2.1...v4.2.2) (2026-06-02)
 
 
