@@ -218,39 +218,7 @@ export class NotificationClient {
         parsedData = event.data as string
       }
 
-      const data = JSON.parse(parsedData)
-
-      if (data.type === "validation") {
-        this.logger.error(`Bad request: ${data.summary} - ${data.message} - ${data.found} - ${data.errors}`)
-        return
-      }
-
-      const parsed = JSON.parse(data.message) as {
-        pattern: string
-        data: NotificationEventData
-      }
-
-      this.logger.debug(`Received event: ${parsed.pattern}`)
-
-      this.observer.next({
-        pattern: parsed.pattern,
-        data: {
-          tenant: parsed.data.tenantId,
-          eventId: parsed.data.eventId,
-          dataCoreId: parsed.data.dataCore,
-          flowType: parsed.data.aggregator,
-          eventType: parsed.data.eventType,
-          validTime: parsed.data.validTime,
-        },
-      })
-
-      this.eventCount++
-
-      if (this.options.maxEvents && this.options.maxEvents <= this.eventCount) {
-        this.observer.complete()
-        this.eventCount = 0
-        this.webSocket.close(1000, "Max events received")
-      }
+      this.handleMessage(parsedData)
     }
 
     this.webSocket.onclose = (event) => {
@@ -268,6 +236,82 @@ export class NotificationClient {
       this.logger.error(`WebSocket encountered error: ${error}`)
       this.observer.error(error)
       this.webSocket.close()
+    }
+  }
+
+  /**
+   * Parses and dispatches a single raw notification frame.
+   *
+   * Runs inside the WebSocket `onmessage` callback, where any thrown error is
+   * uncaught and crashes the host process. Notification frames can occasionally
+   * be malformed (non-JSON, empty/absent `message`, truncated payloads, or
+   * non-event control frames), so every parse is guarded — a bad frame is logged
+   * and skipped instead of taking down the whole connection/process.
+   */
+  private handleMessage(rawData: string): void {
+    let data: {
+      type?: string
+      message?: string
+      summary?: string
+      found?: unknown
+      errors?: unknown
+    }
+    try {
+      data = JSON.parse(rawData)
+    } catch (error) {
+      this.logger.warn(
+        `Discarding notification frame: outer payload is not valid JSON (${
+          error instanceof Error ? error.message : String(error)
+        })`,
+      )
+      return
+    }
+
+    if (data.type === "validation") {
+      this.logger.error(`Bad request: ${data.summary} - ${data.message} - ${data.found} - ${data.errors}`)
+      return
+    }
+
+    let parsed: { pattern: string; data: NotificationEventData }
+    try {
+      parsed = JSON.parse(data.message as string) as {
+        pattern: string
+        data: NotificationEventData
+      }
+    } catch (error) {
+      this.logger.warn(
+        `Discarding notification frame: 'message' is not valid JSON (type ${typeof data.message}): ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+      )
+      return
+    }
+
+    if (!parsed || typeof parsed !== "object" || !parsed.data) {
+      this.logger.warn("Discarding notification frame: parsed payload is missing a 'data' field")
+      return
+    }
+
+    this.logger.debug(`Received event: ${parsed.pattern}`)
+
+    this.observer.next({
+      pattern: parsed.pattern,
+      data: {
+        tenant: parsed.data.tenantId,
+        eventId: parsed.data.eventId,
+        dataCoreId: parsed.data.dataCore,
+        flowType: parsed.data.aggregator,
+        eventType: parsed.data.eventType,
+        validTime: parsed.data.validTime,
+      },
+    })
+
+    this.eventCount++
+
+    if (this.options.maxEvents && this.options.maxEvents <= this.eventCount) {
+      this.observer.complete()
+      this.eventCount = 0
+      this.webSocket.close(1000, "Max events received")
     }
   }
 
