@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.2.5](https://github.com/flowcore-io/flowcore-sdk/compare/v4.2.4...v4.2.5) (2026-06-23)
+
+
+### Bug Fixes
+
+* **ci:** use OIDC id-token for npm publish ([#235](https://github.com/flowcore-io/flowcore-sdk/issues/235)) ([6c3f8d4](https://github.com/flowcore-io/flowcore-sdk/commit/6c3f8d410ab50668ba458d903b4cc728db25ece8))
+
 ## [4.2.4](https://github.com/flowcore-io/flowcore-sdk/compare/v4.2.3...v4.2.4) (2026-06-23)
 
 
