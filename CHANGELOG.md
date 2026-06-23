@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.2.4](https://github.com/flowcore-io/flowcore-sdk/compare/v4.2.3...v4.2.4) (2026-06-23)
+
+
+### Bug Fixes
+
+* **notification-client:** guard JSON parsing of notification frames ([#232](https://github.com/flowcore-io/flowcore-sdk/issues/232)) ([2b84c0e](https://github.com/flowcore-io/flowcore-sdk/commit/2b84c0eef7a3f9118cc8bb010edc20abbb0309d9))
+
 ## [4.2.3](https://github.com/flowcore-io/flowcore-sdk/compare/v4.2.2...v4.2.3) (2026-06-11)
 
 
