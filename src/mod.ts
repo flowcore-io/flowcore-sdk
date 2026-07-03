@@ -1,7 +1,6 @@
 export * from "./commands/ai-agent-coordinator/mod.ts"
 export * from "./commands/index.ts"
 export * from "./common/command-custom.ts"
-export * from "./common/command-graphql.ts"
 export * from "./common/command.ts"
 export * from "./common/flowcore-client.ts"
 export {

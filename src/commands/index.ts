@@ -118,13 +118,6 @@ export * from "./scenario/scenario.fetch.ts"
 export * from "./scenario/scenario.list.ts"
 export * from "./scenario/scenario.update.ts"
 
-// Legacy Scenario (GraphQL-based)
-export * from "./legacy-scenario/legacy-scenario.delete.ts"
-export * from "./legacy-scenario/legacy-scenario.fetch.ts"
-export * from "./legacy-scenario/legacy-scenario.list.ts"
-export * from "./legacy-scenario/legacy-scenario-adapter.fetch-state.ts"
-export * from "./legacy-scenario/legacy-scenario-adapter.restart.ts"
-
 // Data Pathways
 export * from "./data-pathways/index.ts"
 
