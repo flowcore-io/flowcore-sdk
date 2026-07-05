@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.3.0](https://github.com/flowcore-io/flowcore-sdk/compare/v4.2.4...v4.3.0) (2026-07-05)
+
+
+### Features
+
+* **api-key:** allow apiKey mode on api-key management commands ([#238](https://github.com/flowcore-io/flowcore-sdk/issues/238)) ([e3b2de1](https://github.com/flowcore-io/flowcore-sdk/commit/e3b2de16da26856c012fb60dd3c26d2a1bad30e0))
+
+
+### Bug Fixes
+
+* **ci:** use OIDC id-token for npm publish ([#235](https://github.com/flowcore-io/flowcore-sdk/issues/235)) ([6c3f8d4](https://github.com/flowcore-io/flowcore-sdk/commit/6c3f8d410ab50668ba458d903b4cc728db25ece8))
+
 ## [4.2.4](https://github.com/flowcore-io/flowcore-sdk/compare/v4.2.3...v4.2.4) (2026-06-23)
 
 
