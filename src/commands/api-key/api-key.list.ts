@@ -41,9 +41,11 @@ export class ApiKeyListCommand extends Command<ApiKeyListInput, ApiKey[]> {
   }
 
   /**
-   * The allowed modes for the command
+   * The allowed modes for the command. Api-key mode requires tenant-store >=
+   * the release that accepts AuthType.ApiKey on the api-key management routes;
+   * authorization is still gated by IAM grants on frn::<tenantId>:tenant.
    */
-  protected override allowedModes: ("apiKey" | "bearer")[] = ["bearer"]
+  protected override allowedModes: ("apiKey" | "bearer")[] = ["apiKey", "bearer"]
 
   /**
    * Parse the response
