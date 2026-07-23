@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.4.0](https://github.com/flowcore-io/flowcore-sdk/compare/v4.3.0...v4.4.0) (2026-07-23)
+
+
+### Features
+
+* **tenant:** enhance TenantListCommand to support pagination and filtering ([ffc6a43](https://github.com/flowcore-io/flowcore-sdk/commit/ffc6a43599521b5c0217700fb02c81d6255daf86))
+
 ## [4.3.0](https://github.com/flowcore-io/flowcore-sdk/compare/v4.2.4...v4.3.0) (2026-07-05)
 
 
