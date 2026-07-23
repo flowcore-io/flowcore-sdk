@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.4.1](https://github.com/flowcore-io/flowcore-sdk/compare/v4.4.0...v4.4.1) (2026-07-23)
+
+
+### Bug Fixes
+
+* **ci:** update npm version in build workflow to 11.x for compatibility with Node 20 ([9fb2a07](https://github.com/flowcore-io/flowcore-sdk/commit/9fb2a07f405c9e681d1bb41e61b6d76d5728ce8c))
+
 ## [4.4.0](https://github.com/flowcore-io/flowcore-sdk/compare/v4.3.0...v4.4.0) (2026-07-23)
 
 
