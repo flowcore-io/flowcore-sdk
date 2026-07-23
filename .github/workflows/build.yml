@@ -43,8 +43,9 @@ jobs:
           node-version: "20.x"
           registry-url: "https://registry.npmjs.org"
 
-      - name: Update npm to latest
-        run: npm install -g npm@latest
+      # npm@12+ requires Node ^22.22.2; pin to 11.x for Node 20
+      - name: Update npm
+        run: npm install -g npm@11
 
       - name: Publish to NPM
         run: npm publish --access public --provenance=false
