@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.6.0](https://github.com/flowcore-io/flowcore-sdk/compare/v4.5.0...v4.6.0) (2026-07-24)
+
+
+### Features
+
+* **data-pathways:** add pagination and id filtering options to DataPathwayListCommand ([3c11a92](https://github.com/flowcore-io/flowcore-sdk/commit/3c11a92e2f20648e707154753a77b1cbcd592a4f))
+
 ## [4.5.0](https://github.com/flowcore-io/flowcore-sdk/compare/v4.4.1...v4.5.0) (2026-07-24)
 
 
