@@ -4,7 +4,7 @@ import { type DataCoreWithAccess, DataCoreWithAccessSchema } from "../../contrac
 import { parseResponseHelper } from "../../utils/parse-response-helper.ts"
 
 /**
- * The input for the data core fetch by name command
+ * The input for the data core list command
  */
 export interface DataCoreListInput {
   /** The tenant id */
@@ -13,6 +13,12 @@ export interface DataCoreListInput {
   tenant?: string
   /** The data core name */
   name?: string
+  /** Page number (1-based). Used with limit. Defaults to 1 when limit is provided. */
+  page?: number
+  /** Maximum number of data cores to return (max 100). Omit to return all data cores. */
+  limit?: number
+  /** Data core ids to pin to the front of the list (comma-separated string or array) */
+  ids?: string | string[]
 }
 
 const responseSchema = Type.Object({
@@ -51,7 +57,18 @@ export class DataCoreListCommand extends Command<DataCoreListInput, DataCoreWith
     if (this.input.name) {
       queryParams.set("name", this.input.name)
     }
-    return `/api/v1/data-cores?${queryParams.toString()}`
+    if (this.input.page !== undefined) {
+      queryParams.set("page", this.input.page.toString())
+    }
+    if (this.input.limit !== undefined) {
+      queryParams.set("limit", this.input.limit.toString())
+    }
+    if (this.input.ids !== undefined) {
+      const ids = Array.isArray(this.input.ids) ? this.input.ids.join(",") : this.input.ids
+      queryParams.set("ids", ids)
+    }
+    const qs = queryParams.toString()
+    return qs ? `/api/v1/data-cores?${qs}` : "/api/v1/data-cores"
   }
 
   /**
