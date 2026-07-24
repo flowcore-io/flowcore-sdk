@@ -10,6 +10,10 @@ export interface DataPathwayListInput {
   priority?: number
   limit?: number
   offset?: number
+  /** Page number (1-based). When set, offset is derived as (page - 1) * limit. */
+  page?: number
+  /** Pathway ids to pin to the front of the list (comma-separated string or array) */
+  ids?: string | string[]
   sort?: "asc" | "desc"
 }
 
@@ -33,6 +37,11 @@ export class DataPathwayListCommand extends Command<DataPathwayListInput, DataPa
     if (this.input.priority !== undefined) queryParams.set("priority", String(this.input.priority))
     if (this.input.limit !== undefined) queryParams.set("limit", String(this.input.limit))
     if (this.input.offset !== undefined) queryParams.set("offset", String(this.input.offset))
+    if (this.input.page !== undefined) queryParams.set("page", String(this.input.page))
+    if (this.input.ids !== undefined) {
+      const ids = Array.isArray(this.input.ids) ? this.input.ids.join(",") : this.input.ids
+      queryParams.set("ids", ids)
+    }
     if (this.input.sort) queryParams.set("sort", this.input.sort)
     const qs = queryParams.toString()
     return `/api/v1/pathways${qs ? `?${qs}` : ""}`
