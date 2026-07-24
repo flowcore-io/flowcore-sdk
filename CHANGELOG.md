@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.5.0](https://github.com/flowcore-io/flowcore-sdk/compare/v4.4.1...v4.5.0) (2026-07-24)
+
+
+### Features
+
+* **data-core:** enhance DataCoreListCommand to support pagination and filtering options ([25bee74](https://github.com/flowcore-io/flowcore-sdk/commit/25bee7400be80722521d6e49966ef080dede474e))
+
 ## [4.4.1](https://github.com/flowcore-io/flowcore-sdk/compare/v4.4.0...v4.4.1) (2026-07-23)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "@flowcore/sdk",
-  "version": "4.4.1",
+  "version": "4.5.0",
   "description": "Flowcore SDK",
   "license": "MIT",
   "type": "module",
