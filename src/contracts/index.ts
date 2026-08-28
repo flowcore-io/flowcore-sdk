@@ -1,5 +1,8 @@
 export * from "./ai-agent-coordinator-stream.ts"
 export * from "./ai-agent-coordinator.ts"
+// Compute (container) service. Exported with `export *` so both the TypeBox
+// schemas and their `Static` types are reachable from the package root.
+export * from "./compute.ts"
 export type { ApiKey, ApiKeyValidation, ApiKeyWithValue } from "./api-key.ts"
 export type {
   AwsMarketplaceCustomer,
