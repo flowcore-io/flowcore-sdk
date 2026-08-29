@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.7.0](https://github.com/flowcore-io/flowcore-sdk/compare/v4.6.0...v4.7.0) (2026-08-29)
+
+
+### Features
+
+* **compute:** add full compute-api command coverage ([#243](https://github.com/flowcore-io/flowcore-sdk/issues/243)) ([6fa6481](https://github.com/flowcore-io/flowcore-sdk/commit/6fa648147596a4c53cab6a390e569eb2cfcc2862))
+* **compute:** stream workload logs over SSE as an RxJS observable ([#245](https://github.com/flowcore-io/flowcore-sdk/issues/245)) ([c59c399](https://github.com/flowcore-io/flowcore-sdk/commit/c59c39970ddbaadaf8ab6ead92353325fe1ccc57))
+
 ## [4.6.0](https://github.com/flowcore-io/flowcore-sdk/compare/v4.5.0...v4.6.0) (2026-07-24)
 
 
