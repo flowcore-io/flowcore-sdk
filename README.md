@@ -18,6 +18,7 @@ This is the Flowcore SDK, a TypeScript library for interacting with the Flowcore
   - [Scenario Operations](#scenario-operations)
   - [Notifications](#notifications)
   - [Adapter Operations](#adapter-operations)
+  - [Compute Operations](#compute-operations)
 
 ## Installation
 
@@ -1239,3 +1240,345 @@ if (result.success) {
 
 > **Note**: If both `timeBucket` and `eventId` are provided, the adapter will reset from the specified event within that time bucket.
 > **Important**: Resetting an adapter will cause it to reprocess events from the specified point, which may result in duplicate processing if not handled properly in your adapter logic.
+
+### Compute Operations
+
+Compute operations manage container workloads on the Flowcore compute platform (`https://compute.api.flowcore.io`):
+workloads and their revisions, on-demand batch runs, container logs, custom domains and image registry credentials.
+
+> **Note**: these commands are namespaced `Compute*` and are unrelated to the older `ContainerRegist*` commands, which
+> target a different backend.
+
+> **Important**: the live log stream (`GET /api/v1/workloads/{workloadId}/logs/stream`, Server-Sent Events) is **not**
+> covered by this SDK. Use `ComputeWorkloadLogsFetchCommand` for indexed historical logs.
+
+#### Asynchronous operations
+
+Six commands answer `202 Accepted` with an `operationId`: update, delete, rollback, pause, resume and run. The 202 is
+about the **cluster** — the write itself is already durable — so the returned workload is the one still serving until
+the in-cluster reconciler reports the operation succeeded.
+
+Every one of those six accepts `waitForOperation`:
+
+```typescript
+const result = await client.execute(new ComputeWorkloadUpdateCommand({
+  workloadId: "3f5d0d3e-0f2a-4a5f-9f2c-2f0f0d7b5a11",
+  image: "ghcr.io/acme/api:2.0.0",
+  waitForOperation: true,       // Poll until the operation reaches a terminal state
+  operationTimeoutMs: 900_000,  // Optional: budget in ms (default 600_000, i.e. 10 minutes)
+  operationPollIntervalMs: 2000 // Optional: gap between polls in ms (default 1000)
+}))
+
+result.operation?.status // "succeeded" | "failed"
+result.operation?.reason // Why it failed, when it did
+```
+
+- A **404 while polling means "not yet"**: the operation row does not exist until the reconciler files its first
+  progress report, so an early 404 is not a terminal answer.
+- A **failed operation is returned, not thrown** — `failed` answers the question that was asked.
+- **Exhausting the budget throws** a `CommandError` naming the last state observed. It is never a silent timeout.
+
+You can also poll manually with `ComputeOperationFetchCommand`.
+
+#### List Workloads
+
+```typescript
+import { ComputeWorkloadListCommand, FlowcoreClient } from "@flowcore/sdk"
+
+const workloads = await client.execute(new ComputeWorkloadListCommand({
+  tenantId: "8a1a2f83-4a6a-4f0a-9a7b-4c9b1d2e3f40"
+}))
+```
+
+#### Create a Workload
+
+```typescript
+import { ComputeWorkloadCreateCommand, FlowcoreClient } from "@flowcore/sdk"
+
+const workload = await client.execute(new ComputeWorkloadCreateCommand({
+  tenantId: "8a1a2f83-4a6a-4f0a-9a7b-4c9b1d2e3f40",
+  name: "api",
+  definition: {
+    image: "ghcr.io/acme/api:1.2.3",
+    slotTier: "small",              // nano | micro | small | medium | large
+    kind: "service",                // "service" (default) or "job" — IMMUTABLE after create
+    replicas: 2,                    // Fixed count under scaling.mode "manual"
+    port: 8080,
+    probes: { readiness: { httpGet: { path: "/healthz", port: 8080 } } },
+    preSync: {                      // Must exit 0 before any pod is created
+      image: "ghcr.io/acme/migrate:1.2.3",
+      command: ["bun", "run", "migrate"],
+      timeoutSeconds: 300
+    },
+    scaling: { mode: "hpa", minReplicas: 2, maxReplicas: 10, targetCpuPercent: 70 }
+  }
+}))
+```
+
+#### Fetch a Workload
+
+```typescript
+import { ComputeWorkloadFetchCommand, FlowcoreClient } from "@flowcore/sdk"
+
+const workload = await client.execute(new ComputeWorkloadFetchCommand({
+  workloadId: "3f5d0d3e-0f2a-4a5f-9f2c-2f0f0d7b5a11"
+}))
+
+workload.activeRevision  // The revision the platform has ACCEPTED as current
+workload.rolledBackFrom  // Set when the active revision came from a rollback
+workload.paused          // true when deliberately scaled to zero (status reads "stopped")
+```
+
+#### Update a Workload
+
+Every field is optional, but at least one must be given. Switching `scaling.mode` from `hpa` to `manual` additionally
+requires `replicas` in the same call.
+
+```typescript
+import { ComputeWorkloadUpdateCommand, FlowcoreClient } from "@flowcore/sdk"
+
+const { workload, operationId } = await client.execute(new ComputeWorkloadUpdateCommand({
+  workloadId: "3f5d0d3e-0f2a-4a5f-9f2c-2f0f0d7b5a11",
+  image: "ghcr.io/acme/api:2.0.0",
+  slotTier: "medium"
+}))
+```
+
+> **Note**: an update **records** a revision; it is promoted only when the operation succeeds. A workload whose
+> pre-sync hook fails keeps reporting the previous definition, which is the honest answer.
+
+#### Roll Back a Workload
+
+```typescript
+import { ComputeWorkloadRollbackCommand, FlowcoreClient } from "@flowcore/sdk"
+
+const { workload, operationId } = await client.execute(new ComputeWorkloadRollbackCommand({
+  workloadId: "3f5d0d3e-0f2a-4a5f-9f2c-2f0f0d7b5a11"
+}))
+```
+
+History is append-only: rolling back to revision 1 from revision 2 makes revision **3** active with revision 1's
+definition, and the workload then reports `activeRevision: 3, rolledBackFrom: 1`. Answers 409 when there is no earlier
+revision.
+
+#### Pause and Resume a Workload
+
+```typescript
+import { ComputeWorkloadPauseCommand, ComputeWorkloadResumeCommand, FlowcoreClient } from "@flowcore/sdk"
+
+await client.execute(new ComputeWorkloadPauseCommand({ workloadId: "3f5d0d3e-0f2a-4a5f-9f2c-2f0f0d7b5a11" }))
+await client.execute(new ComputeWorkloadResumeCommand({ workloadId: "3f5d0d3e-0f2a-4a5f-9f2c-2f0f0d7b5a11" }))
+```
+
+A pause scales the Deployment to zero and changes no definition field, so it mints no revision. A **resume re-runs the
+tenant quota pre-flight** — pausing frees quota, and the headroom may have been taken meanwhile — and a refused resume
+still answers 202, then fails the operation with the quota reason. Both answer 409 for a job-kind workload.
+
+#### Delete a Workload
+
+```typescript
+import { ComputeWorkloadDeleteCommand, FlowcoreClient } from "@flowcore/sdk"
+
+const { operationId } = await client.execute(new ComputeWorkloadDeleteCommand({
+  workloadId: "3f5d0d3e-0f2a-4a5f-9f2c-2f0f0d7b5a11"
+}))
+```
+
+Every live domain binding is released first. The workload leaves the list immediately; the Deployment, Service,
+autoscaler and Jobs are removed asynchronously.
+
+#### Run a Batch Job
+
+```typescript
+import { ComputeWorkloadRunCommand, FlowcoreClient } from "@flowcore/sdk"
+
+const { run, runId, operationId } = await client.execute(new ComputeWorkloadRunCommand({
+  workloadId: "3f5d0d3e-0f2a-4a5f-9f2c-2f0f0d7b5a11"
+}))
+```
+
+Only for a workload of kind `job` — a service-kind workload answers 409.
+
+#### List Run History
+
+```typescript
+import { ComputeWorkloadRunsListCommand, FlowcoreClient } from "@flowcore/sdk"
+
+const page = await client.execute(new ComputeWorkloadRunsListCommand({
+  workloadId: "3f5d0d3e-0f2a-4a5f-9f2c-2f0f0d7b5a11",
+  limit: 50,        // Optional, 1..200 (default 50)
+  cursor: undefined // Optional: the previous page's nextCursor
+}))
+
+page.runs       // Newest first — kind "batch" (on demand) and "pre_sync" (deploy hooks)
+page.nextCursor // Absent on the last page
+```
+
+#### Fetch Container Logs
+
+```typescript
+import { ComputeWorkloadLogsFetchCommand, FlowcoreClient } from "@flowcore/sdk"
+
+const logs = await client.execute(new ComputeWorkloadLogsFetchCommand({
+  workloadId: "3f5d0d3e-0f2a-4a5f-9f2c-2f0f0d7b5a11",
+  since: "2026-08-01T00:00:00.000Z", // Optional
+  until: "2026-08-02T00:00:00.000Z", // Optional
+  search: "error",                   // Optional
+  limit: 100,                        // Optional, 1..1000 (default 100)
+  container: "api"                   // Optional
+}))
+```
+
+The tenant namespace and the workload pod label are derived server-side and cannot be widened by the caller.
+
+#### List Attached Domains
+
+```typescript
+import { ComputeDomainListCommand, FlowcoreClient } from "@flowcore/sdk"
+
+const domains = await client.execute(new ComputeDomainListCommand({
+  workloadId: "3f5d0d3e-0f2a-4a5f-9f2c-2f0f0d7b5a11"
+}))
+```
+
+Live bindings only, oldest first, served from the projection — no DNS lookup is performed.
+
+#### Attach a Domain
+
+Exactly one of `hostname` (a domain you own) or `subdomain` (a label under the platform wildcard zone):
+
+```typescript
+import { ComputeDomainAttachCommand, FlowcoreClient } from "@flowcore/sdk"
+
+// Custom hostname — 202, DNS verification and certificate issuance still pending
+const custom = await client.execute(new ComputeDomainAttachCommand({
+  workloadId: "3f5d0d3e-0f2a-4a5f-9f2c-2f0f0d7b5a11",
+  hostname: "api.acme.org",       // Lowercase FQDN; uppercase is REJECTED, not folded
+  targetPort: 8080,
+  tls: { mode: "letsencrypt", clusterIssuer: "letsencrypt-prod" } // Optional
+}))
+
+// Platform wildcard subdomain — 201, ready to route
+const wildcard = await client.execute(new ComputeDomainAttachCommand({
+  workloadId: "3f5d0d3e-0f2a-4a5f-9f2c-2f0f0d7b5a11",
+  subdomain: "acme",              // A single DNS label — no dots
+  targetPort: 8080
+}))
+```
+
+Attach carries **no** `operationId`, so it has no `waitForOperation`; follow up with the verify command instead.
+Answers 409 when the hostname is already bound, or when the workload is of kind `job`.
+
+#### Verify a Domain
+
+```typescript
+import { ComputeDomainVerifyCommand, FlowcoreClient } from "@flowcore/sdk"
+
+const observed = await client.execute(new ComputeDomainVerifyCommand({
+  workloadId: "3f5d0d3e-0f2a-4a5f-9f2c-2f0f0d7b5a11",
+  domainId: "b7d2c1e0-5f4a-4c3b-8d2e-1a0b9c8d7e6f"
+}))
+
+observed.verification.verified // false when the CNAME is missing or mismatched
+observed.tls.status            // "pending_issuance" | "issued" | "failed"
+```
+
+Every observed outcome is a 200, including the unhappy ones. Only a broken upstream changes the status code (503
+unreachable, 502 bad answer).
+
+#### Detach a Domain
+
+```typescript
+import { ComputeDomainDetachCommand, FlowcoreClient } from "@flowcore/sdk"
+
+await client.execute(new ComputeDomainDetachCommand({
+  workloadId: "3f5d0d3e-0f2a-4a5f-9f2c-2f0f0d7b5a11",
+  domainId: "b7d2c1e0-5f4a-4c3b-8d2e-1a0b9c8d7e6f"
+}))
+// Returns { status: 204 } — the endpoint answers 204 No Content
+```
+
+#### Inspect an Operation
+
+```typescript
+import { ComputeOperationFetchCommand, FlowcoreClient } from "@flowcore/sdk"
+
+const operation = await client.execute(new ComputeOperationFetchCommand({
+  operationId: "d9e8f7a6-b5c4-4d3e-9f2a-1b0c9d8e7f66"
+}))
+
+operation.status              // "pending" | "in_progress" | "succeeded" | "failed"
+operation.phase               // e.g. "pre_sync_running", "rolling_out", "tearing_down"
+operation.progress.preSync    // The migration hook, when the mutation gated on one
+operation.progress.deployment // Rollout replica counters
+```
+
+Throws `NotFoundException` until the reconciler files its first progress report.
+
+#### List Registries
+
+```typescript
+import { ComputeRegistryListCommand, FlowcoreClient } from "@flowcore/sdk"
+
+const registries = await client.execute(new ComputeRegistryListCommand({
+  tenantId: "8a1a2f83-4a6a-4f0a-9a7b-4c9b1d2e3f40"
+}))
+```
+
+#### Register Registry Credentials
+
+```typescript
+import { ComputeRegistryRegisterCommand, FlowcoreClient } from "@flowcore/sdk"
+
+const registry = await client.execute(new ComputeRegistryRegisterCommand({
+  tenantId: "8a1a2f83-4a6a-4f0a-9a7b-4c9b1d2e3f40",
+  name: "acme ghcr",
+  serverUrl: "ghcr.io",   // Host only — a scheme is REJECTED, not stripped, and so is uppercase
+  username: "acme-bot",
+  secret: process.env.REGISTRY_TOKEN!,
+  isDefault: true         // Optional (default false)
+}))
+```
+
+> **Important**: the secret is **write-only**. No response type in this SDK has a field that could hold a credential —
+> rotation is the only way to change it. Answers 409 when the same `serverUrl` is already configured for the tenant.
+
+#### Inspect a Registry
+
+```typescript
+import { ComputeRegistryFetchCommand, FlowcoreClient } from "@flowcore/sdk"
+
+const registry = await client.execute(new ComputeRegistryFetchCommand({
+  registryId: "c1a2b3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d"
+}))
+
+registry.synthesisStatus // "pending" (no report yet) | "synthesized" | "failed"
+registry.synthesisReason // Why the in-cluster pull Secret could not be built
+```
+
+#### Rotate a Registry Secret
+
+```typescript
+import { ComputeRegistryRotateCommand, FlowcoreClient } from "@flowcore/sdk"
+
+const registry = await client.execute(new ComputeRegistryRotateCommand({
+  registryId: "c1a2b3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+  secret: process.env.NEW_REGISTRY_TOKEN!
+}))
+
+registry.updatedAt // The real rotation timestamp, read back from the projection
+```
+
+#### Remove a Registry
+
+```typescript
+import { ComputeRegistryRemoveCommand, FlowcoreClient } from "@flowcore/sdk"
+
+await client.execute(new ComputeRegistryRemoveCommand({
+  registryId: "c1a2b3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d"
+}))
+// Returns { status: 204 } — the endpoint answers 204 No Content
+```
+
+Removal is unconditional: no workload reference is checked and no new default is elected. The `serverUrl` becomes
+registrable again immediately; the in-cluster credential is revoked asynchronously.
