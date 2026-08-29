@@ -1,13 +1,15 @@
-import { assertEquals, assertRejects } from "@test/compat/assert"
 import { afterAll, afterEach, describe, it } from "bun:test"
+import { assertEquals, assertRejects } from "@test/compat/assert"
+import type { Observable } from "rxjs"
 import {
   CommandError,
   type ComputeDomain,
   ComputeDomainAttachCommand,
   ComputeDomainDetachCommand,
   ComputeDomainListCommand,
-  type ComputeDomainVerifyResponse,
   ComputeDomainVerifyCommand,
+  type ComputeDomainVerifyResponse,
+  type ComputeLogStreamEvent,
   type ComputeOperation,
   ComputeOperationFetchCommand,
   type ComputeRegistry,
@@ -22,8 +24,9 @@ import {
   ComputeWorkloadDeleteCommand,
   ComputeWorkloadFetchCommand,
   ComputeWorkloadListCommand,
-  ComputeWorkloadLogsFetchCommand,
+  ComputeWorkloadLogStreamCommand,
   type ComputeWorkloadLogs,
+  ComputeWorkloadLogsFetchCommand,
   ComputeWorkloadPauseCommand,
   ComputeWorkloadResumeCommand,
   ComputeWorkloadRollbackCommand,
@@ -132,6 +135,53 @@ function makeRun(overrides: Partial<ComputeWorkloadRun> = {}): ComputeWorkloadRu
     ...overrides,
   }
 }
+
+/** Drains an observable to an array, resolving when it completes. */
+function collect<T>(observable: Observable<T>): Promise<T[]> {
+  return new Promise<T[]>((resolve, reject) => {
+    const values: T[] = []
+    observable.subscribe({
+      next: (value) => values.push(value),
+      error: reject,
+      complete: () => resolve(values),
+    })
+  })
+}
+
+/**
+ * Swaps `globalThis.fetch` for the duration of one call, so a test can serve a
+ * stream that stays open — something the shared FetchMocker, which answers with
+ * a complete body, cannot do. Restored even when `run` throws.
+ */
+async function withStubbedFetch<T>(
+  handler: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>,
+  run: () => Promise<T>,
+): Promise<T> {
+  const original = globalThis.fetch
+  globalThis.fetch = handler as typeof globalThis.fetch
+  try {
+    return await run()
+  } finally {
+    globalThis.fetch = original
+  }
+}
+
+/** Polls until `predicate` holds, or throws after ~1s. No live calls, no sleeps in the SUT. */
+async function waitFor(predicate: () => boolean): Promise<void> {
+  for (let attempt = 0; attempt < 100; attempt++) {
+    if (predicate()) {
+      return
+    }
+    await new Promise((resolve) => setTimeout(resolve, 10))
+  }
+  throw new Error("Timed out waiting for condition")
+}
+
+function sseResponse(body: ReadableStream<Uint8Array>): Response {
+  return new Response(body, { status: 200, headers: { "Content-Type": "text/event-stream" } })
+}
+
+const encoder = new TextEncoder()
 
 describe("Compute", () => {
   const fetchMocker = new FetchMocker()
@@ -706,6 +756,259 @@ describe("Compute", () => {
       () => responsePromise,
       NotFoundException,
       `Registry not found: ${JSON.stringify({ registryId })}`,
+    )
+  })
+
+  // ── Live log stream (SSE) ──
+
+  it("should parse a multi-frame SSE stream into log events, in wire order", async () => {
+    // arrange — a leading comment line, then three `event: log` frames.
+    const frames = [
+      ": stream opened",
+      "",
+      "event: log",
+      'data: {"timestamp":"2026-08-01T10:00:00.000Z","pod":"api-0","container":"api","line":"first"}',
+      "",
+      "event: log",
+      'data: {"timestamp":"2026-08-01T10:00:01.000Z","pod":"api-0","container":"api","line":"second"}',
+      "",
+      "event: log",
+      'data: {"timestamp":"2026-08-01T10:00:02.000Z","pod":"api-1","container":"api","line":"third"}',
+      "",
+      "",
+    ].join("\n")
+    compute
+      .get(`/api/v1/workloads/${workloadId}/logs/stream`)
+      .matchSearchParams({ container: "api", tailLines: "50" })
+      .respondWith(200, frames)
+
+    // act
+    const stream = await flowcoreClient.execute(
+      new ComputeWorkloadLogStreamCommand({ workloadId, container: "api", tailLines: 50 }),
+    )
+    const events = await collect(stream.output$)
+
+    // assert
+    assertEquals(
+      events.map((event) => event.line),
+      ["first", "second", "third"],
+    )
+    assertEquals(events[0], {
+      timestamp: "2026-08-01T10:00:00.000Z",
+      pod: "api-0",
+      container: "api",
+      line: "first",
+    })
+    assertEquals(events[2].pod, "api-1")
+  })
+
+  it("should NOT emit heartbeat frames or comment lines as log events", async () => {
+    // arrange
+    const frames = [
+      "event: heartbeat",
+      "data: 2026-08-01T10:00:00.000Z",
+      "",
+      ": keep-alive",
+      "",
+      "event: log",
+      'data: {"timestamp":"2026-08-01T10:00:01.000Z","pod":"api-0","container":"api","line":"only line"}',
+      "",
+      "event: heartbeat",
+      "data: 2026-08-01T10:00:15.000Z",
+      "",
+      "",
+    ].join("\n")
+    compute.get(`/api/v1/workloads/${workloadId}/logs/stream`).respondWith(200, frames)
+
+    // act
+    const stream = await flowcoreClient.execute(new ComputeWorkloadLogStreamCommand({ workloadId }))
+    const events = await collect(stream.output$)
+
+    // assert — the heartbeats kept the connection alive and nothing else.
+    assertEquals(events.length, 1)
+    assertEquals(events[0].line, "only line")
+  })
+
+  it("should surface a mid-stream error frame as an observable error, not a silent completion", async () => {
+    // arrange — the service commits a 200, streams one log line, then hits a
+    // failure and writes `event: error`. Dropping that frame would complete
+    // the stream normally and the caller could not tell "the logs ended" from
+    // "streaming broke".
+    const frames = [
+      "event: log",
+      'data: {"timestamp":"2026-08-01T10:00:00.000Z","pod":"api-0","container":"api","line":"before the failure"}',
+      "",
+      "event: error",
+      'data: {"message":"pod log stream closed unexpectedly"}',
+      "",
+      "",
+    ].join("\n")
+    compute.get(`/api/v1/workloads/${workloadId}/logs/stream`).respondWith(200, frames)
+
+    // act
+    const stream = await flowcoreClient.execute(new ComputeWorkloadLogStreamCommand({ workloadId }))
+    const seen: ComputeLogStreamEvent[] = []
+    const failure = await new Promise<unknown>((resolve) => {
+      stream.output$.subscribe({
+        next: (event) => seen.push(event),
+        error: (error) => resolve(error),
+        complete: () => resolve(null),
+      })
+    })
+
+    // assert — the lines before the failure are delivered, THEN it errors.
+    assertEquals(seen.length, 1)
+    assertEquals(seen[0].line, "before the failure")
+    assertEquals(failure instanceof Error, true)
+    assertEquals((failure as Error).message.includes("pod log stream closed unexpectedly"), true)
+  })
+
+  it("should still error when an error frame carries a payload that is not the expected JSON", async () => {
+    // arrange — a mid-stream failure is exactly the moment not to add a second
+    // failure mode, so an unparseable payload falls back to the raw text
+    // rather than throwing inside the parser.
+    const frames = ["event: error", "data: upstream exploded", "", ""].join("\n")
+    compute.get(`/api/v1/workloads/${workloadId}/logs/stream`).respondWith(200, frames)
+
+    // act
+    const stream = await flowcoreClient.execute(new ComputeWorkloadLogStreamCommand({ workloadId }))
+    const failure = await new Promise<unknown>((resolve) => {
+      stream.output$.subscribe({ error: (error) => resolve(error), complete: () => resolve(null) })
+    })
+
+    // assert
+    assertEquals(failure instanceof Error, true)
+    assertEquals((failure as Error).message.includes("upstream exploded"), true)
+  })
+
+  it("should concatenate a data payload split across multiple data lines", async () => {
+    // arrange — one frame whose JSON is spread over three `data:` fields. Per
+    // the SSE spec they are joined with a newline, which keeps the JSON valid.
+    const frames = [
+      "event: log",
+      'data: {"timestamp":"2026-08-01T10:00:00.000Z",',
+      'data: "pod":"api-0","container":"api",',
+      'data: "line":"joined across data lines"}',
+      "",
+      "",
+    ].join("\n")
+    compute.get(`/api/v1/workloads/${workloadId}/logs/stream`).respondWith(200, frames)
+
+    // act
+    const stream = await flowcoreClient.execute(new ComputeWorkloadLogStreamCommand({ workloadId }))
+    const events = await collect(stream.output$)
+
+    // assert
+    assertEquals(events.length, 1)
+    assertEquals(events[0].line, "joined across data lines")
+    assertEquals(events[0].pod, "api-0")
+  })
+
+  it("should reassemble frames split across network chunk boundaries", async () => {
+    // arrange — the frame delimiter, the field name and the JSON are all cut
+    // mid-token, which is what a real socket does.
+    const chunks = [
+      "event: lo",
+      'g\ndata: {"timestamp":"2026-08-01T10:00:00.000Z","pod":"api-0",',
+      '"container":"api","line":"chunked"}\n',
+      '\nevent: log\ndata: {"timestamp":"2026-08-01T10:00:01.000Z","pod":"api-0","container":"api",',
+      '"line":"second chunked"}\n\n',
+    ]
+
+    // act
+    const stream = await withStubbedFetch(
+      () =>
+        Promise.resolve(
+          sseResponse(
+            new ReadableStream<Uint8Array>({
+              start(controller) {
+                for (const chunk of chunks) {
+                  controller.enqueue(encoder.encode(chunk))
+                }
+                controller.close()
+              },
+            }),
+          ),
+        ),
+      () => flowcoreClient.execute(new ComputeWorkloadLogStreamCommand({ workloadId })),
+    )
+    const events = await collect(stream.output$)
+
+    // assert
+    assertEquals(
+      events.map((event) => event.line),
+      ["chunked", "second chunked"],
+    )
+  })
+
+  it("should abort the underlying fetch when the caller disconnects", async () => {
+    // arrange — a stream that emits once and then never closes, so the only
+    // way out is the caller's disconnect.
+    let capturedSignal: AbortSignal | undefined
+    const stream = await withStubbedFetch(
+      (_input, init) => {
+        capturedSignal = init?.signal ?? undefined
+        return Promise.resolve(
+          sseResponse(
+            new ReadableStream<Uint8Array>({
+              start(controller) {
+                controller.enqueue(
+                  encoder.encode(
+                    'event: log\ndata: {"timestamp":"2026-08-01T10:00:00.000Z","pod":"api-0","container":"api","line":"live"}\n\n',
+                  ),
+                )
+                // Deliberately never closed.
+              },
+            }),
+          ),
+        )
+      },
+      () => flowcoreClient.execute(new ComputeWorkloadLogStreamCommand({ workloadId })),
+    )
+
+    const received: ComputeLogStreamEvent[] = []
+    let completed = false
+    stream.output$.subscribe({
+      next: (event) => received.push(event),
+      complete: () => {
+        completed = true
+      },
+    })
+    await waitFor(() => received.length === 1)
+
+    // assert — still open before the disconnect
+    assertEquals(capturedSignal?.aborted, false)
+    assertEquals(completed, false)
+
+    // act
+    stream.disconnect()
+
+    // assert — the fetch is really aborted and the observable completes
+    assertEquals(capturedSignal?.aborted, true)
+    await waitFor(() => completed)
+    assertEquals(received.length, 1)
+
+    // and it is idempotent
+    stream.disconnect()
+  })
+
+  it("should throw NotFoundException when the stream 404s before it opens", async () => {
+    // arrange — 404/502/503 are produced BEFORE the first chunk, so the status
+    // is still meaningful and can be mapped.
+    compute.get(`/api/v1/workloads/${workloadId}/logs/stream`).respondWith(404, {
+      statusCode: 404,
+      error: "Not Found",
+      message: `Workload ${workloadId} has no running pods to stream`,
+    })
+
+    // act
+    const responsePromise = flowcoreClient.execute(new ComputeWorkloadLogStreamCommand({ workloadId }))
+
+    // assert
+    await assertRejects(
+      () => responsePromise,
+      NotFoundException,
+      `Workload not found: ${JSON.stringify({ workloadId })}`,
     )
   })
 })

@@ -86,8 +86,14 @@ export class FlowcoreClient {
 
   /**
    * Get the auth header
+   *
+   * Public so that a `CustomCommand` which owns its own transport — a
+   * streaming request whose body must NOT be consumed by `innerExecute`'s
+   * unconditional `response.json()` — can authenticate its own fetch with
+   * exactly the header every other command sends. Read-only: it derives the
+   * header from the client options and mutates nothing.
    */
-  private async getAuthHeader(): Promise<string | null> {
+  public async getAuthHeader(): Promise<string | null> {
     if ((this.options as ClientOptionsBearer).getBearerToken) {
       const bearerToken = await (this.options as ClientOptionsBearer).getBearerToken()
       if (!bearerToken) {

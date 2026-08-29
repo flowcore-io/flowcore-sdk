@@ -21,7 +21,7 @@ export abstract class CustomCommand<Input, Output> extends Command<Input, Output
   /**
    * Get the request object
    */
-  public override async getRequest(_client: FlowcoreClient, direct?: boolean): Promise<{
+  public override async getRequest(client: FlowcoreClient, direct?: boolean): Promise<{
     allowedModes: ("apiKey" | "bearer")[]
     body: string | Record<string, unknown> | Array<unknown> | undefined
     headers: Record<string, string>
@@ -32,9 +32,13 @@ export abstract class CustomCommand<Input, Output> extends Command<Input, Output
     processResponse: (client: FlowcoreClient, response: Output) => Promise<Output>
     handleClientError: (error: ClientError) => void
     retryOnFailure: boolean
+    customExecute: (client: FlowcoreClient) => Promise<Output>
   }> {
+    // `super.getRequest` is async: spreading it without awaiting yields NONE
+    // of its keys (a Promise has no own enumerable properties), so the
+    // returned object used to carry `customExecute` alone.
     return {
-      ...super.getRequest(_client, direct),
+      ...(await super.getRequest(client, direct)),
       customExecute: this.customExecute.bind(this),
     }
   }
