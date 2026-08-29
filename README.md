@@ -1249,8 +1249,8 @@ workloads and their revisions, on-demand batch runs, container logs, custom doma
 > **Note**: these commands are namespaced `Compute*` and are unrelated to the older `ContainerRegist*` commands, which
 > target a different backend.
 
-> **Important**: the live log stream (`GET /api/v1/workloads/{workloadId}/logs/stream`, Server-Sent Events) is **not**
-> covered by this SDK. Use `ComputeWorkloadLogsFetchCommand` for indexed historical logs.
+> **Logs come in two flavours**: `ComputeWorkloadLogsFetchCommand` queries indexed historical lines, while
+> `ComputeWorkloadLogStreamCommand` follows the live Server-Sent Events stream as an RxJS `Observable`.
 
 #### Asynchronous operations
 
@@ -1430,6 +1430,36 @@ const logs = await client.execute(new ComputeWorkloadLogsFetchCommand({
 ```
 
 The tenant namespace and the workload pod label are derived server-side and cannot be widened by the caller.
+
+#### Stream Container Logs
+
+```typescript
+import { ComputeWorkloadLogStreamCommand, FlowcoreClient } from "@flowcore/sdk"
+
+const stream = await client.execute(new ComputeWorkloadLogStreamCommand({
+  workloadId: "3f5d0d3e-0f2a-4a5f-9f2c-2f0f0d7b5a11",
+  container: "api", // Optional
+  tailLines: 100    // Optional, 0..1000 (default 100)
+}))
+
+const subscription = stream.output$.subscribe({
+  next: (event) => console.log(event.timestamp, event.pod, event.container, event.line),
+  error: (error) => console.error("stream broke", error),
+  complete: () => console.log("stream closed")
+})
+
+// Later — aborts the underlying request and completes the observable
+stream.disconnect()
+subscription.unsubscribe()
+```
+
+- `output$` emits one `ComputeLogStreamEvent` per `event: log` frame, in wire order. The server's `event: heartbeat`
+  frames keep the connection alive and are **not** emitted.
+- Errors are raised **before** the stream opens, so the HTTP status is still meaningful: a 404 (unknown workload, or one
+  with no running pods) throws `NotFoundException`, and 502/503 throw `ClientError`. Once the stream is open, a failure
+  surfaces on `output$`.
+- `disconnect()` aborts the underlying fetch, so the service tears down its upstream pod followers rather than leaking
+  one per abandoned consumer. It is idempotent.
 
 #### List Attached Domains
 

@@ -510,6 +510,34 @@ export const ComputeWorkloadLogsSchema: TComputeWorkloadLogs = Type.Object({
 })
 export type ComputeWorkloadLogs = Static<typeof ComputeWorkloadLogsSchema>
 
+/**
+ * The `data:` payload of one `event: log` frame on the LIVE SSE stream
+ * (`GET /api/v1/workloads/{workloadId}/logs/stream`).
+ *
+ * Deliberately NOT unified with `ComputeLogEntry`: the service names the
+ * fields differently on the two surfaces (`pod`/`line` here, `podName`/
+ * `message` on the indexed one), and collapsing them would rename a
+ * documented wire field. Heartbeat frames (`event: heartbeat`) carry a bare
+ * ISO-8601 string, not this shape, and are never surfaced as log events.
+ */
+export type TComputeLogStreamEvent = TObject<{
+  timestamp: TString
+  pod: TString
+  container: TString
+  line: TString
+}>
+export const ComputeLogStreamEventSchema: TComputeLogStreamEvent = Type.Object({
+  /** ISO-8601 timestamp of the line, from the Kubernetes `timestamps=true` prefix */
+  timestamp: Type.String(),
+  /** The pod that emitted it */
+  pod: Type.String(),
+  /** The container that emitted it */
+  container: Type.String(),
+  /** The line itself, passed through byte-for-byte */
+  line: Type.String(),
+})
+export type ComputeLogStreamEvent = Static<typeof ComputeLogStreamEventSchema>
+
 // ── Domains ──
 
 /** Lifecycle state of a domain binding. */
