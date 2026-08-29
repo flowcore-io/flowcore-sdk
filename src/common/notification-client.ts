@@ -74,6 +74,11 @@ type NotificationClientAuthOptions =
   | NotificationClientAuthOptionsBearer
   | NotificationClientAuthOptionsApiKey
 
+/** The resolved credential, after an OIDC token has been fetched. */
+type NotificationCredential =
+  | { kind: "bearer"; token: string }
+  | { kind: "apiKey"; apiKey: string; apiKeyId?: string }
+
 /**
  * Client for handling WebSocket connections to the Flowcore notification system.
  * Manages connection lifecycle, authentication, and event handling.
@@ -88,6 +93,17 @@ export class NotificationClient {
   private reconnectAttempts = 0
   private _isOpen: boolean = false
   private _isConnecting: boolean = false
+  /**
+   * Which handshake carries the credential.
+   *
+   * `subprotocol` is tried first and is the one that does NOT put the
+   * credential in the URL. `query` is the legacy transport, kept only so this
+   * client still works against a server that has not shipped subprotocol
+   * support yet.
+   */
+  private authTransport: "subprotocol" | "query" = "subprotocol"
+  /** True once a handshake has settled, so the fallback is probed at most once. */
+  private transportSettled = false
 
   /**
    * Creates a new NotificationClient instance
@@ -143,22 +159,30 @@ export class NotificationClient {
     let flowcoreClient: FlowcoreClient | null = null
     const urlParams = new URLSearchParams()
 
+    let credential: NotificationCredential
     if ("oidcClient" in this.authOptions) {
       const oidcClient = this.authOptions.oidcClient
       flowcoreClient = new FlowcoreClient({
         getBearerToken: async () => (await oidcClient.getToken()).accessToken,
       })
-      urlParams.set("token", (await oidcClient.getToken()).accessToken)
+      credential = { kind: "bearer", token: (await oidcClient.getToken()).accessToken }
     } else {
       flowcoreClient = new FlowcoreClient({
         apiKey: this.authOptions.apiKey,
         ...(this.authOptions.apiKeyId ? { apiKeyId: this.authOptions.apiKeyId } : {}),
       })
-      urlParams.set("api_key", this.authOptions.apiKey)
-      if (this.authOptions.apiKeyId) {
-        urlParams.set("api_key_id", this.authOptions.apiKeyId)
+      credential = {
+        kind: "apiKey",
+        apiKey: this.authOptions.apiKey,
+        ...(this.authOptions.apiKeyId ? { apiKeyId: this.authOptions.apiKeyId } : {}),
       }
     }
+
+    const handshake = this.buildCredentialHandshake(credential)
+    for (const [key, value] of handshake.query) {
+      urlParams.set(key, value)
+    }
+    const credentialProtocols = handshake.protocols
 
     const dataCore = await flowcoreClient.execute(
       new DataCoreFetchCommand({
@@ -187,11 +211,17 @@ export class NotificationClient {
       }
     }
 
-    this.webSocket = new WebSocketConstructor(`${this.url}?${urlParams.toString()}`) as unknown as WebSocket
+    const query = urlParams.toString()
+    this.webSocket = new WebSocketConstructor(
+      query ? `${this.url}?${query}` : this.url,
+      credentialProtocols.length > 0 ? credentialProtocols : undefined,
+    ) as unknown as WebSocket
 
     this.webSocket.onopen = () => {
       this._isOpen = true
       this._isConnecting = false
+      // This transport works; never probe the other one again.
+      this.transportSettled = true
       this.logger.debug("WebSocket connection opened.")
       this.reconnectInterval = this.options.reconnectInterval
       this.reconnectAttempts = 0
@@ -224,6 +254,10 @@ export class NotificationClient {
     this.webSocket.onclose = (event) => {
       this._isOpen = false
       this.logger.debug(`Connection closed: Code [${event.code}], Reason: ${event.reason}`)
+      if (this.shouldFallBackToQueryTransport()) {
+        this.fallBackToQueryTransport()
+        return
+      }
       if (![1000].includes(event.code)) {
         this.attemptReconnect()
         return
@@ -233,10 +267,81 @@ export class NotificationClient {
     }
 
     this.webSocket.onerror = (error) => {
+      // A server without subprotocol support refuses the handshake, which
+      // surfaces here BEFORE `onopen`. That is a probe result, not a fault, so
+      // it must not terminate the observable — `onclose` performs the retry.
+      if (this.shouldFallBackToQueryTransport()) {
+        this.logger.debug("Subprotocol handshake refused; retrying on the legacy query transport")
+        this.webSocket.close()
+        return
+      }
       this.logger.error(`WebSocket encountered error: ${error}`)
       this.observer.error(error)
       this.webSocket.close()
     }
+  }
+
+  /**
+   * Decides WHERE the credential travels, for the transport currently selected.
+   *
+   * This is the whole security property of this client, isolated so it can be
+   * asserted directly: on the `subprotocol` transport the returned query is
+   * EMPTY. An ingress access log records the request line, so a credential in
+   * the query string is written to disk in plaintext and is readable by
+   * everyone with log access — for a long-lived `fc_` key that is a full
+   * tenant compromise sitting in a log index.
+   */
+  private buildCredentialHandshake(
+    credential: NotificationCredential,
+  ): { query: URLSearchParams; protocols: string[] } {
+    const query = new URLSearchParams()
+    const protocols: string[] = []
+
+    if (this.authTransport === "query") {
+      if (credential.kind === "bearer") {
+        query.set("token", credential.token)
+      } else {
+        query.set("api_key", credential.apiKey)
+        if (credential.apiKeyId) {
+          query.set("api_key_id", credential.apiKeyId)
+        }
+      }
+      return { query, protocols }
+    }
+
+    if (credential.kind === "bearer") {
+      protocols.push("flowcore-bearer", credential.token)
+    } else {
+      protocols.push("flowcore-api-key", credential.apiKey)
+      if (credential.apiKeyId) {
+        protocols.push(credential.apiKeyId)
+      }
+    }
+    return { query, protocols }
+  }
+
+  /**
+   * True when the subprotocol handshake has just failed for the first time.
+   *
+   * The fallback is probed at most ONCE per client. After it settles, a later
+   * failure is a real failure and goes through normal reconnect handling.
+   */
+  private shouldFallBackToQueryTransport(): boolean {
+    return this.authTransport === "subprotocol" && !this.transportSettled && !this._isOpen
+  }
+
+  /**
+   * Switches to the legacy query-string transport and reconnects immediately.
+   *
+   * This does NOT count as a reconnect attempt: no backoff is consumed and the
+   * caller sees one continuous connection attempt.
+   */
+  private fallBackToQueryTransport(): void {
+    this.transportSettled = true
+    this.authTransport = "query"
+    this._isConnecting = false
+    this.logger.debug("Falling back to the legacy query-string credential transport")
+    void this.connect()
   }
 
   /**
