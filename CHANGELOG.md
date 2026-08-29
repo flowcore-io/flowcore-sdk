@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.8.0](https://github.com/flowcore-io/flowcore-sdk/compare/v4.7.0...v4.8.0) (2026-08-29)
+
+
+### Features
+
+* **compute:** add workload revisions and deployment events list commands ([#246](https://github.com/flowcore-io/flowcore-sdk/issues/246)) ([9afca59](https://github.com/flowcore-io/flowcore-sdk/commit/9afca59057d38535d0ad6c9acde7fc3ab3c8a7d3))
+
 ## [4.7.0](https://github.com/flowcore-io/flowcore-sdk/compare/v4.6.0...v4.7.0) (2026-08-29)
 
 
