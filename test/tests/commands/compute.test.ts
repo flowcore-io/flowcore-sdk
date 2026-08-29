@@ -1,15 +1,15 @@
-import { assertEquals, assertRejects } from "@test/compat/assert"
 import { afterAll, afterEach, describe, it } from "bun:test"
+import { assertEquals, assertRejects } from "@test/compat/assert"
 import type { Observable } from "rxjs"
 import {
   CommandError,
-  type ComputeLogStreamEvent,
   type ComputeDomain,
   ComputeDomainAttachCommand,
   ComputeDomainDetachCommand,
   ComputeDomainListCommand,
-  type ComputeDomainVerifyResponse,
   ComputeDomainVerifyCommand,
+  type ComputeDomainVerifyResponse,
+  type ComputeLogStreamEvent,
   type ComputeOperation,
   ComputeOperationFetchCommand,
   type ComputeRegistry,
@@ -25,8 +25,8 @@ import {
   ComputeWorkloadFetchCommand,
   ComputeWorkloadListCommand,
   ComputeWorkloadLogStreamCommand,
-  ComputeWorkloadLogsFetchCommand,
   type ComputeWorkloadLogs,
+  ComputeWorkloadLogsFetchCommand,
   ComputeWorkloadPauseCommand,
   ComputeWorkloadResumeCommand,
   ComputeWorkloadRollbackCommand,
@@ -827,6 +827,58 @@ describe("Compute", () => {
     // assert — the heartbeats kept the connection alive and nothing else.
     assertEquals(events.length, 1)
     assertEquals(events[0].line, "only line")
+  })
+
+  it("should surface a mid-stream error frame as an observable error, not a silent completion", async () => {
+    // arrange — the service commits a 200, streams one log line, then hits a
+    // failure and writes `event: error`. Dropping that frame would complete
+    // the stream normally and the caller could not tell "the logs ended" from
+    // "streaming broke".
+    const frames = [
+      "event: log",
+      'data: {"timestamp":"2026-08-01T10:00:00.000Z","pod":"api-0","container":"api","line":"before the failure"}',
+      "",
+      "event: error",
+      'data: {"message":"pod log stream closed unexpectedly"}',
+      "",
+      "",
+    ].join("\n")
+    compute.get(`/api/v1/workloads/${workloadId}/logs/stream`).respondWith(200, frames)
+
+    // act
+    const stream = await flowcoreClient.execute(new ComputeWorkloadLogStreamCommand({ workloadId }))
+    const seen: ComputeLogStreamEvent[] = []
+    const failure = await new Promise<unknown>((resolve) => {
+      stream.output$.subscribe({
+        next: (event) => seen.push(event),
+        error: (error) => resolve(error),
+        complete: () => resolve(null),
+      })
+    })
+
+    // assert — the lines before the failure are delivered, THEN it errors.
+    assertEquals(seen.length, 1)
+    assertEquals(seen[0].line, "before the failure")
+    assertEquals(failure instanceof Error, true)
+    assertEquals((failure as Error).message.includes("pod log stream closed unexpectedly"), true)
+  })
+
+  it("should still error when an error frame carries a payload that is not the expected JSON", async () => {
+    // arrange — a mid-stream failure is exactly the moment not to add a second
+    // failure mode, so an unparseable payload falls back to the raw text
+    // rather than throwing inside the parser.
+    const frames = ["event: error", "data: upstream exploded", "", ""].join("\n")
+    compute.get(`/api/v1/workloads/${workloadId}/logs/stream`).respondWith(200, frames)
+
+    // act
+    const stream = await flowcoreClient.execute(new ComputeWorkloadLogStreamCommand({ workloadId }))
+    const failure = await new Promise<unknown>((resolve) => {
+      stream.output$.subscribe({ error: (error) => resolve(error), complete: () => resolve(null) })
+    })
+
+    // assert
+    assertEquals(failure instanceof Error, true)
+    assertEquals((failure as Error).message.includes("upstream exploded"), true)
   })
 
   it("should concatenate a data payload split across multiple data lines", async () => {

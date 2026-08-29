@@ -142,6 +142,28 @@ function createSseParser(onFrame: (frame: SseFrame) => void): (chunk: string) =>
  * subscription.unsubscribe()
  * ```
  */
+/**
+ * The human-readable message inside an `event: error` frame.
+ *
+ * The service sends `{"message": "..."}`, but a mid-stream failure is exactly
+ * the moment not to add a second failure mode: if the payload is not the JSON
+ * we expect, fall back to the raw text rather than throwing inside the parser.
+ */
+function errorFrameMessage(data: string): string {
+  try {
+    const parsed: unknown = JSON.parse(data)
+    if (typeof parsed === "object" && parsed !== null && "message" in parsed) {
+      const { message } = parsed as { message: unknown }
+      if (typeof message === "string" && message.length > 0) {
+        return message
+      }
+    }
+  } catch {
+    // fall through to the raw payload
+  }
+  return data || "The log stream failed after it had started"
+}
+
 export class ComputeWorkloadLogStreamCommand extends CustomCommand<
   ComputeWorkloadLogStreamInput,
   ComputeWorkloadLogStream
@@ -230,8 +252,27 @@ export class ComputeWorkloadLogStreamCommand extends CustomCommand<
     const decoder = new TextDecoder()
 
     const push = createSseParser((frame) => {
-      // Only `log` frames carry a ComputeLogStreamEvent. `heartbeat` (and any
-      // other frame kind the service adds later) is consumed silently.
+      // An `error` frame is how the service reports a failure that happens
+      // AFTER the 200 is committed — the bridge throwing mid-stream. It must
+      // reach the subscriber as an error: dropping it would end the stream
+      // with a normal completion, and the caller could not tell "the logs
+      // ended" from "streaming broke". Its data is `{"message": "..."}`.
+      if (frame.event === "error") {
+        subject.error(
+          // The message goes in the BODY as well as the message slot:
+          // ClientError renders `body` in preference to `message`, so text
+          // passed only as the message would never reach the reader.
+          new ClientError(errorFrameMessage(frame.data), 0, this.constructor.name, {
+            workloadId: this.input.workloadId,
+            message: errorFrameMessage(frame.data),
+          }),
+        )
+        return
+      }
+      // Only `log` frames carry a ComputeLogStreamEvent. `heartbeat` (whose
+      // data is a bare ISO-8601 string, not JSON, so the filter MUST precede
+      // the parse) and any frame kind the service adds later are consumed
+      // silently.
       if (frame.event !== "log") {
         return
       }
