@@ -92,3 +92,63 @@ describe("NotificationClient.handleMessage", () => {
     assertEquals(logger.calls.error.length >= 1, true)
   })
 })
+
+// The security property of this client, asserted directly: on the default
+// transport the credential is NOT in the URL. An ingress access log records the
+// request line, so a credential in the query string is written to disk in
+// plaintext — 59 distinct live `fc_` keys were found in two hours of production
+// nginx logs before this changed.
+describe("NotificationClient credential transport", () => {
+  type Handshake = { query: URLSearchParams; protocols: string[] }
+  type Credential =
+    | { kind: "bearer"; token: string }
+    | { kind: "apiKey"; apiKey: string; apiKeyId?: string }
+
+  function build(credential: Credential, transport?: "subprotocol" | "query"): Handshake {
+    const { client } = makeClientForTransport()
+    const internal = client as unknown as {
+      authTransport: "subprotocol" | "query"
+      buildCredentialHandshake(c: Credential): Handshake
+    }
+    if (transport) internal.authTransport = transport
+    return internal.buildCredentialHandshake(credential)
+  }
+
+  function makeClientForTransport() {
+    const observer = new Subject<NotificationEvent>()
+    const client = new NotificationClient(
+      observer,
+      { apiKey: "fc_secret", apiKeyId: "key-id" },
+      { tenant: "t", dataCore: "dc" },
+      { logger: recordingLogger() },
+    )
+    return { client }
+  }
+
+  it("defaults to the subprotocol transport and puts NOTHING in the query", () => {
+    const h = build({ kind: "apiKey", apiKey: "fc_secret", apiKeyId: "key-id" })
+    assertEquals(h.query.toString(), "")
+    assertEquals(h.protocols, ["flowcore-api-key", "fc_secret", "key-id"])
+  })
+
+  it("keeps a bearer token out of the query too", () => {
+    const h = build({ kind: "bearer", token: "jwt-value" })
+    assertEquals(h.query.toString(), "")
+    assertEquals(h.protocols, ["flowcore-bearer", "jwt-value"])
+  })
+
+  // The legacy transport is retained ONLY as a fallback for a server that has
+  // not shipped subprotocol support. It is the shape that leaks, so it is
+  // pinned here to make any accidental re-defaulting visible.
+  it("carries the credential in the query ONLY on the legacy transport", () => {
+    const h = build({ kind: "apiKey", apiKey: "fc_secret", apiKeyId: "key-id" }, "query")
+    assertEquals(h.protocols, [])
+    assertEquals(h.query.get("api_key"), "fc_secret")
+    assertEquals(h.query.get("api_key_id"), "key-id")
+  })
+
+  it("omits api_key_id when the caller did not supply one", () => {
+    const h = build({ kind: "apiKey", apiKey: "fc_secret" }, "query")
+    assertEquals(h.query.get("api_key_id"), null)
+  })
+})
