@@ -24,6 +24,12 @@ import {
  * ("feat(registries): registry detail with synthesis status, and deletion
  * with in-cluster revocation (#39)").
  *
+ * The revision-history and deployment-event types below were transcribed
+ * later, from `compute/revisions.ts` and `compute/deployment-events.ts` plus
+ * `workload-revisions.list.ts` and `workload-events.list.ts`, at `main` commit
+ * `5c3858b` — the endpoints shipped in compute-api 1.11.0, after SDK 4.7.0
+ * was cut.
+ *
  * THERE IS NO GENERATOR AND NO DRIFT GUARD. Nothing in this repository fails
  * when the service changes its contracts, so a change upstream has to be
  * re-read into this file by hand against those two directories.
@@ -833,6 +839,174 @@ export const ComputeOperationSchema: TComputeOperation = Type.Object({
   updatedAt: Type.String(),
 })
 export type ComputeOperation = Static<typeof ComputeOperationSchema>
+
+// ── Revision history ──
+//
+// DECLARED AFTER `Operations` ON PURPOSE: a revision's `outcome` IS the joined
+// operation's status, so `ComputeRevisionOutcomeSchema` below cannot be
+// evaluated before `ComputeOperationStatusSchema` exists.
+
+/** Why a revision exists. */
+export type TComputeWorkloadRevisionCause = TUnion<[TLiteral<"created">, TLiteral<"update">, TLiteral<"rollback">]>
+export const ComputeWorkloadRevisionCauseSchema: TComputeWorkloadRevisionCause = Type.Union([
+  Type.Literal("created"),
+  Type.Literal("update"),
+  Type.Literal("rollback"),
+])
+export type ComputeWorkloadRevisionCause = Static<typeof ComputeWorkloadRevisionCauseSchema>
+
+/**
+ * One recorded revision of a workload's definition.
+ *
+ * `outcome` IS OPTIONAL, AND THAT IS THE CONTRACT — not a tolerance. Upstream
+ * reports it at three levels of knowledge:
+ *
+ *   - the joined operation's status, when there is an operation row;
+ *   - `pending`, when the revision names an operation whose row has not
+ *     arrived yet;
+ *   - ABSENT, when the revision names no operation at all.
+ *
+ * The third case is EVERY `created` revision: a create mints no `operationId`,
+ * so nothing will ever report on it. Declaring `outcome` required here would
+ * make `parseResponseHelper` throw on revision 1 of every healthy workload.
+ *
+ * `slotTier` is absent on a row recorded before slot tiers were part of the
+ * definition contract — omitted rather than invented, upstream and here.
+ */
+export type TComputeWorkloadRevision = TObject<{
+  revision: TNumber
+  image: TString
+  slotTier: TOptional<TComputeSlotTier>
+  cause: TComputeWorkloadRevisionCause
+  isActive: TBoolean
+  rolledBackFrom: TOptional<TNumber>
+  operationId: TOptional<TString>
+  outcome: TOptional<TComputeOperationStatus>
+  outcomeReason: TOptional<TString>
+  createdAt: TString
+}>
+export const ComputeWorkloadRevisionSchema: TComputeWorkloadRevision = Type.Object({
+  /** The revision ordinal, 1-based and monotonic per workload */
+  revision: Type.Number(),
+  /** The container image this revision was recorded with */
+  image: Type.String(),
+  /** The slot tier, absent on a row recorded before the field existed */
+  slotTier: Type.Optional(ComputeSlotTierSchema),
+  /** Why the revision exists — `created`, `update` or `rollback` */
+  cause: ComputeWorkloadRevisionCauseSchema,
+  /** At most one revision per workload is active */
+  isActive: Type.Boolean(),
+  /** The ordinal a rollback restored from; present only on a rollback revision */
+  rolledBackFrom: Type.Optional(Type.Number()),
+  /** The operation carrying this revision to the cluster (full UUID), when there is one */
+  operationId: Type.Optional(Type.String()),
+  /** The operation's verdict; ABSENT when the revision names no operation */
+  outcome: Type.Optional(ComputeOperationStatusSchema),
+  /** The operation's explanation of a non-succeeded outcome */
+  outcomeReason: Type.Optional(Type.String()),
+  /** ISO-8601 creation timestamp */
+  createdAt: Type.String(),
+})
+export type ComputeWorkloadRevision = Static<typeof ComputeWorkloadRevisionSchema>
+
+/**
+ * A page of revision history, NEWEST ORDINAL FIRST. BARE — this endpoint does
+ * not use the `{ success: true, ... }` envelope.
+ */
+export type TComputeWorkloadRevisionList = TObject<{
+  revisions: TArray<TComputeWorkloadRevision>
+  nextCursor: TOptional<TString>
+}>
+export const ComputeWorkloadRevisionListSchema: TComputeWorkloadRevisionList = Type.Object({
+  /** One page of revisions, newest ordinal first */
+  revisions: Type.Array(ComputeWorkloadRevisionSchema),
+  /** Opaque cursor for the next page; absent on the last page */
+  nextCursor: Type.Optional(Type.String()),
+})
+export type ComputeWorkloadRevisionList = Static<typeof ComputeWorkloadRevisionListSchema>
+
+// ── Deployment events ──
+//
+// KUBERNETES events, not Flowcore events. These are a live, read-only cluster
+// read — nothing is emitted and nothing is persisted — and they are bounded by
+// the cluster's own event TTL (about an hour on this platform).
+
+/** The object an event is about — a Deployment, ReplicaSet, Pod, Service, HPA or Job. */
+export type TComputeDeploymentEventObject = TObject<{
+  kind: TString
+  name: TString
+}>
+export const ComputeDeploymentEventObjectSchema: TComputeDeploymentEventObject = Type.Object({
+  /** The Kubernetes kind */
+  kind: Type.String(),
+  /** The object's name */
+  name: Type.String(),
+})
+export type ComputeDeploymentEventObject = Static<typeof ComputeDeploymentEventObjectSchema>
+
+/**
+ * One cluster event, normalized across BOTH Kubernetes API groups.
+ *
+ * `type` is a plain string and NOT an enum: Kubernetes documents `Normal` and
+ * `Warning`, but the field is free-form on the wire and a narrower contract
+ * here would reject a value the cluster is entitled to send.
+ *
+ * `firstSeen` and `lastSeen` are optional because an event is entitled to
+ * carry neither — the modern group's series fields are absent on a
+ * single-occurrence event.
+ */
+export type TComputeDeploymentEvent = TObject<{
+  name: TString
+  type: TString
+  reason: TString
+  message: TString
+  count: TNumber
+  object: TComputeDeploymentEventObject
+  source: TOptional<TString>
+  firstSeen: TOptional<TString>
+  lastSeen: TOptional<TString>
+}>
+export const ComputeDeploymentEventSchema: TComputeDeploymentEvent = Type.Object({
+  /** The event object's own name, stable for the life of the event */
+  name: Type.String(),
+  /** `Normal` or `Warning` in practice, but free-form on the wire */
+  type: Type.String(),
+  /** The machine-readable reason, e.g. `Scheduled`, `BackOff` */
+  reason: Type.String(),
+  /** The human-readable message; may be empty */
+  message: Type.String(),
+  /** How many times the event has recurred; 1 for a single occurrence */
+  count: Type.Number(),
+  /** The object the event is about */
+  object: ComputeDeploymentEventObjectSchema,
+  /** The controller that reported it — kubelet, deployment-controller, … */
+  source: Type.Optional(Type.String()),
+  /** ISO-8601 timestamp of the first occurrence */
+  firstSeen: Type.Optional(Type.String()),
+  /** ISO-8601 timestamp of the most recent occurrence */
+  lastSeen: Type.Optional(Type.String()),
+})
+export type ComputeDeploymentEvent = Static<typeof ComputeDeploymentEventSchema>
+
+/**
+ * The workload's recent cluster events, most recently seen first. BARE — no
+ * `{ success: true, ... }` envelope, and UNPAGINATED by construction.
+ *
+ * AN EMPTY ARRAY IS A LEGITIMATE ANSWER, never an error: a workload the
+ * cluster has had nothing to say about — or nothing within the TTL — answers
+ * 200 with `events: []`.
+ */
+export type TComputeWorkloadDeploymentEvents = TObject<{
+  workloadId: TString
+  events: TArray<TComputeDeploymentEvent>
+}>
+export const ComputeWorkloadDeploymentEventsSchema: TComputeWorkloadDeploymentEvents = Type.Object({
+  /** The workload the events belong to (full UUID) */
+  workloadId: Type.String(),
+  /** The cluster's recent events, most recently seen first; possibly empty */
+  events: Type.Array(ComputeDeploymentEventSchema),
+})
+export type ComputeWorkloadDeploymentEvents = Static<typeof ComputeWorkloadDeploymentEventsSchema>
 
 // ── Registries ──
 

@@ -22,6 +22,8 @@ import {
   type ComputeWorkload,
   ComputeWorkloadCreateCommand,
   ComputeWorkloadDeleteCommand,
+  type ComputeWorkloadDeploymentEvents,
+  ComputeWorkloadEventsListCommand,
   ComputeWorkloadFetchCommand,
   ComputeWorkloadListCommand,
   ComputeWorkloadLogStreamCommand,
@@ -29,6 +31,8 @@ import {
   ComputeWorkloadLogsFetchCommand,
   ComputeWorkloadPauseCommand,
   ComputeWorkloadResumeCommand,
+  type ComputeWorkloadRevision,
+  ComputeWorkloadRevisionsListCommand,
   ComputeWorkloadRollbackCommand,
   type ComputeWorkloadRun,
   ComputeWorkloadRunCommand,
@@ -461,6 +465,179 @@ describe("Compute", () => {
 
     // assert
     assertEquals(response, { runs: [run], nextCursor: "next-opaque-cursor" })
+  })
+
+  // ── Revision history ──
+
+  it("should list revision history, including a `created` revision with NO outcome", async () => {
+    // arrange
+    //
+    // THE REGRESSION THIS PINS: revision 1 is seeded by the create handler and
+    // mints no operation, so it carries NO `outcome` and no `operationId` at
+    // all. A schema that declared `outcome` required would make
+    // `parseResponseHelper` throw on the first revision of every healthy
+    // workload.
+    const revisions: ComputeWorkloadRevision[] = [
+      {
+        revision: 3,
+        image: "ghcr.io/acme/api:3.0.0",
+        slotTier: "small",
+        cause: "rollback",
+        isActive: false,
+        rolledBackFrom: 1,
+        operationId,
+        outcome: "failed",
+        outcomeReason: "pre-sync hook exited 1",
+        createdAt: "2026-08-03T10:00:00.000Z",
+      },
+      {
+        revision: 2,
+        image: "ghcr.io/acme/api:2.0.0",
+        slotTier: "small",
+        cause: "update",
+        isActive: true,
+        operationId,
+        outcome: "succeeded",
+        createdAt: "2026-08-02T10:00:00.000Z",
+      },
+      {
+        // No `outcome`, no `operationId`, no `slotTier` — a create.
+        revision: 1,
+        image: "ghcr.io/acme/api:1.2.3",
+        cause: "created",
+        isActive: false,
+        createdAt: "2026-08-01T10:00:00.000Z",
+      },
+    ]
+    compute.get(`/api/v1/workloads/${workloadId}/revisions`).respondWith(200, { revisions })
+
+    // act
+    const response = await flowcoreClient.execute(new ComputeWorkloadRevisionsListCommand({ workloadId }))
+
+    // assert
+    assertEquals(response, { revisions })
+    assertEquals(response.revisions[2]?.outcome, undefined)
+  })
+
+  it("should send limit and cursor as query params and round-trip nextCursor", async () => {
+    // arrange
+    const revision: ComputeWorkloadRevision = {
+      revision: 7,
+      image: "ghcr.io/acme/api:7.0.0",
+      cause: "update",
+      isActive: true,
+      operationId,
+      outcome: "pending",
+      createdAt: "2026-08-07T10:00:00.000Z",
+    }
+    compute
+      .get(`/api/v1/workloads/${workloadId}/revisions`)
+      .matchSearchParams({ limit: "25", cursor: "opaque-cursor" })
+      .respondWith(200, { revisions: [revision], nextCursor: "next-opaque-cursor" })
+
+    // act
+    const response = await flowcoreClient.execute(
+      new ComputeWorkloadRevisionsListCommand({ workloadId, limit: 25, cursor: "opaque-cursor" }),
+    )
+
+    // assert
+    assertEquals(response, { revisions: [revision], nextCursor: "next-opaque-cursor" })
+  })
+
+  it("should throw NotFoundException when a workload has no revision history to read", async () => {
+    // arrange
+    compute
+      .get(`/api/v1/workloads/${workloadId}/revisions`)
+      .respondWith(404, { statusCode: 404, error: "Not Found", message: `Workload ${workloadId} not found` })
+
+    // act
+    const responsePromise = flowcoreClient.execute(new ComputeWorkloadRevisionsListCommand({ workloadId }))
+
+    // assert
+    await assertRejects(
+      () => responsePromise,
+      NotFoundException,
+      `Workload not found: ${JSON.stringify({ workloadId })}`,
+    )
+  })
+
+  // ── Deployment events ──
+
+  it("should list cluster events across more than one object kind", async () => {
+    // arrange
+    const events: ComputeWorkloadDeploymentEvents = {
+      workloadId,
+      events: [
+        {
+          name: "workload-3f5d0d3e-0f2a-4a5f-9f2c-2f0f0d7b5a11-abcde.17f0",
+          type: "Warning",
+          reason: "BackOff",
+          message: "Back-off restarting failed container",
+          count: 4,
+          object: { kind: "Pod", name: "workload-3f5d0d3e-0f2a-4a5f-9f2c-2f0f0d7b5a11-abcde" },
+          source: "kubelet",
+          firstSeen: "2026-08-01T10:10:00.000Z",
+          lastSeen: "2026-08-01T10:14:00.000Z",
+        },
+        {
+          name: "workload-3f5d0d3e-0f2a-4a5f-9f2c-2f0f0d7b5a11.17ef",
+          type: "Normal",
+          reason: "ScalingReplicaSet",
+          message: "Scaled up replica set to 2",
+          count: 1,
+          object: { kind: "Deployment", name: "workload-3f5d0d3e-0f2a-4a5f-9f2c-2f0f0d7b5a11" },
+          source: "deployment-controller",
+          lastSeen: "2026-08-01T10:09:00.000Z",
+        },
+        {
+          // The tolerant end of the contract: no `source`, no series
+          // timestamps, and an empty message are all shapes the cluster is
+          // entitled to send.
+          name: "pre-sync-3f5d0d3e-0f2a-4a5f-9f2c-2f0f0d7b5a11-r2.17ee",
+          type: "Normal",
+          reason: "Completed",
+          message: "",
+          count: 1,
+          object: { kind: "Job", name: "pre-sync-3f5d0d3e-0f2a-4a5f-9f2c-2f0f0d7b5a11-r2" },
+        },
+      ],
+    }
+    compute.get(`/api/v1/workloads/${workloadId}/events`).respondWith(200, events)
+
+    // act
+    const response = await flowcoreClient.execute(new ComputeWorkloadEventsListCommand({ workloadId }))
+
+    // assert
+    assertEquals(response, events)
+  })
+
+  it("should accept an EMPTY events array — the cluster's TTL, not an error", async () => {
+    // arrange — Kubernetes reaps events on about an hour's TTL, so a quiet
+    // workload legitimately answers 200 with nothing at all.
+    compute.get(`/api/v1/workloads/${workloadId}/events`).respondWith(200, { workloadId, events: [] })
+
+    // act
+    const response = await flowcoreClient.execute(new ComputeWorkloadEventsListCommand({ workloadId }))
+
+    // assert
+    assertEquals(response, { workloadId, events: [] })
+  })
+
+  it("should throw NotFoundException when a workload has no cluster events to read", async () => {
+    // arrange
+    compute
+      .get(`/api/v1/workloads/${workloadId}/events`)
+      .respondWith(404, { statusCode: 404, error: "Not Found", message: `Workload ${workloadId} not found` })
+
+    // act
+    const responsePromise = flowcoreClient.execute(new ComputeWorkloadEventsListCommand({ workloadId }))
+
+    // assert
+    await assertRejects(
+      () => responsePromise,
+      NotFoundException,
+      `Workload not found: ${JSON.stringify({ workloadId })}`,
+    )
   })
 
   it("should fetch historical logs from a BARE response with no success envelope", async () => {

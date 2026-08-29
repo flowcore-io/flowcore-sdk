@@ -1244,7 +1244,8 @@ if (result.success) {
 ### Compute Operations
 
 Compute operations manage container workloads on the Flowcore compute platform (`https://compute.api.flowcore.io`):
-workloads and their revisions, on-demand batch runs, container logs, custom domains and image registry credentials.
+workloads and their revisions, on-demand batch runs, container logs, cluster deployment events, custom domains and
+image registry credentials.
 
 > **Note**: these commands are namespaced `Compute*` and are unrelated to the older `ContainerRegist*` commands, which
 > target a different backend.
@@ -1413,6 +1414,51 @@ const page = await client.execute(new ComputeWorkloadRunsListCommand({
 page.runs       // Newest first — kind "batch" (on demand) and "pre_sync" (deploy hooks)
 page.nextCursor // Absent on the last page
 ```
+
+#### List Revision History
+
+```typescript
+import { ComputeWorkloadRevisionsListCommand, FlowcoreClient } from "@flowcore/sdk"
+
+const page = await client.execute(new ComputeWorkloadRevisionsListCommand({
+  workloadId: "3f5d0d3e-0f2a-4a5f-9f2c-2f0f0d7b5a11",
+  limit: 50,        // Optional page size
+  cursor: undefined // Optional: the previous page's nextCursor
+}))
+
+page.revisions  // Newest ordinal first — cause "created", "update" or "rollback"
+page.nextCursor // Absent on the last page
+```
+
+Every definition the workload has been recorded with. A rollback is a **new** revision carrying the ordinal it restored
+from (`rolledBackFrom`) — history is never edited, and exactly one revision is `isActive` at a time.
+
+> **`outcome` is optional.** It is the status of the operation that carried the revision to the cluster, so a revision
+> recorded but never promoted (a failed pre-sync hook, say) is distinguishable from one merely superseded. It is
+> `pending` while the operation has not reported, and **absent entirely** on a `created` revision — a create mints no
+> operation, so nothing will ever report on it. Check before reading it.
+
+#### List Deployment Events
+
+```typescript
+import { ComputeWorkloadEventsListCommand, FlowcoreClient } from "@flowcore/sdk"
+
+const { events } = await client.execute(new ComputeWorkloadEventsListCommand({
+  workloadId: "3f5d0d3e-0f2a-4a5f-9f2c-2f0f0d7b5a11"
+}))
+
+events[0]?.reason  // e.g. "BackOff", "ScalingReplicaSet"
+events[0]?.object  // { kind: "Pod" | "Deployment" | "ReplicaSet" | "Service" | "Job" | …, name }
+```
+
+The workload's recent **Kubernetes** events — its Deployment, Service and autoscaler, its ReplicaSets, its pods and its
+pre-sync and run Jobs — read live across both cluster API groups, merged and deduplicated, most recently seen first. The
+namespace and every object name are derived server-side, so there is no selector to widen.
+
+> **The window is the cluster's, and empty is a normal answer.** Kubernetes reaps events on its own TTL (roughly an
+> hour) and nothing older survives; the service persists nothing to widen it. There is no pagination because the window
+> already bounds the result, and a workload the cluster has had nothing to say about answers with an empty array — never
+> a 404.
 
 #### Fetch Container Logs
 
