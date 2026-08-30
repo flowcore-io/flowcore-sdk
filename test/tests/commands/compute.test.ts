@@ -21,6 +21,7 @@ import {
   ComputeRegistryRotateCommand,
   type ComputeWorkload,
   ComputeWorkloadCreateCommand,
+  ComputeWorkloadCreateTrackedCommand,
   ComputeWorkloadDeleteCommand,
   type ComputeWorkloadDeploymentEvents,
   ComputeWorkloadEventsListCommand,
@@ -239,6 +240,28 @@ describe("Compute", () => {
 
     // assert
     assertEquals(response, workload)
+  })
+
+  it("should create a tracked workload and retain its operation id", async () => {
+    const workload = makeWorkload()
+    compute
+      .post("/api/v1/workloads")
+      .matchBody({
+        tenantId,
+        name: "api",
+        definition: { image: "ghcr.io/acme/api:1.2.3", slotTier: "small", replicas: 2 },
+      })
+      .respondWith(201, { success: true, workload, operationId })
+
+    const response = await flowcoreClient.execute(
+      new ComputeWorkloadCreateTrackedCommand({
+        tenantId,
+        name: "api",
+        definition: { image: "ghcr.io/acme/api:1.2.3", slotTier: "small", replicas: 2 },
+      }),
+    )
+
+    assertEquals(response, { success: true, workload, operationId })
   })
 
   it("should fetch a workload and unwrap the success envelope", async () => {
@@ -469,14 +492,12 @@ describe("Compute", () => {
 
   // ── Revision history ──
 
-  it("should list revision history, including a `created` revision with NO outcome", async () => {
+  it("should list revision history, including a historical create with no outcome", async () => {
     // arrange
     //
-    // THE REGRESSION THIS PINS: revision 1 is seeded by the create handler and
-    // mints no operation, so it carries NO `outcome` and no `operationId` at
-    // all. A schema that declared `outcome` required would make
-    // `parseResponseHelper` throw on the first revision of every healthy
-    // workload.
+    // THE REGRESSION THIS PINS: replay can seed revision 1 from an event that
+    // predates API-minted create operations. It carries no `outcome` and no
+    // `operationId`, so the reader must keep both optional.
     const revisions: ComputeWorkloadRevision[] = [
       {
         revision: 3,

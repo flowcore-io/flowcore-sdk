@@ -446,7 +446,7 @@ export const ComputeWorkloadListResponseSchema: TComputeWorkloadListResponse = T
 })
 export type ComputeWorkloadListResponse = Static<typeof ComputeWorkloadListResponseSchema>
 
-/** `POST /api/v1/workloads` and `GET /api/v1/workloads/{workloadId}` */
+/** `GET /api/v1/workloads/{workloadId}` and the legacy create command. */
 export type TComputeWorkloadResponse = TObject<{
   success: TLiteral<true>
   workload: TComputeWorkload
@@ -456,6 +456,20 @@ export const ComputeWorkloadResponseSchema: TComputeWorkloadResponse = Type.Obje
   workload: ComputeWorkloadSchema,
 })
 export type ComputeWorkloadResponse = Static<typeof ComputeWorkloadResponseSchema>
+
+/** `POST /api/v1/workloads`, including the cluster-convergence operation. */
+export type TComputeWorkloadCreateResponse = TObject<{
+  success: TLiteral<true>
+  workload: TComputeWorkload
+  operationId: TString
+}>
+export const ComputeWorkloadCreateResponseSchema: TComputeWorkloadCreateResponse = Type.Object({
+  success: Type.Literal(true),
+  workload: ComputeWorkloadSchema,
+  /** Poll `GET /api/v1/operations/{operationId}` for cluster convergence */
+  operationId: Type.String(),
+})
+export type ComputeWorkloadCreateResponse = Static<typeof ComputeWorkloadCreateResponseSchema>
 
 /** The 202 of PATCH, rollback, pause and resume. */
 export type TComputeWorkloadMutationResponse = TObject<{
@@ -905,9 +919,9 @@ export type ComputeWorkloadRevisionCause = Static<typeof ComputeWorkloadRevision
  *     arrived yet;
  *   - ABSENT, when the revision names no operation at all.
  *
- * The third case is EVERY `created` revision: a create mints no `operationId`,
- * so nothing will ever report on it. Declaring `outcome` required here would
- * make `parseResponseHelper` throw on revision 1 of every healthy workload.
+ * The third case covers historical `created` revisions written before create
+ * operations were API-minted. Declaring `outcome` required here would make
+ * `parseResponseHelper` throw while reading those replayed rows.
  *
  * `slotTier` is absent on a row recorded before slot tiers were part of the
  * definition contract — omitted rather than invented, upstream and here.
