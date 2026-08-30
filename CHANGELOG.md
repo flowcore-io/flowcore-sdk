@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.9.0](https://github.com/flowcore-io/flowcore-sdk/compare/v4.8.0...v4.9.0) (2026-08-30)
+
+
+### Features
+
+* **compute:** environment variables and organization-secret bindings ([#250](https://github.com/flowcore-io/flowcore-sdk/issues/250)) ([2bdb7ab](https://github.com/flowcore-io/flowcore-sdk/commit/2bdb7ab540ceae4bf1f478b2db0e6c543e396b18))
+
+
+### Bug Fixes
+
+* **notifications:** stop sending the credential in the WebSocket URL ([#248](https://github.com/flowcore-io/flowcore-sdk/issues/248)) ([77cd5bb](https://github.com/flowcore-io/flowcore-sdk/commit/77cd5bb9e2d00a8a6987694bc9015f0701a5c640))
+
 ## [4.8.0](https://github.com/flowcore-io/flowcore-sdk/compare/v4.7.0...v4.8.0) (2026-08-29)
 
 
