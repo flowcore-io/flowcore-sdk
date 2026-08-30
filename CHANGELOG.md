@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.10.0](https://github.com/flowcore-io/flowcore-sdk/compare/v4.9.0...v4.10.0) (2026-08-30)
+
+
+### Features
+
+* **compute:** expose tracked workload creation ([#251](https://github.com/flowcore-io/flowcore-sdk/issues/251)) ([2bba492](https://github.com/flowcore-io/flowcore-sdk/commit/2bba492fe86f8d8d7df029d5476984e3c543cc36))
+
 ## [4.9.0](https://github.com/flowcore-io/flowcore-sdk/compare/v4.8.0...v4.9.0) (2026-08-30)
 
 
