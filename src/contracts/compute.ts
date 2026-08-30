@@ -243,6 +243,39 @@ export const ComputeWorkloadScalingSchema: TComputeWorkloadScaling = Type.Object
 })
 export type ComputeWorkloadScaling = Static<typeof ComputeWorkloadScalingSchema>
 
+/** One plain environment variable on a workload's container. */
+export type TComputeWorkloadEnvVar = TObject<{
+  name: TString
+  value: TString
+}>
+export const ComputeWorkloadEnvVarSchema: TComputeWorkloadEnvVar = Type.Object({
+  /** Variable name, e.g. `GREETING` */
+  name: Type.String(),
+  /** Variable value, stored and replayed as-is */
+  value: Type.String(),
+})
+export type ComputeWorkloadEnvVar = Static<typeof ComputeWorkloadEnvVarSchema>
+
+/**
+ * One environment variable bound to a key in the tenant's ORGANIZATION
+ * SECRETS.
+ *
+ * There is no value field, deliberately. The compute API cannot read an
+ * organization secret and never receives one: only the key name travels, and
+ * the value is bound inside the cluster from the organization secret store.
+ */
+export type TComputeWorkloadSecretRef = TObject<{
+  name: TString
+  secretKey: TString
+}>
+export const ComputeWorkloadSecretRefSchema: TComputeWorkloadSecretRef = Type.Object({
+  /** Variable name as the container sees it, e.g. `TOKEN` */
+  name: Type.String(),
+  /** The key in the tenant's organization secrets that supplies the value */
+  secretKey: Type.String(),
+})
+export type ComputeWorkloadSecretRef = Static<typeof ComputeWorkloadSecretRefSchema>
+
 /** Everything the reconciler needs to build a Deployment, a Service and a pre-sync Job. */
 export type TComputeWorkloadDefinition = TObject<{
   image: TString
@@ -253,6 +286,8 @@ export type TComputeWorkloadDefinition = TObject<{
   probes: TOptional<TComputeWorkloadProbes>
   preSync: TOptional<TComputePreSyncSpec>
   scaling: TOptional<TComputeWorkloadScaling>
+  env: TOptional<TArray<TComputeWorkloadEnvVar>>
+  secrets: TOptional<TArray<TComputeWorkloadSecretRef>>
 }>
 export const ComputeWorkloadDefinitionSchema: TComputeWorkloadDefinition = Type.Object({
   /** Container image reference */
@@ -271,6 +306,10 @@ export const ComputeWorkloadDefinitionSchema: TComputeWorkloadDefinition = Type.
   preSync: Type.Optional(ComputePreSyncSpecSchema),
   /** How the replica count is decided (defaults to `{ mode: "manual" }`) */
   scaling: Type.Optional(ComputeWorkloadScalingSchema),
+  /** Plain environment variables (defaults to an empty list) */
+  env: Type.Optional(Type.Array(ComputeWorkloadEnvVarSchema)),
+  /** Organization-secret bindings, by key reference (defaults to an empty list) */
+  secrets: Type.Optional(Type.Array(ComputeWorkloadSecretRefSchema)),
 })
 export type ComputeWorkloadDefinition = Static<typeof ComputeWorkloadDefinitionSchema>
 

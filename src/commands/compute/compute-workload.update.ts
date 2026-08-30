@@ -3,9 +3,11 @@ import type { FlowcoreClient } from "../../common/flowcore-client.ts"
 import {
   type ComputePreSyncSpec,
   type ComputeSlotTier,
+  type ComputeWorkloadEnvVar,
   ComputeWorkloadMutationResponseSchema,
   type ComputeWorkloadProbes,
   type ComputeWorkloadScaling,
+  type ComputeWorkloadSecretRef,
 } from "../../contracts/compute.ts"
 import type { ClientError } from "../../exceptions/client-error.ts"
 import { CommandError } from "../../exceptions/command-error.ts"
@@ -37,6 +39,14 @@ export interface ComputeWorkloadUpdateInput extends ComputeOperationWaitOptions 
   preSync?: ComputePreSyncSpec
   /** Replaces the scaling block WHOLESALE — it is not merged into the stored one */
   scaling?: ComputeWorkloadScaling
+  /**
+   * Replaces the environment variables WHOLESALE, like `scaling` above.
+   * Sending `[]` CLEARS every variable the previous revision set — that is
+   * how a variable is removed, as there is no per-key patch.
+   */
+  env?: ComputeWorkloadEnvVar[]
+  /** Replaces the organization-secret bindings wholesale, same rule as `env` */
+  secrets?: ComputeWorkloadSecretRef[]
 }
 
 /**
