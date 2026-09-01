@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.11.0](https://github.com/flowcore-io/flowcore-sdk/compare/v4.10.0...v4.11.0) (2026-09-01)
+
+
+### Features
+
+* **compute:** workload persistent volumes and tenant-scoped wildcard DNS ([#253](https://github.com/flowcore-io/flowcore-sdk/issues/253)) ([9862d7f](https://github.com/flowcore-io/flowcore-sdk/commit/9862d7f6b2d17a8651c5b9ee5680a8fae1975dad))
+
 ## [4.10.0](https://github.com/flowcore-io/flowcore-sdk/compare/v4.9.0...v4.10.0) (2026-08-30)
 
 
