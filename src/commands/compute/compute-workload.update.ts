@@ -8,6 +8,7 @@ import {
   type ComputeWorkloadProbes,
   type ComputeWorkloadScaling,
   type ComputeWorkloadSecretRef,
+  type ComputeWorkloadVolume,
 } from "../../contracts/compute.ts"
 import type { ClientError } from "../../exceptions/client-error.ts"
 import { CommandError } from "../../exceptions/command-error.ts"
@@ -47,6 +48,13 @@ export interface ComputeWorkloadUpdateInput extends ComputeOperationWaitOptions 
   env?: ComputeWorkloadEnvVar[]
   /** Replaces the organization-secret bindings wholesale, same rule as `env` */
   secrets?: ComputeWorkloadSecretRef[]
+  /**
+   * The volume list, GROWTH-ONLY: the same set of volumes (same names, same
+   * mount paths) with each `sizeGi` equal or larger. The service answers 422
+   * to an add, a remove, a rename, a mountPath move or a shrink — volumes
+   * are declared at create and destroyed only by workload DELETE.
+   */
+  volumes?: ComputeWorkloadVolume[]
 }
 
 /**

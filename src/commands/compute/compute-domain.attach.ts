@@ -32,6 +32,15 @@ export interface ComputeDomainAttachCustomInput {
 
 /**
  * Attach a single label under the PLATFORM's wildcard zone.
+ *
+ * TENANT-SCOPED MINT: the served hostname is
+ * `<subdomain>-<tenantSlug>.<zone>` — the platform resolves the tenant's
+ * slug at attach time and suffixes it, so two tenants asking for the same
+ * subdomain never clash. The service answers 422 for a reserved subdomain
+ * (`www`, `flowcore`, `usable`), for a scoped label over 63 bytes and for
+ * an unresolvable tenant slug, and 409 when the tenant's active wildcard
+ * cap is reached. Bindings minted before scoping keep their stored
+ * hostnames.
  */
 export interface ComputeDomainAttachWildcardInput {
   /** The workload id (full UUID) */

@@ -276,6 +276,33 @@ export const ComputeWorkloadSecretRefSchema: TComputeWorkloadSecretRef = Type.Ob
 })
 export type ComputeWorkloadSecretRef = Static<typeof ComputeWorkloadSecretRefSchema>
 
+/**
+ * One persistent volume of a workload definition.
+ *
+ * The claim is ReadWriteOnce on the cluster's DEFAULT StorageClass — there
+ * is deliberately no class field, and provisioned `sizeGi` is the only
+ * billing dimension. A workload with volumes must run at most one replica
+ * under `scaling.mode: "manual"` (the service answers 422 otherwise), and
+ * `sizeGi` only ever GROWS: an update or rollback that would shrink a
+ * volume is refused, and volumes cannot be added, removed, renamed or
+ * remounted after create. Workload DELETE destroys the claims and their
+ * data.
+ */
+export type TComputeWorkloadVolume = TObject<{
+  name: TString
+  sizeGi: TNumber
+  mountPath: TString
+}>
+export const ComputeWorkloadVolumeSchema: TComputeWorkloadVolume = Type.Object({
+  /** Lowercase DNS label, max 20 chars — embedded in the claim's object name */
+  name: Type.String(),
+  /** Provisioned size in Gi, 1..1024 — growth-only after create */
+  sizeGi: Type.Number(),
+  /** Absolute mount path inside the container (never `/`) */
+  mountPath: Type.String(),
+})
+export type ComputeWorkloadVolume = Static<typeof ComputeWorkloadVolumeSchema>
+
 /** Everything the reconciler needs to build a Deployment, a Service and a pre-sync Job. */
 export type TComputeWorkloadDefinition = TObject<{
   image: TString
@@ -288,6 +315,7 @@ export type TComputeWorkloadDefinition = TObject<{
   scaling: TOptional<TComputeWorkloadScaling>
   env: TOptional<TArray<TComputeWorkloadEnvVar>>
   secrets: TOptional<TArray<TComputeWorkloadSecretRef>>
+  volumes: TOptional<TArray<TComputeWorkloadVolume>>
 }>
 export const ComputeWorkloadDefinitionSchema: TComputeWorkloadDefinition = Type.Object({
   /** Container image reference */
@@ -310,6 +338,8 @@ export const ComputeWorkloadDefinitionSchema: TComputeWorkloadDefinition = Type.
   env: Type.Optional(Type.Array(ComputeWorkloadEnvVarSchema)),
   /** Organization-secret bindings, by key reference (defaults to an empty list) */
   secrets: Type.Optional(Type.Array(ComputeWorkloadSecretRefSchema)),
+  /** Persistent volumes, max 4 (defaults to an empty list). See ComputeWorkloadVolumeSchema */
+  volumes: Type.Optional(Type.Array(ComputeWorkloadVolumeSchema)),
 })
 export type ComputeWorkloadDefinition = Static<typeof ComputeWorkloadDefinitionSchema>
 
