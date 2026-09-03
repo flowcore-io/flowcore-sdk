@@ -35,17 +35,6 @@ export type { Tenant, TenantInstance, TenantPreview } from "./tenant.ts"
 export type { Variable } from "./variable.ts"
 export type { Permission } from "./permission.ts"
 export type {
-  LegacyScenario,
-  LegacyScenarioAdapterState,
-  LegacyScenarioListItem,
-  LegacyScenarioNode,
-} from "./legacy-scenario.ts"
-export {
-  LegacyScenarioAdapterKubernetesStatus,
-  LegacyScenarioDeploymentState,
-  LegacyScenarioNodeType,
-} from "./legacy-scenario.ts"
-export type {
   DataPathway,
   DataPathwayAssignment,
   DataPathwayAssignmentList,
