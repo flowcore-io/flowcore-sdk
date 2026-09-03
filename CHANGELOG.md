@@ -1,5 +1,16 @@
 # Changelog
 
+## [5.0.0](https://github.com/flowcore-io/flowcore-sdk/compare/v4.11.0...v5.0.0) (2026-09-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* Scenario and LegacyScenario commands, contracts, and the legacy GraphQL command base are removed.
+
+### Features
+
+* remove Scenario SDK surface ([#255](https://github.com/flowcore-io/flowcore-sdk/issues/255)) ([676891d](https://github.com/flowcore-io/flowcore-sdk/commit/676891dded9369b502baabd13079cd1442b3e199))
+
 ## [4.11.0](https://github.com/flowcore-io/flowcore-sdk/compare/v4.10.0...v4.11.0) (2026-09-01)
 
 
