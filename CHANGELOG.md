@@ -1,5 +1,16 @@
 # Changelog
 
+## [6.0.0](https://github.com/flowcore-io/flowcore-sdk/compare/v5.0.0...v6.0.0) (2026-09-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* ResetAdapterCommand, ResetAdapterInput, and ResetAdapterResponse are no longer exported.
+
+### Features
+
+* remove legacy Adapter reset command ([#257](https://github.com/flowcore-io/flowcore-sdk/issues/257)) ([e31992c](https://github.com/flowcore-io/flowcore-sdk/commit/e31992c7f41a5a44916aef5671876c66ede29351))
+
 ## [5.0.0](https://github.com/flowcore-io/flowcore-sdk/compare/v4.11.0...v5.0.0) (2026-09-03)
 
 
