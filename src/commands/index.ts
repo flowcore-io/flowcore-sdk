@@ -12,9 +12,6 @@ export * from "./tenant/tenant.user-list.ts"
 export * from "./tenant/tenant.translate-name-to-id.ts"
 export * from "./tenant/tenant.preview.ts"
 
-// Adapter
-export * from "./adapter/reset-adapter.ts"
-
 // Api Key
 export * from "./api-key/api-key.create.ts"
 export * from "./api-key/api-key.fetch.ts"
