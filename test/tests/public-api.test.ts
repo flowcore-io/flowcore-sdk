@@ -2,6 +2,11 @@ import { assertEquals } from "@test/compat/assert"
 import { describe, it } from "bun:test"
 import * as sdk from "../../src/mod.ts"
 
+// @ts-expect-error Retired Adapter reset type.
+import type { ResetAdapterInput } from "../../src/mod.ts"
+// @ts-expect-error Retired Adapter reset type.
+import type { ResetAdapterResponse } from "../../src/mod.ts"
+
 // Keep type-only exports covered: runtime namespace checks cannot see them.
 // @ts-expect-error Retired Scenario type.
 import type { Scenario } from "../../src/mod.ts"
@@ -58,7 +63,9 @@ import type { LegacyScenarioNode } from "../../src/mod.ts"
 // @ts-expect-error Retired Scenario type.
 import type { LegacyScenarioNodeType } from "../../src/mod.ts"
 
-type RetiredScenarioContracts =
+type RetiredContracts =
+  | ResetAdapterInput
+  | ResetAdapterResponse
   | Scenario
   | ScenarioCreateInput
   | ScenarioDeleteInput
@@ -88,6 +95,10 @@ type RetiredScenarioContracts =
   | LegacyScenarioNodeType
 
 describe("public API", () => {
+  it("does not export the retired Adapter reset command", () => {
+    assertEquals("ResetAdapterCommand" in sdk, false)
+  })
+
   it("does not export retired scenario commands", () => {
     const retiredExports = Object.keys(sdk).filter((name) => name.toLowerCase().includes("scenario"))
 
@@ -99,4 +110,4 @@ describe("public API", () => {
   })
 })
 
-void (undefined as unknown as RetiredScenarioContracts)
+void (undefined as unknown as RetiredContracts)
