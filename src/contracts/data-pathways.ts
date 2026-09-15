@@ -134,10 +134,32 @@ const PathwayTypeSchema: TPathwayType = Type.Optional(Type.Union([Type.Literal("
 type TVirtualConfig = TObject<{
   flowTypes: TOptional<TArray<TString>>
 }>
+/**
+ * What a virtual pathway consumes, and therefore what a command may target.
+ *
+ * Entries are either a bare flow type (`"orders.0"`, every pump group on it) or a
+ * composite `"orders.0::hot"` naming one pump group. A pump group belongs to exactly one
+ * flow type, so the pair is the identity and one array carries both levels of precision.
+ */
 const VirtualConfigSchema: TVirtualConfig = Type.Object({
   flowTypes: Type.Optional(Type.Array(Type.String())),
 })
 export type VirtualConfig = Static<typeof VirtualConfigSchema>
+
+/**
+ * Desired delivery state of a virtual pathway.
+ *
+ * `paused` means the control plane has told the consumer to stop delivering to its
+ * handlers. The pump keeps running, keeps its buffer and keeps its cursor. A consumer
+ * reads this at boot so a redeploy comes back paused rather than silently resuming.
+ *
+ * Optional: a control plane older than the pause feature omits it.
+ */
+type TDeliveryState = TUnion<[TLiteral<"active">, TLiteral<"paused">]>
+const DeliveryStateSchema: TDeliveryState = Type.Union([Type.Literal("active"), Type.Literal("paused")])
+export type DeliveryState = Static<typeof DeliveryStateSchema>
+
+type TNullableStringArray = TUnion<[TArray<TString>, TNull]>
 
 // ── Pathways ──
 
@@ -154,6 +176,8 @@ export const DataPathwaySchema: TObject<{
   labels: TStringRecord
   config: TOptional<TPathwayConfig>
   virtualConfig: TOptional<TVirtualConfig>
+  deliveryState: TOptional<TDeliveryState>
+  deliveryPauseTargets: TOptional<TNullableStringArray>
   createdAt: TString
   updatedAt: TString
 }> = Type.Object({
@@ -169,6 +193,8 @@ export const DataPathwaySchema: TObject<{
   labels: Type.Record(Type.String(), Type.String()),
   config: Type.Optional(PathwayConfigSchema),
   virtualConfig: Type.Optional(VirtualConfigSchema),
+  deliveryState: Type.Optional(DeliveryStateSchema),
+  deliveryPauseTargets: Type.Optional(Type.Union([Type.Array(Type.String()), Type.Null()])),
   createdAt: Type.String(),
   updatedAt: Type.String(),
 })
