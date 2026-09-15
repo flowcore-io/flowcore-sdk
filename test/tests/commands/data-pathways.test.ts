@@ -1,5 +1,5 @@
-import { assertEquals } from "@test/compat/assert"
 import { afterAll, afterEach, describe, it } from "bun:test"
+import { assertEquals } from "@test/compat/assert"
 import {
   DataPathwayAssignmentCompleteCommand,
   DataPathwayAssignmentExpireLeasesCommand,
@@ -9,7 +9,9 @@ import {
   DataPathwayAssignmentNextCommand,
   DataPathwayCapacityFetchCommand,
   DataPathwayCommandDispatchConfigUpdateCommand,
+  DataPathwayCommandDispatchPauseCommand,
   DataPathwayCommandDispatchRestartCommand,
+  DataPathwayCommandDispatchResumeCommand,
   DataPathwayCommandDispatchStopCommand,
   DataPathwayCommandFetchCommand,
   DataPathwayCommandPendingByPathwayCommand,
@@ -56,7 +58,8 @@ describe("DataPathways", () => {
     const id = crypto.randomUUID()
     const response = { pathwayId: id, status: "created" }
 
-    base.put(`/api/v1/pathways/${id}`)
+    base
+      .put(`/api/v1/pathways/${id}`)
       .matchBody({ tenant: "t1", dataCore: "dc1", sizeClass: "small" })
       .respondWith(200, response)
 
@@ -70,7 +73,8 @@ describe("DataPathways", () => {
     const id = crypto.randomUUID()
     const response = { pathwayId: id, status: "created" }
 
-    base.put(`/api/v1/pathways/${id}`)
+    base
+      .put(`/api/v1/pathways/${id}`)
       .matchBody({
         tenant: "t1",
         dataCore: "dc1",
@@ -155,13 +159,9 @@ describe("DataPathways", () => {
   it("should list pathways", async () => {
     const response = { pathways: [], total: 0 }
 
-    base.get("/api/v1/pathways")
-      .matchSearchParams({ tenant: "t1", limit: "10" })
-      .respondWith(200, response)
+    base.get("/api/v1/pathways").matchSearchParams({ tenant: "t1", limit: "10" }).respondWith(200, response)
 
-    const result = await bearerClient.execute(
-      new DataPathwayListCommand({ tenant: "t1", limit: 10 }),
-    )
+    const result = await bearerClient.execute(new DataPathwayListCommand({ tenant: "t1", limit: 10 }))
     assertEquals(result, response)
   })
 
@@ -169,13 +169,9 @@ describe("DataPathways", () => {
     const id = crypto.randomUUID()
     const response = { pathwayId: id, status: "disabled" }
 
-    base.post(`/api/v1/pathways/${id}/disable`)
-      .matchBody({ reason: "maintenance" })
-      .respondWith(200, response)
+    base.post(`/api/v1/pathways/${id}/disable`).matchBody({ reason: "maintenance" }).respondWith(200, response)
 
-    const result = await bearerClient.execute(
-      new DataPathwayDisableCommand({ id, reason: "maintenance" }),
-    )
+    const result = await bearerClient.execute(new DataPathwayDisableCommand({ id, reason: "maintenance" }))
     assertEquals(result, response)
   })
 
@@ -186,7 +182,8 @@ describe("DataPathways", () => {
     const podUnitId = crypto.randomUUID()
     const response = { slotId, status: "registered" }
 
-    base.post("/api/v1/slots/register")
+    base
+      .post("/api/v1/slots/register")
       .matchBody({ slotId, podUnitId, class: "small", version: "1.0.0" })
       .respondWith(200, response)
 
@@ -199,13 +196,9 @@ describe("DataPathways", () => {
   it("should list slots", async () => {
     const response = { slots: [], total: 0 }
 
-    base.get("/api/v1/slots")
-      .matchSearchParams({ class: "small" })
-      .respondWith(200, response)
+    base.get("/api/v1/slots").matchSearchParams({ class: "small" }).respondWith(200, response)
 
-    const result = await apiKeyClient.execute(
-      new DataPathwaySlotListCommand({ class: "small" }),
-    )
+    const result = await apiKeyClient.execute(new DataPathwaySlotListCommand({ class: "small" }))
     assertEquals(result, response)
   })
 
@@ -231,13 +224,9 @@ describe("DataPathways", () => {
     const id = crypto.randomUUID()
     const response = { slotId: id, status: "deregistered" }
 
-    base.post(`/api/v1/slots/${id}/deregister`)
-      .matchBody({ reason: "shutdown" })
-      .respondWith(200, response)
+    base.post(`/api/v1/slots/${id}/deregister`).matchBody({ reason: "shutdown" }).respondWith(200, response)
 
-    const result = await apiKeyClient.execute(
-      new DataPathwaySlotDeregisterCommand({ id, reason: "shutdown" }),
-    )
+    const result = await apiKeyClient.execute(new DataPathwaySlotDeregisterCommand({ id, reason: "shutdown" }))
     assertEquals(result, response)
   })
 
@@ -245,9 +234,7 @@ describe("DataPathways", () => {
     const id = crypto.randomUUID()
     const response = { slotId: id, status: "ok" }
 
-    base.post(`/api/v1/slots/${id}/heartbeat`)
-      .matchBody({})
-      .respondWith(200, response)
+    base.post(`/api/v1/slots/${id}/heartbeat`).matchBody({}).respondWith(200, response)
 
     const result = await apiKeyClient.execute(new DataPathwaySlotHeartbeatCommand({ id }))
     assertEquals(result, response)
@@ -282,13 +269,9 @@ describe("DataPathways", () => {
       },
     }
 
-    base.post("/api/v1/assignments/next")
-      .matchBody({ slotId, class: "small" })
-      .respondWith(200, response)
+    base.post("/api/v1/assignments/next").matchBody({ slotId, class: "small" }).respondWith(200, response)
 
-    const result = await apiKeyClient.execute(
-      new DataPathwayAssignmentNextCommand({ slotId, class: "small" }),
-    )
+    const result = await apiKeyClient.execute(new DataPathwayAssignmentNextCommand({ slotId, class: "small" }))
     assertEquals(result, response)
   })
 
@@ -297,7 +280,8 @@ describe("DataPathways", () => {
     const assignmentId = crypto.randomUUID()
     const pathwayId = crypto.randomUUID()
 
-    base.post("/api/v1/assignments/heartbeat")
+    base
+      .post("/api/v1/assignments/heartbeat")
       .matchBody({ slotId, assignmentId, pathwayId, metrics: { lagSeconds: 5 } })
       .respondWith(200, {})
 
@@ -317,7 +301,8 @@ describe("DataPathways", () => {
     const assignmentId = crypto.randomUUID()
     const pathwayId = crypto.randomUUID()
 
-    base.post("/api/v1/assignments/complete")
+    base
+      .post("/api/v1/assignments/complete")
       .matchBody({ slotId, assignmentId, pathwayId, outcome: "completed" })
       .respondWith(200, {})
 
@@ -335,13 +320,9 @@ describe("DataPathways", () => {
   it("should list assignments", async () => {
     const response = { assignments: [], total: 0 }
 
-    base.get("/api/v1/assignments")
-      .matchSearchParams({ status: "active" })
-      .respondWith(200, response)
+    base.get("/api/v1/assignments").matchSearchParams({ status: "active" }).respondWith(200, response)
 
-    const result = await bearerClient.execute(
-      new DataPathwayAssignmentListCommand({ status: "active" }),
-    )
+    const result = await bearerClient.execute(new DataPathwayAssignmentListCommand({ status: "active" }))
     assertEquals(result, response)
   })
 
@@ -379,9 +360,7 @@ describe("DataPathways", () => {
 
     base.post("/api/v1/assignments/expire-leases").respondWith(200, response)
 
-    const result = await apiKeyClient.execute(
-      new DataPathwayAssignmentExpireLeasesCommand({}),
-    )
+    const result = await apiKeyClient.execute(new DataPathwayAssignmentExpireLeasesCommand({}))
     assertEquals(result, response)
   })
 
@@ -393,9 +372,7 @@ describe("DataPathways", () => {
 
     base.get(`/api/v1/assignments/${assignmentId}/commands/pending`).respondWith(200, response)
 
-    const result = await apiKeyClient.execute(
-      new DataPathwayCommandPendingCommand({ assignmentId }),
-    )
+    const result = await apiKeyClient.execute(new DataPathwayCommandPendingCommand({ assignmentId }))
     assertEquals(result, response)
   })
 
@@ -404,7 +381,8 @@ describe("DataPathways", () => {
     const commandId = crypto.randomUUID()
     const response = { commandId, phase: "dispatched" }
 
-    base.post(`/api/v1/assignments/${assignmentId}/commands/datapump-restart`)
+    base
+      .post(`/api/v1/assignments/${assignmentId}/commands/datapump-restart`)
       .matchBody({ generation: 1, position: { timeBucket: "2025-01-01T00:00:00Z" } })
       .respondWith(200, response)
 
@@ -423,7 +401,8 @@ describe("DataPathways", () => {
     const commandId = crypto.randomUUID()
     const response = { commandId, phase: "dispatched" }
 
-    base.post(`/api/v1/assignments/${assignmentId}/commands/stop`)
+    base
+      .post(`/api/v1/assignments/${assignmentId}/commands/stop`)
       .matchBody({ generation: 1, reason: "scaling down" })
       .respondWith(200, response)
 
@@ -442,7 +421,8 @@ describe("DataPathways", () => {
     const commandId = crypto.randomUUID()
     const response = { commandId, phase: "acknowledged" }
 
-    base.post(`/api/v1/assignments/${assignmentId}/commands/${commandId}/status`)
+    base
+      .post(`/api/v1/assignments/${assignmentId}/commands/${commandId}/status`)
       .matchBody({ phase: "acknowledged" })
       .respondWith(200, response)
 
@@ -466,7 +446,8 @@ describe("DataPathways", () => {
       skippedTargets: [],
     }
 
-    base.post("/api/v1/restarts/request")
+    base
+      .post("/api/v1/restarts/request")
       .matchBody({
         targets: { pathwayIds: ["pathway-1"] },
         position: { timeBucket: "2025-01-01T00:00:00Z" },
@@ -493,7 +474,8 @@ describe("DataPathways", () => {
       skippedTargets: [],
     }
 
-    base.post("/api/v1/restarts/request")
+    base
+      .post("/api/v1/restarts/request")
       .matchBody({
         targets: { pathwayIds: [virtualPathwayId] },
         position: { timeBucket: "2025-01-01T00:00:00Z" },
@@ -554,7 +536,8 @@ describe("DataPathways", () => {
   it("should set a quota", async () => {
     const response = { tenant: "t1", status: "set" }
 
-    base.put("/api/v1/quotas/t1")
+    base
+      .put("/api/v1/quotas/t1")
       .matchBody({ maxSlots: { small: 10, medium: 5, high: 2 } })
       .respondWith(200, response)
 
@@ -602,9 +585,7 @@ describe("DataPathways", () => {
 
     base.get(`/api/v1/pump-states/${pathwayId}/${flowType}`).respondWith(200, response)
 
-    const result = await apiKeyClient.execute(
-      new DataPathwayPumpStateFetchCommand({ pathwayId, flowType }),
-    )
+    const result = await apiKeyClient.execute(new DataPathwayPumpStateFetchCommand({ pathwayId, flowType }))
     assertEquals(result, response)
   })
 
@@ -613,7 +594,8 @@ describe("DataPathways", () => {
     const flowType = "data.0"
     const response = { status: "saved" }
 
-    base.post(`/api/v1/pump-states/${pathwayId}/${flowType}`)
+    base
+      .post(`/api/v1/pump-states/${pathwayId}/${flowType}`)
       .matchBody({ state: { timeBucket: "2025-01-01T00:00:00Z" } })
       .respondWith(200, response)
 
@@ -639,9 +621,7 @@ describe("DataPathways", () => {
 
     base.get(`/api/v1/pump-states/${pathwayId}/sources/${sourceId}`).respondWith(200, response)
 
-    const result = await apiKeyClient.execute(
-      new DataPathwayPumpStateFetchBySourceCommand({ pathwayId, sourceId }),
-    )
+    const result = await apiKeyClient.execute(new DataPathwayPumpStateFetchBySourceCommand({ pathwayId, sourceId }))
     assertEquals(result, response)
   })
 
@@ -650,7 +630,8 @@ describe("DataPathways", () => {
     const sourceId = crypto.randomUUID()
     const response = { status: "ok" }
 
-    base.put(`/api/v1/pump-states/${pathwayId}/sources/${sourceId}`)
+    base
+      .put(`/api/v1/pump-states/${pathwayId}/sources/${sourceId}`)
       .matchBody({ state: { timeBucket: "2025-01-01T00:00:00Z" } })
       .respondWith(200, response)
 
@@ -690,9 +671,7 @@ describe("DataPathways", () => {
 
     base.get(`/api/v1/commands/${commandId}`).respondWith(200, response)
 
-    const result = await bearerClient.execute(
-      new DataPathwayCommandFetchCommand({ commandId }),
-    )
+    const result = await bearerClient.execute(new DataPathwayCommandFetchCommand({ commandId }))
     assertEquals(result, response)
   })
 
@@ -702,7 +681,8 @@ describe("DataPathways", () => {
     const assignmentId = crypto.randomUUID()
     const response = { commandId: crypto.randomUUID(), phase: "dispatched" }
 
-    base.post(`/api/v1/assignments/${assignmentId}/commands/config-update`)
+    base
+      .post(`/api/v1/assignments/${assignmentId}/commands/config-update`)
       .matchBody({ generation: 1, config: { foo: "bar" } })
       .respondWith(200, response)
 
@@ -724,9 +704,7 @@ describe("DataPathways", () => {
 
     base.get(`/api/v1/pathways/${pathwayId}/commands/pending`).respondWith(200, response)
 
-    const result = await apiKeyClient.execute(
-      new DataPathwayCommandPendingByPathwayCommand({ pathwayId }),
-    )
+    const result = await apiKeyClient.execute(new DataPathwayCommandPendingByPathwayCommand({ pathwayId }))
     assertEquals(result, response)
   })
 
@@ -735,7 +713,8 @@ describe("DataPathways", () => {
     const commandId = crypto.randomUUID()
     const response = { commandId, phase: "acknowledged" }
 
-    base.post(`/api/v1/pathways/${pathwayId}/commands/${commandId}/status`)
+    base
+      .post(`/api/v1/pathways/${pathwayId}/commands/${commandId}/status`)
       .matchBody({ phase: "acknowledged" })
       .respondWith(200, response)
 
@@ -770,13 +749,9 @@ describe("DataPathways", () => {
       updatedAt: "2025-01-01T00:00:00Z",
     }
 
-    base.get(`/api/v1/pathways/by-name/${name}`)
-      .matchSearchParams({ tenant })
-      .respondWith(200, response)
+    base.get(`/api/v1/pathways/by-name/${name}`).matchSearchParams({ tenant }).respondWith(200, response)
 
-    const result = await apiKeyClient.execute(
-      new DataPathwayFetchByNameCommand({ name, tenant }),
-    )
+    const result = await apiKeyClient.execute(new DataPathwayFetchByNameCommand({ name, tenant }))
     assertEquals(result, response)
   })
 
@@ -784,7 +759,8 @@ describe("DataPathways", () => {
     const name = "my-pathway"
     const response = { pathwayId: crypto.randomUUID(), status: "created" as const }
 
-    base.put(`/api/v1/pathways/by-name/${name}`)
+    base
+      .put(`/api/v1/pathways/by-name/${name}`)
       .matchBody({ tenant: "test-tenant", dataCore: "dc-1", type: "virtual" })
       .respondWith(200, response)
 
@@ -806,17 +782,18 @@ describe("DataPathways", () => {
     const assignmentId = crypto.randomUUID()
     const response = { inserted: 1 }
 
-    base.post("/api/v1/delivery-log/batch")
-      .respondWith(200, response)
+    base.post("/api/v1/delivery-log/batch").respondWith(200, response)
 
     const result = await apiKeyClient.execute(
       new DataPathwayDeliveryLogBatchCommand({
-        entries: [{
-          pathwayId,
-          assignmentId,
-          endpointUrl: "https://example.com/webhook",
-          success: true,
-        }],
+        entries: [
+          {
+            pathwayId,
+            assignmentId,
+            endpointUrl: "https://example.com/webhook",
+            success: true,
+          },
+        ],
       }),
     )
     assertEquals(result, response)
@@ -828,22 +805,118 @@ describe("DataPathways", () => {
     const sourceId = crypto.randomUUID()
     const response = { inserted: 1 }
 
-    base.post("/api/v1/delivery-log/batch")
-      .respondWith(200, response)
+    base.post("/api/v1/delivery-log/batch").respondWith(200, response)
 
     const result = await apiKeyClient.execute(
       new DataPathwayDeliveryLogBatchCommand({
-        entries: [{
-          pathwayId,
-          assignmentId,
-          endpointUrl: "https://example.com/webhook",
-          success: true,
-          flowType: "analytics",
-          sourceId,
-          eventType: "pat.created.0",
-        }],
+        entries: [
+          {
+            pathwayId,
+            assignmentId,
+            endpointUrl: "https://example.com/webhook",
+            success: true,
+            flowType: "analytics",
+            sourceId,
+            eventType: "pat.created.0",
+          },
+        ],
       }),
     )
     assertEquals(result, response)
+  })
+
+  it("should dispatch a delivery pause to a virtual pathway", async () => {
+    const pathwayId = crypto.randomUUID()
+    const response = { commandId: crypto.randomUUID(), phase: "dispatched" }
+
+    base
+      .post(`/api/v1/pathways/${pathwayId}/commands/pause`)
+      .matchBody({ reason: "downstream maintenance" })
+      .respondWith(200, response)
+
+    const result = await bearerClient.execute(
+      new DataPathwayCommandDispatchPauseCommand({
+        pathwayId,
+        reason: "downstream maintenance",
+      }),
+    )
+    assertEquals(result, response)
+  })
+
+  it("should pass pump-group targets through on a pause", async () => {
+    const pathwayId = crypto.randomUUID()
+    const response = { commandId: crypto.randomUUID(), phase: "dispatched" }
+
+    // A bare flow type covers every pump group on it; the composite form names one pump.
+    base
+      .post(`/api/v1/pathways/${pathwayId}/commands/pause`)
+      .matchBody({ targets: ["orders.0", "invoices.0::hot"] })
+      .respondWith(200, response)
+
+    const result = await bearerClient.execute(
+      new DataPathwayCommandDispatchPauseCommand({
+        pathwayId,
+        targets: ["orders.0", "invoices.0::hot"],
+      }),
+    )
+    assertEquals(result, response)
+  })
+
+  it("should dispatch a delivery resume to a virtual pathway", async () => {
+    const pathwayId = crypto.randomUUID()
+    const response = { commandId: crypto.randomUUID(), phase: "dispatched" }
+
+    base.post(`/api/v1/pathways/${pathwayId}/commands/resume`).matchBody({}).respondWith(200, response)
+
+    const result = await bearerClient.execute(new DataPathwayCommandDispatchResumeCommand({ pathwayId }))
+    assertEquals(result, response)
+  })
+
+  it("should parse the delivery state on a fetched pathway", async () => {
+    const id = crypto.randomUUID()
+    const response = {
+      id,
+      tenant: "test-tenant",
+      dataCore: "test-data-core",
+      sizeClass: "small",
+      type: "virtual",
+      enabled: true,
+      priority: 0,
+      version: 1,
+      labels: {},
+      virtualConfig: { flowTypes: ["orders.0::hot"] },
+      deliveryState: "paused",
+      deliveryPauseTargets: ["orders.0::hot"],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }
+
+    base.get(`/api/v1/pathways/${id}`).respondWith(200, response)
+
+    const result = await bearerClient.execute(new DataPathwayFetchCommand({ id }))
+    assertEquals(result.deliveryState, "paused")
+    assertEquals(result.deliveryPauseTargets, ["orders.0::hot"])
+  })
+
+  it("should accept a pathway from a control plane that predates the pause feature", async () => {
+    const id = crypto.randomUUID()
+    const response = {
+      id,
+      tenant: "test-tenant",
+      dataCore: "test-data-core",
+      sizeClass: "small",
+      type: "virtual",
+      enabled: true,
+      priority: 0,
+      version: 1,
+      labels: {},
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }
+
+    base.get(`/api/v1/pathways/${id}`).respondWith(200, response)
+
+    const result = await bearerClient.execute(new DataPathwayFetchCommand({ id }))
+    assertEquals(result.deliveryState, undefined)
   })
 })
