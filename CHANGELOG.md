@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.1.0](https://github.com/flowcore-io/flowcore-sdk/compare/v6.0.0...v6.1.0) (2026-09-15)
+
+
+### Features
+
+* **data-pathways:** dispatch delivery pause and resume ([#259](https://github.com/flowcore-io/flowcore-sdk/issues/259)) ([ce2654e](https://github.com/flowcore-io/flowcore-sdk/commit/ce2654ec329ea782525faedea79aa7331d0a3c36))
+
 ## [6.0.0](https://github.com/flowcore-io/flowcore-sdk/compare/v5.0.0...v6.0.0) (2026-09-08)
 
 
