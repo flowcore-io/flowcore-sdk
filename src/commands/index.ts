@@ -152,6 +152,9 @@ export * from "./iam/tenant-iam-audit/get-audit-for-tenant.ts"
 
 export * from "./iam/validate/validate-key.ts"
 export * from "./iam/validate/validate-user.ts"
+export * from "./iam/policy-filters.ts"
+export * from "./iam/entitlements/resolve-user-entitlements.ts"
+export * from "./iam/entitlements/resolve-key-entitlements.ts"
 
 // Compute
 export * from "./compute/compute-domain.attach.ts"

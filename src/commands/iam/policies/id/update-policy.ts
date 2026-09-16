@@ -65,6 +65,10 @@ export class PolicyUpdateCommand extends Command<PolicyUpdateInput, Policy> {
     }
   }
 
+  protected override getHeaders(): Record<string, string> {
+    return { ...super.getHeaders(), "x-flowcore-policy-conditions": "1" }
+  }
+
   /**
    * Parse the response
    */
