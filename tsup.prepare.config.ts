@@ -3,7 +3,7 @@ import { defineConfig } from "tsup"
 export default defineConfig({
   entry: { index: "src/mod.ts" },
   format: ["esm", "cjs"],
-  dts: true,
+  dts: false,
   sourcemap: false,
   clean: true,
   target: "es2022",
