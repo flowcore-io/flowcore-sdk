@@ -30,6 +30,10 @@ export const EntitlementResponseSchema = Type.Object({
 
 export type EntitlementResponse = Static<typeof EntitlementResponseSchema>
 
+export function parseEntitlementResponse(rawResponse: unknown): EntitlementResponse {
+  return parseResponseHelper(EntitlementResponseSchema, rawResponse)
+}
+
 export interface ResolveUserEntitlementsInput {
   userId: string
   mode: "tenant" | "organization"
@@ -45,6 +49,6 @@ export class ResolveUserEntitlementsCommand extends Command<ResolveUserEntitleme
     return { mode: this.input.mode, requestedAccess: this.input.requestedAccess }
   }
   protected override parseResponse(rawResponse: unknown): EntitlementResponse {
-    return parseResponseHelper(EntitlementResponseSchema, rawResponse)
+    return parseEntitlementResponse(rawResponse)
   }
 }

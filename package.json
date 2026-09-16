@@ -30,6 +30,7 @@
   ],
   "scripts": {
     "build": "tsup",
+    "prepare": "tsup",
     "typecheck": "tsc --noEmit",
     "lint": "biome lint .",
     "format": "biome format --write .",
