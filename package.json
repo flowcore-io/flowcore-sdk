@@ -30,7 +30,6 @@
   ],
   "scripts": {
     "build": "tsup",
-    "prepare": "tsup --config tsup.prepare.config.ts && tsc -p tsconfig.prepare.json && cp dist/mod.d.ts dist/index.d.ts && cp dist/mod.d.ts dist/index.d.cts",
     "typecheck": "tsc --noEmit",
     "lint": "biome lint .",
     "format": "biome format --write .",
