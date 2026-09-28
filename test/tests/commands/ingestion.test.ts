@@ -30,6 +30,7 @@ describe("Ingestion", () => {
       const fetchMockerBuilder = fetchMocker.mock(mockWebhookUrl)
 
       fetchMockerBuilder.post(`/event/${tenantName}/${dataCoreId}/${flowTypeName}/${eventTypeName}`)
+        .withoutSearchParams()
         .matchBody(eventData)
         .matchHeaders({
           "Content-Type": "application/json",
@@ -233,6 +234,7 @@ describe("Ingestion", () => {
       const fetchMockerBuilder = fetchMocker.mock(mockWebhookUrl)
 
       fetchMockerBuilder.post(`/events/${tenantName}/${dataCoreId}/${flowTypeName}/${eventTypeName}`)
+        .withoutSearchParams()
         .matchBody(events)
         .matchHeaders({
           "Content-Type": "application/json",
