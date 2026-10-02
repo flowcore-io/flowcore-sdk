@@ -169,6 +169,28 @@ describe("WebSocketClient", () => { // Updated describe block
     assertEquals(instance.url, expectedUrl)
   })
 
+  it("does not log API key credentials in the initial WebSocket URL", async () => {
+    const logger = createRecordingLogger()
+    client = createClient(authOptionsApiKey, { logger })
+    activeStream = await client.connect(testCommand)
+
+    assertEquals(mockWebSocketInstances.length, 1)
+    assertEquals(mockWebSocketInstances[0].url.includes("test-api-key"), true)
+    const allLogs = JSON.stringify(logger.calls)
+    assertEquals(allLogs.includes("test-api-key"), false)
+    assertEquals(allLogs.includes("test-api-key-id"), false)
+    assertEquals(allLogs.includes("ai-coordinator.api.flowcore.io/api/v1/stream/conv_test_123"), true)
+
+    activeStream.disconnect()
+    await delay(10)
+
+    const bearerLogger = createRecordingLogger()
+    client = createClient(authOptionsBearer, { logger: bearerLogger })
+    activeStream = await client.connect(testCommand)
+    assertEquals(mockWebSocketInstances[1].url.includes("test-bearer-token"), true)
+    assertEquals(JSON.stringify(bearerLogger.calls).includes("test-bearer-token"), false)
+  })
+
   it("should set client state correctly during connection", async () => {
     client = createClient(authOptionsBearer)
     const connectPromise = client.connect(testCommand)
@@ -319,6 +341,66 @@ describe("WebSocketClient", () => { // Updated describe block
 
     assertEquals(client.isOpen, true, "Client should be open after successful reconnect")
     assertEquals(client.isConnecting, false)
+  })
+
+  it("does not log API key credentials in reconnect URLs", async () => {
+    const logger = createRecordingLogger()
+    client = createClient(authOptionsApiKey, { maxReconnects: 1, logger })
+    activeStream = await client.connect(testCommand)
+    const firstSocket = mockWebSocketInstances[0]
+    firstSocket._triggerOpen()
+    await delay(0)
+
+    firstSocket._triggerClose(1006, "Synthetic close")
+    await delay(clientOptions.reconnectInterval + 50)
+
+    assertEquals(mockWebSocketInstances.length, 2)
+    assertEquals(mockWebSocketInstances[1].url.includes("test-api-key"), true)
+    const allLogs = JSON.stringify(logger.calls)
+    assertEquals(allLogs.includes("test-api-key"), false)
+    assertEquals(allLogs.includes("test-api-key-id"), false)
+    assertEquals(allLogs.includes("ai-coordinator.api.flowcore.io/api/v1/stream/conv_test_123"), true)
+  })
+
+  it("does not log URL-bearing close reasons", async () => {
+    const logger = createRecordingLogger()
+    client = createClient(authOptionsApiKey, { logger })
+    activeStream = await client.connect(testCommand)
+    const socket = mockWebSocketInstances[0]
+    socket._triggerOpen()
+    await delay(0)
+
+    socket._triggerClose(1000, "wss://service.example/stream?token=fake-close-secret")
+
+    const allLogs = JSON.stringify(logger.calls)
+    assertEquals(allLogs.includes("fake-close-secret"), false)
+    assertEquals(allLogs.includes("Code [1000]"), true)
+  })
+
+  it("does not log malformed URLs or credential-bearing setup errors", async () => {
+    const logger = createRecordingLogger()
+    client = createClient(authOptionsApiKey, { logger })
+    client.setBaseUrl("wss://fake-user:fake-password@bad host?token=fake-url-secret")
+
+    assertEquals(JSON.stringify(logger.calls).includes("fake-password"), false)
+    assertEquals(JSON.stringify(logger.calls).includes("fake-url-secret"), false)
+    assertEquals(logger.calls.info.some((message) => message.includes("(invalid WebSocket URL)")), true)
+
+    const failingClient = new WebSocketClient(
+      authOptionsApiKey,
+      { ...clientOptions, logger },
+      () => {
+        const error = new Error("wss://service.example/stream?api_key=fake-error-secret")
+        error.name = "fake-name-secret"
+        throw error
+      },
+    )
+    await failingClient.connect(testCommand).catch(() => {})
+
+    const allLogs = JSON.stringify(logger.calls)
+    assertEquals(allLogs.includes("fake-error-secret"), false)
+    assertEquals(allLogs.includes("fake-name-secret"), false)
+    assertEquals(allLogs.includes("Failed to initiate WebSocket connection."), true)
   })
 
   it("output$ should complete after max reconnect attempts failed", async () => {
