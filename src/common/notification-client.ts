@@ -266,19 +266,22 @@ export class NotificationClient {
       this.observer.complete()
     }
 
-    this.webSocket.onerror = (error) => {
-      // A server without subprotocol support refuses the handshake, which
-      // surfaces here BEFORE `onopen`. That is a probe result, not a fault, so
-      // it must not terminate the observable — `onclose` performs the retry.
-      if (this.shouldFallBackToQueryTransport()) {
-        this.logger.debug("Subprotocol handshake refused; retrying on the legacy query transport")
-        this.webSocket.close()
-        return
-      }
-      this.logger.error(`WebSocket encountered error: ${error}`)
-      this.observer.error(error)
+    this.webSocket.onerror = (error) => this.handleWebSocketError(error)
+  }
+
+  private handleWebSocketError(error: Event) {
+    // A server without subprotocol support refuses the handshake, which
+    // surfaces here BEFORE `onopen`. That is a probe result, not a fault, so
+    // it must not terminate the observable — `onclose` performs the retry.
+    if (this.shouldFallBackToQueryTransport()) {
+      this.logger.debug("Subprotocol handshake refused; retrying on the legacy query transport")
       this.webSocket.close()
+      return
     }
+    // ErrorEvent stringification can include the request URL and its query.
+    this.logger.error("WebSocket encountered an error.")
+    this.observer.error(error)
+    this.webSocket.close()
   }
 
   /**

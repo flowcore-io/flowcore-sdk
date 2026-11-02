@@ -93,6 +93,38 @@ describe("NotificationClient.handleMessage", () => {
   })
 })
 
+describe("NotificationClient WebSocket errors", () => {
+  it("does not log a credential-bearing ErrorEvent string", () => {
+    const observer = new Subject<NotificationEvent>()
+    let observedError: Event | undefined
+    observer.subscribe({ error: (error) => observedError = error })
+    const logger = recordingLogger()
+    const client = new NotificationClient(
+      observer,
+      { apiKey: "fake-api-key", apiKeyId: "fake-key-id" },
+      { tenant: "t", dataCore: "dc" },
+      { logger },
+    )
+    const event = Object.assign(new Event("error"), {
+      toString: () => "wss://service.example/notifications?api_key=fake-api-key&api_key_id=fake-key-id",
+    })
+    const internal = client as unknown as {
+      transportSettled: boolean
+      webSocket: { readyState: number; close: () => void }
+      handleWebSocketError: (error: Event) => void
+    }
+    internal.transportSettled = true
+    internal.webSocket = { readyState: 1, close: () => {} }
+
+    internal.handleWebSocketError(event)
+
+    assertEquals(logger.calls.error, ["WebSocket encountered an error."])
+    assertEquals(JSON.stringify(logger.calls).includes("fake-api-key"), false)
+    assertEquals(JSON.stringify(logger.calls).includes("fake-key-id"), false)
+    assertEquals(observedError, event)
+  })
+})
+
 // The security property of this client, asserted directly: on the default
 // transport the credential is NOT in the URL. An ingress access log records the
 // request line, so a credential in the query string is written to disk in

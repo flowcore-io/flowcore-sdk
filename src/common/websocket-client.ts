@@ -32,6 +32,23 @@ const MAX_RECONNECT_INTERVAL = 30_000
 const WEBSOCKET_CLOSING = 2
 const WEBSOCKET_CLOSED = 3
 
+function safeWebSocketLogUrl(url: string): string {
+  try {
+    const parsed = new URL(url)
+    // Keep endpoint context while excluding query parameters, fragments, and user info.
+    return `${parsed.origin}${parsed.pathname}`
+  } catch {
+    // Malformed input may still contain credentials outside a parseable query.
+    return "(invalid WebSocket URL)"
+  }
+}
+
+function safeWebSocketLogEndpoint(baseUrl: string, pathSegment: string): string {
+  const cleanedBaseUrl = baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl
+  const cleanedPathSegment = pathSegment.startsWith("/") ? pathSegment.slice(1) : pathSegment
+  return safeWebSocketLogUrl(`${cleanedBaseUrl}/${cleanedPathSegment}`)
+}
+
 // Define the expected WebSocket interface subset used by the client
 interface MinimalWebSocket {
   readyState: number
@@ -96,7 +113,7 @@ export class WebSocketClient {
    * @param baseUrl - The new base URL to use (e.g., "wss://staging-server.api.flowcore.io").
    */
   setBaseUrl(baseUrl: string): void {
-    this.logger.info(`WebSocket base URL overridden to: ${baseUrl}`)
+    this.logger.info(`WebSocket base URL overridden to: ${safeWebSocketLogUrl(baseUrl)}`)
     this.overrideBaseUrl = baseUrl
   }
 
@@ -139,7 +156,7 @@ export class WebSocketClient {
     // Use override URL if set, otherwise use command's base URL
     const baseUrl = this.overrideBaseUrl ?? command.getWebSocketBaseUrl()
     const pathSegment = command.getWebSocketPathSegment(config) // Get path segment from command
-    this.logger.debug(`Attempting to connect stream: ${baseUrl}${pathSegment}`)
+    this.logger.debug(`Attempting to connect stream: ${safeWebSocketLogEndpoint(baseUrl, pathSegment)}`)
 
     try {
       const urlParams = new URLSearchParams()
@@ -159,7 +176,7 @@ export class WebSocketClient {
       const cleanedPathSegment = pathSegment.startsWith("/") ? pathSegment.slice(1) : pathSegment
       const streamUrl = `${cleanedBaseUrl}/${cleanedPathSegment}?${urlParams.toString()}` // Construct URL from command parts
 
-      this.logger.debug(`Connecting to WebSocket URL: ${streamUrl}`)
+      this.logger.debug(`Connecting to WebSocket URL: ${safeWebSocketLogUrl(streamUrl)}`)
       this.webSocket = this.webSocketFactory(streamUrl)
 
       this.setupEventHandlers() // Sets up handlers that push to internalSubject
@@ -171,7 +188,7 @@ export class WebSocketClient {
         disconnect: (): void => this.disconnect(),
       }
     } catch (error) {
-      this.logger.error(`Failed to initiate connection: ${error}`)
+      this.logger.error("Failed to initiate WebSocket connection.")
       this._isConnecting = false
       this.currentCommand = null // Clear command/config on failure
       this.currentConfig = null
@@ -191,7 +208,7 @@ export class WebSocketClient {
       const baseUrl = this.overrideBaseUrl ?? this.currentCommand?.getWebSocketBaseUrl()
       const pathSegment = this.currentCommand?.getWebSocketPathSegment(this.currentConfig)
       const logUrl = baseUrl && pathSegment
-        ? `${baseUrl.replace(/\/?$/, "/")}${pathSegment.replace(/^\/?/, "")}`
+        ? safeWebSocketLogUrl(`${baseUrl.replace(/\/?$/, "/")}${pathSegment.replace(/^\/?/, "")}`)
         : "(unknown URL)"
       this.logger.debug(`WebSocket connection opened: ${logUrl}`)
       this.reconnectInterval = this.options.reconnectInterval
@@ -235,10 +252,10 @@ export class WebSocketClient {
       const baseUrl = this.overrideBaseUrl ?? this.currentCommand?.getWebSocketBaseUrl()
       const pathSegment = this.currentCommand?.getWebSocketPathSegment(this.currentConfig)
       const logUrl = baseUrl && pathSegment
-        ? `${baseUrl.replace(/\/?$/, "/")}${pathSegment.replace(/^\/?/, "")}`
+        ? safeWebSocketLogUrl(`${baseUrl.replace(/\/?$/, "/")}${pathSegment.replace(/^\/?/, "")}`)
         : "(unknown URL)"
       this.logger.debug(
-        `WebSocket connection closed: ${logUrl} Code [${event.code}], Reason: ${event.reason || "No reason given"}
+        `WebSocket connection closed: ${logUrl} Code [${event.code}]
 . Was open: ${wasOpen}`,
       )
       if (wasOpen && event.code !== 1000 && this.currentCommand) { // Only reconnect if command is still set
@@ -256,7 +273,7 @@ export class WebSocketClient {
       const baseUrl = this.overrideBaseUrl ?? this.currentCommand?.getWebSocketBaseUrl()
       const pathSegment = this.currentCommand?.getWebSocketPathSegment(this.currentConfig)
       const logUrl = baseUrl && pathSegment
-        ? `${baseUrl.replace(/\/?$/, "/")}${pathSegment.replace(/^\/?/, "")}`
+        ? safeWebSocketLogUrl(`${baseUrl.replace(/\/?$/, "/")}${pathSegment.replace(/^\/?/, "")}`)
         : "(unknown URL)"
       this.logger.error(`WebSocket encountered an error for stream: ${logUrl}.`)
       if (
@@ -289,7 +306,7 @@ export class WebSocketClient {
     const baseUrl = this.overrideBaseUrl ?? this.currentCommand.getWebSocketBaseUrl()
     const pathSegment = this.currentCommand.getWebSocketPathSegment(this.currentConfig)
     const logUrl = baseUrl && pathSegment
-      ? `${baseUrl.replace(/\/?$/, "/")}${pathSegment.replace(/^\/?/, "")}`
+      ? safeWebSocketLogUrl(`${baseUrl.replace(/\/?$/, "/")}${pathSegment.replace(/^\/?/, "")}`)
       : "(unknown URL)"
     if (this.options.maxReconnects && this.reconnectAttempts >= this.options.maxReconnects) {
       this.logger.error(
@@ -338,12 +355,12 @@ export class WebSocketClient {
 
         // Use potentially overridden base URL for reconnect URL
         const streamUrl = `${baseUrl}${pathSegment}?${urlParams.toString()}`
-        this.logger.debug(`Reconnecting to WebSocket URL: ${streamUrl}`)
+        this.logger.debug(`Reconnecting to WebSocket URL: ${safeWebSocketLogUrl(streamUrl)}`)
         this.webSocket = this.webSocketFactory(streamUrl)
         // Connecting flag will be reset in onopen/onerror/onclose
         this.setupEventHandlers()
-      } catch (error) {
-        this.logger.error(`Reconnect attempt connection failed: ${error}`)
+      } catch {
+        this.logger.error("Reconnect attempt connection failed.")
         this._isConnecting = false // Reset connection flag on immediate error
         // Error during reconnect setup, trigger another attempt after backoff
         // We might get stuck here if auth always fails, consider adding specific error handling
