@@ -52,6 +52,8 @@ type NotificationEventData = {
  * Configuration options for the NotificationClient
  */
 export type NotificationClientOptions = {
+  /** Default true for legacy servers. False requires subprotocol auth and never retries credentials in a URL. */
+  allowQueryFallback?: boolean
   reconnectInterval: number
   maxReconnects?: number
   maxEvents?: number
@@ -70,14 +72,10 @@ interface NotificationClientAuthOptionsApiKey {
   apiKeyId?: string
 }
 
-type NotificationClientAuthOptions =
-  | NotificationClientAuthOptionsBearer
-  | NotificationClientAuthOptionsApiKey
+type NotificationClientAuthOptions = NotificationClientAuthOptionsBearer | NotificationClientAuthOptionsApiKey
 
 /** The resolved credential, after an OIDC token has been fetched. */
-type NotificationCredential =
-  | { kind: "bearer"; token: string }
-  | { kind: "apiKey"; apiKey: string; apiKeyId?: string }
+type NotificationCredential = { kind: "bearer"; token: string } | { kind: "apiKey"; apiKey: string; apiKeyId?: string }
 
 /**
  * Client for handling WebSocket connections to the Flowcore notification system.
@@ -104,6 +102,7 @@ export class NotificationClient {
   private authTransport: "subprotocol" | "query" = "subprotocol"
   /** True once a handshake has settled, so the fallback is probed at most once. */
   private transportSettled = false
+  private handshakeAccepted = false
 
   /**
    * Creates a new NotificationClient instance
@@ -155,6 +154,7 @@ export class NotificationClient {
     }
 
     this._isConnecting = true
+    this.handshakeAccepted = false
 
     let flowcoreClient: FlowcoreClient | null = null
     const urlParams = new URLSearchParams()
@@ -218,6 +218,11 @@ export class NotificationClient {
     ) as unknown as WebSocket
 
     this.webSocket.onopen = () => {
+      if (this.options.allowQueryFallback === false && this.webSocket.protocol !== credentialProtocols[0]) {
+        this.rejectStrictHandshake()
+        return
+      }
+      this.handshakeAccepted = true
       this._isOpen = true
       this._isConnecting = false
       // This transport works; never probe the other one again.
@@ -253,6 +258,11 @@ export class NotificationClient {
 
     this.webSocket.onclose = (event) => {
       this._isOpen = false
+      if (this.options.allowQueryFallback === false && !this.handshakeAccepted) {
+        this._isConnecting = false
+        this.observer.error(new Error("Notification WebSocket handshake failed"))
+        return
+      }
       this.logger.debug(`Connection closed: Code [${event.code}], Reason: ${event.reason}`)
       if (this.shouldFallBackToQueryTransport()) {
         this.fallBackToQueryTransport()
@@ -269,7 +279,17 @@ export class NotificationClient {
     this.webSocket.onerror = (error) => this.handleWebSocketError(error)
   }
 
+  private rejectStrictHandshake() {
+    this._isConnecting = false
+    this.observer.error(new Error("Notification WebSocket handshake failed"))
+    this.webSocket.close()
+  }
+
   private handleWebSocketError(error: Event) {
+    if (this.options.allowQueryFallback === false && !this.handshakeAccepted) {
+      this.rejectStrictHandshake()
+      return
+    }
     // A server without subprotocol support refuses the handshake, which
     // surfaces here BEFORE `onopen`. That is a probe result, not a fault, so
     // it must not terminate the observable — `onclose` performs the retry.
@@ -294,9 +314,10 @@ export class NotificationClient {
    * everyone with log access — for a long-lived `fc_` key that is a full
    * tenant compromise sitting in a log index.
    */
-  private buildCredentialHandshake(
-    credential: NotificationCredential,
-  ): { query: URLSearchParams; protocols: string[] } {
+  private buildCredentialHandshake(credential: NotificationCredential): {
+    query: URLSearchParams
+    protocols: string[]
+  } {
     const query = new URLSearchParams()
     const protocols: string[] = []
 
@@ -330,7 +351,12 @@ export class NotificationClient {
    * failure is a real failure and goes through normal reconnect handling.
    */
   private shouldFallBackToQueryTransport(): boolean {
-    return this.authTransport === "subprotocol" && !this.transportSettled && !this._isOpen
+    return (
+      this.options.allowQueryFallback !== false &&
+      this.authTransport === "subprotocol" &&
+      !this.transportSettled &&
+      !this._isOpen
+    )
   }
 
   /**

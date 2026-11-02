@@ -1089,6 +1089,14 @@ client.disconnect()
 
 #### Configuration Options
 
+- **allowQueryFallback**: Defaults to `true` for compatibility with older servers. Set `false`
+  to keep API keys and bearer tokens in WebSocket subprotocols and never retry them
+  as URL query parameters. Requires a server that negotiates `flowcore-api-key` or
+  `flowcore-bearer` (hosted tenant API 2.18.1 or later). A failed or unnegotiated
+  handshake reports a fixed error through the observer and sends no subscription.
+  This option does not sanitize caller-supplied endpoint URLs or all logging paths.
+  Wrappers such as data pumps must explicitly forward the option; updating the SDK
+  alone does not enable it.
 - **reconnectInterval**: Time in milliseconds between reconnection attempts (default: 1000)
 - **maxReconnects**: Maximum number of reconnection attempts (optional)
 - **maxEvents**: Maximum number of events to receive before auto-disconnecting (optional)
