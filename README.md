@@ -1107,7 +1107,9 @@ or metadata setup so it cannot open a socket or send a subscription afterward.
 Already-running HTTP/token requests are not aborted. A later explicit `connect()`
 starts a new generation; disconnect completes the supplied observer as before.
 Automatic reconnect after an accepted socket closes abnormally now releases the
-connection guard before attempting the replacement handshake.
+connection guard before attempting the replacement handshake. Socket errors remain
+terminal observer errors; their subsequent close events cannot reconnect into a
+stopped observer. Close-only abnormal disconnects remain reconnectable.
 
 #### Subscription Specification
 

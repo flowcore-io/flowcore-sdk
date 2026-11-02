@@ -162,4 +162,35 @@ for (const stage of ["metadata", "socket", "backoff"]) {
   assert.equal(client.isConnecting, false)
   globalThis.fetch = originalFetch
 }
+// A terminal socket error must not reconnect into an already-stopped Subject.
+for (const allowQueryFallback of [false, true]) {
+  sockets.length = 0
+  const observer = new Subject()
+  let errors = 0
+  observer.subscribe({
+    error: () => {
+      errors++
+    },
+  })
+  const client = new NotificationClient(
+    observer as never,
+    { apiKey: "synthetic-key", apiKeyId: "synthetic-id" },
+    { tenant: "synthetic", dataCore: "synthetic" },
+    { allowQueryFallback, reconnectInterval: 1, logger },
+  )
+  await client.connect()
+  const socket = sockets[0]
+  socket.protocol = "flowcore-api-key"
+  socket.onopen?.()
+  socket.onerror?.(new Event("error"))
+  socket.onclose?.({ code: 1006, reason: "" })
+  await Bun.sleep(20)
+  assert.equal(errors, 1)
+  assert.equal(observer.isStopped, true)
+  assert.equal(sockets.length, 1)
+  assert.equal(socket.sent.length, 1)
+  assert.equal(client.isOpen, false)
+  assert.equal(client.isConnecting, false)
+  client.disconnect()
+}
 console.log("strict notification transport passed")

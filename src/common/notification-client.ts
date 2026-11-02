@@ -318,6 +318,12 @@ export class NotificationClient {
     }
     // ErrorEvent stringification can include the request URL and its query.
     this.logger.error("WebSocket encountered an error.")
+    // Error terminates the Subject; invalidate this socket before close can retry.
+    ++this.generation
+    if (this.reconnectTimer) clearTimeout(this.reconnectTimer)
+    this.reconnectTimer = undefined
+    this._isOpen = false
+    this._isConnecting = false
     this.observer.error(error)
     this.webSocket.close()
   }
