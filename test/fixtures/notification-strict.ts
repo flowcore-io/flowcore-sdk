@@ -87,4 +87,79 @@ await Bun.sleep(10)
 assert.equal(sockets.length, 2)
 assert.equal(new URL(sockets[1].url).searchParams.get("api_key"), "synthetic-key")
 legacy.disconnect()
+// Reconnect must create a replacement socket and revalidate its negotiated scheme.
+for (const accepted of [true, false]) {
+  sockets.length = 0
+  const observer = new Subject()
+  let failure: Error | undefined
+  observer.subscribe({
+    error: (error) => {
+      failure = error
+    },
+  })
+  const client = new NotificationClient(
+    observer as never,
+    { apiKey: "synthetic-key", apiKeyId: "synthetic-id" },
+    { tenant: "synthetic", dataCore: "synthetic" },
+    { allowQueryFallback: false, reconnectInterval: 1, logger },
+  )
+  await client.connect()
+  sockets[0].protocol = "flowcore-api-key"
+  sockets[0].onopen?.()
+  sockets[0].onclose?.({ code: 1006, reason: "" })
+  for (let i = 0; i < 100 && sockets.length < 2; i++) await Bun.sleep(1)
+  assert.equal(sockets.length, 2)
+  assert.equal(new URL(sockets[1].url).search, "")
+  sockets[1].protocol = accepted ? "flowcore-api-key" : ""
+  sockets[1].onopen?.()
+  assert.equal(sockets[1].sent.length, accepted ? 1 : 0)
+  assert.equal(Boolean(failure), !accepted)
+  client.disconnect()
+}
+// Disconnect cancels deferred metadata setup and any later socket callbacks.
+const originalFetch = globalThis.fetch
+for (const stage of ["metadata", "socket", "backoff"]) {
+  sockets.length = 0
+  let release!: () => void
+  let entered!: () => void
+  const started = new Promise<void>((resolve) => {
+    entered = resolve
+  })
+  const gate = new Promise<void>((resolve) => {
+    release = resolve
+  })
+  globalThis.fetch = (async (...args: Parameters<typeof fetch>) => {
+    entered()
+    if (stage === "metadata") await gate
+    return originalFetch(...args)
+  }) as unknown as typeof fetch
+  const observer = new Subject()
+  const client = new NotificationClient(
+    observer as never,
+    { apiKey: "synthetic-key", apiKeyId: "synthetic-id" },
+    { tenant: "synthetic", dataCore: "synthetic" },
+    { allowQueryFallback: false, reconnectInterval: 5, logger },
+  )
+  const connecting = client.connect()
+  await started
+  if (stage !== "metadata") await connecting
+  if (stage === "backoff") {
+    sockets[0].protocol = "flowcore-api-key"
+    sockets[0].onopen?.()
+    sockets[0].onclose?.({ code: 1006, reason: "" })
+  }
+  client.disconnect()
+  release()
+  await connecting
+  if (stage === "socket") {
+    sockets[0].protocol = "flowcore-api-key"
+    sockets[0].onopen?.()
+  }
+  await Bun.sleep(20)
+  assert.equal(sockets.length, stage === "metadata" ? 0 : 1)
+  assert.equal(sockets[0]?.sent.length ?? 0, stage === "backoff" ? 1 : 0)
+  assert.equal(client.isOpen, false)
+  assert.equal(client.isConnecting, false)
+  globalThis.fetch = originalFetch
+}
 console.log("strict notification transport passed")

@@ -1102,6 +1102,13 @@ client.disconnect()
 - **maxEvents**: Maximum number of events to receive before auto-disconnecting (optional)
 - **logger**: Custom logger implementation (optional)
 
+`disconnect()` cancels scheduled reconnects and invalidates pending authentication
+or metadata setup so it cannot open a socket or send a subscription afterward.
+Already-running HTTP/token requests are not aborted. A later explicit `connect()`
+starts a new generation; disconnect completes the supplied observer as before.
+Automatic reconnect after an accepted socket closes abnormally now releases the
+connection guard before attempting the replacement handshake.
+
 #### Subscription Specification
 
 You can narrow down your notification subscription by specifying:
