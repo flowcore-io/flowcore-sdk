@@ -1,5 +1,14 @@
 # Changelog
 
+## [6.1.1](https://github.com/flowcore-io/flowcore-sdk/compare/v6.1.0...v6.1.1) (2026-11-02)
+
+
+### Bug Fixes
+
+* **notifications:** omit websocket error event from logs ([83d820d](https://github.com/flowcore-io/flowcore-sdk/commit/83d820d9e1d6133773c99167538cbd92c3c81f0c))
+* **websocket:** omit credentials from URL logs ([b29d005](https://github.com/flowcore-io/flowcore-sdk/commit/b29d0054266c3c102aacda259196a4bd2d019586))
+* **websocket:** omit credentials from URL logs ([377c602](https://github.com/flowcore-io/flowcore-sdk/commit/377c6025183d565b5c29644b6c880e68c252ebb6))
+
 ## [6.1.0](https://github.com/flowcore-io/flowcore-sdk/compare/v6.0.0...v6.1.0) (2026-09-15)
 
 
