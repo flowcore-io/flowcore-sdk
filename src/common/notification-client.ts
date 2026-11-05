@@ -52,6 +52,8 @@ type NotificationEventData = {
  * Configuration options for the NotificationClient
  */
 export type NotificationClientOptions = {
+  /** Default true for legacy servers. False requires subprotocol auth and never retries credentials in a URL. */
+  allowQueryFallback?: boolean
   reconnectInterval: number
   maxReconnects?: number
   maxEvents?: number
@@ -70,14 +72,10 @@ interface NotificationClientAuthOptionsApiKey {
   apiKeyId?: string
 }
 
-type NotificationClientAuthOptions =
-  | NotificationClientAuthOptionsBearer
-  | NotificationClientAuthOptionsApiKey
+type NotificationClientAuthOptions = NotificationClientAuthOptionsBearer | NotificationClientAuthOptionsApiKey
 
 /** The resolved credential, after an OIDC token has been fetched. */
-type NotificationCredential =
-  | { kind: "bearer"; token: string }
-  | { kind: "apiKey"; apiKey: string; apiKeyId?: string }
+type NotificationCredential = { kind: "bearer"; token: string } | { kind: "apiKey"; apiKey: string; apiKeyId?: string }
 
 /**
  * Client for handling WebSocket connections to the Flowcore notification system.
@@ -104,6 +102,9 @@ export class NotificationClient {
   private authTransport: "subprotocol" | "query" = "subprotocol"
   /** True once a handshake has settled, so the fallback is probed at most once. */
   private transportSettled = false
+  private handshakeAccepted = false
+  private generation = 0
+  private reconnectTimer?: ReturnType<typeof setTimeout>
 
   /**
    * Creates a new NotificationClient instance
@@ -154,122 +155,159 @@ export class NotificationClient {
       return
     }
 
+    const generation = ++this.generation
     this._isConnecting = true
+    this.handshakeAccepted = false
+    try {
+      let flowcoreClient: FlowcoreClient | null = null
+      const urlParams = new URLSearchParams()
 
-    let flowcoreClient: FlowcoreClient | null = null
-    const urlParams = new URLSearchParams()
-
-    let credential: NotificationCredential
-    if ("oidcClient" in this.authOptions) {
-      const oidcClient = this.authOptions.oidcClient
-      flowcoreClient = new FlowcoreClient({
-        getBearerToken: async () => (await oidcClient.getToken()).accessToken,
-      })
-      credential = { kind: "bearer", token: (await oidcClient.getToken()).accessToken }
-    } else {
-      flowcoreClient = new FlowcoreClient({
-        apiKey: this.authOptions.apiKey,
-        ...(this.authOptions.apiKeyId ? { apiKeyId: this.authOptions.apiKeyId } : {}),
-      })
-      credential = {
-        kind: "apiKey",
-        apiKey: this.authOptions.apiKey,
-        ...(this.authOptions.apiKeyId ? { apiKeyId: this.authOptions.apiKeyId } : {}),
+      let credential: NotificationCredential
+      if ("oidcClient" in this.authOptions) {
+        const oidcClient = this.authOptions.oidcClient
+        flowcoreClient = new FlowcoreClient({
+          getBearerToken: async () => (await oidcClient.getToken()).accessToken,
+        })
+        credential = { kind: "bearer", token: (await oidcClient.getToken()).accessToken }
+      } else {
+        flowcoreClient = new FlowcoreClient({
+          apiKey: this.authOptions.apiKey,
+          ...(this.authOptions.apiKeyId ? { apiKeyId: this.authOptions.apiKeyId } : {}),
+        })
+        credential = {
+          kind: "apiKey",
+          apiKey: this.authOptions.apiKey,
+          ...(this.authOptions.apiKeyId ? { apiKeyId: this.authOptions.apiKeyId } : {}),
+        }
       }
-    }
 
-    const handshake = this.buildCredentialHandshake(credential)
-    for (const [key, value] of handshake.query) {
-      urlParams.set(key, value)
-    }
-    const credentialProtocols = handshake.protocols
+      if (generation !== this.generation) return
+      const handshake = this.buildCredentialHandshake(credential)
+      for (const [key, value] of handshake.query) {
+        urlParams.set(key, value)
+      }
+      const credentialProtocols = handshake.protocols
 
-    const dataCore = await flowcoreClient.execute(
-      new DataCoreFetchCommand({
-        tenant: this.subscriptionSpec.tenant,
-        dataCore: this.subscriptionSpec.dataCore,
-      }),
-    )
-
-    let flowType: FlowType | undefined
-    let eventType: EventType | undefined
-    if (this.subscriptionSpec.flowType) {
-      flowType = await flowcoreClient.execute(
-        new FlowTypeFetchCommand({
-          dataCoreId: dataCore.id,
-          flowType: this.subscriptionSpec.flowType,
+      const dataCore = await flowcoreClient.execute(
+        new DataCoreFetchCommand({
+          tenant: this.subscriptionSpec.tenant,
+          dataCore: this.subscriptionSpec.dataCore,
         }),
       )
 
-      if (this.subscriptionSpec.eventType) {
-        eventType = await flowcoreClient.execute(
-          new EventTypeFetchCommand({
+      if (generation !== this.generation) return
+      let flowType: FlowType | undefined
+      let eventType: EventType | undefined
+      if (this.subscriptionSpec.flowType) {
+        flowType = await flowcoreClient.execute(
+          new FlowTypeFetchCommand({
+            dataCoreId: dataCore.id,
+            flowType: this.subscriptionSpec.flowType,
+          }),
+        )
+
+        if (generation !== this.generation) return
+        if (this.subscriptionSpec.eventType) {
+          eventType = await flowcoreClient.execute(
+            new EventTypeFetchCommand({
+              flowTypeId: flowType?.id,
+              eventType: this.subscriptionSpec.eventType,
+            }),
+          )
+        }
+      }
+
+      if (generation !== this.generation) return
+      const query = urlParams.toString()
+      this.webSocket = new WebSocketConstructor(
+        query ? `${this.url}?${query}` : this.url,
+        credentialProtocols.length > 0 ? credentialProtocols : undefined,
+      ) as unknown as WebSocket
+
+      this.webSocket.onopen = () => {
+        if (generation !== this.generation) return
+        if (this.options.allowQueryFallback === false && this.webSocket.protocol !== credentialProtocols[0]) {
+          this.rejectStrictHandshake()
+          return
+        }
+        this.handshakeAccepted = true
+        this._isOpen = true
+        this._isConnecting = false
+        // This transport works; never probe the other one again.
+        this.transportSettled = true
+        this.logger.debug("WebSocket connection opened.")
+        this.reconnectInterval = this.options.reconnectInterval
+        this.reconnectAttempts = 0
+        this.webSocket.send(
+          JSON.stringify({
+            tenant: this.subscriptionSpec.tenant,
+            dataCoreId: dataCore.id,
             flowTypeId: flowType?.id,
-            eventType: this.subscriptionSpec.eventType,
+            eventTypeId: eventType?.id,
           }),
         )
       }
-    }
 
-    const query = urlParams.toString()
-    this.webSocket = new WebSocketConstructor(
-      query ? `${this.url}?${query}` : this.url,
-      credentialProtocols.length > 0 ? credentialProtocols : undefined,
-    ) as unknown as WebSocket
+      this.webSocket.onmessage = (event) => {
+        if (generation !== this.generation) return
+        let parsedData: string
+        if (event.data instanceof ArrayBuffer) {
+          parsedData = new TextDecoder().decode(event.data)
+        } else if (Buffer.isBuffer(event.data)) {
+          parsedData = (event.data as BufferType).toString()
+        } else if (Array.isArray(event.data)) {
+          // Handle Buffer arrays by concatenating them
+          parsedData = Buffer.concat(event.data as Uint8Array[]).toString()
+        } else {
+          parsedData = event.data as string
+        }
 
-    this.webSocket.onopen = () => {
-      this._isOpen = true
+        this.handleMessage(parsedData)
+      }
+
+      this.webSocket.onclose = (event) => {
+        if (generation !== this.generation) return
+        this._isOpen = false
+        if (this.options.allowQueryFallback === false && !this.handshakeAccepted) {
+          this.rejectStrictHandshake()
+          return
+        }
+        this.logger.debug(`Connection closed: Code [${event.code}], Reason: ${event.reason}`)
+        if (this.shouldFallBackToQueryTransport()) {
+          this.fallBackToQueryTransport()
+          return
+        }
+        if (![1000].includes(event.code)) {
+          this.attemptReconnect()
+          return
+        }
+        this._isConnecting = false
+        this.observer.complete()
+      }
+
+      this.webSocket.onerror = (error) => {
+        if (generation === this.generation) this.handleWebSocketError(error)
+      }
+    } catch (error) {
+      if (generation !== this.generation) return
       this._isConnecting = false
-      // This transport works; never probe the other one again.
-      this.transportSettled = true
-      this.logger.debug("WebSocket connection opened.")
-      this.reconnectInterval = this.options.reconnectInterval
-      this.reconnectAttempts = 0
-      this.webSocket.send(
-        JSON.stringify({
-          tenant: this.subscriptionSpec.tenant,
-          dataCoreId: dataCore.id,
-          flowTypeId: flowType?.id,
-          eventTypeId: eventType?.id,
-        }),
-      )
+      throw error
     }
+  }
 
-    this.webSocket.onmessage = (event) => {
-      let parsedData: string
-      if (event.data instanceof ArrayBuffer) {
-        parsedData = new TextDecoder().decode(event.data)
-      } else if (Buffer.isBuffer(event.data)) {
-        parsedData = (event.data as BufferType).toString()
-      } else if (Array.isArray(event.data)) {
-        // Handle Buffer arrays by concatenating them
-        parsedData = Buffer.concat(event.data as Uint8Array[]).toString()
-      } else {
-        parsedData = event.data as string
-      }
-
-      this.handleMessage(parsedData)
-    }
-
-    this.webSocket.onclose = (event) => {
-      this._isOpen = false
-      this.logger.debug(`Connection closed: Code [${event.code}], Reason: ${event.reason}`)
-      if (this.shouldFallBackToQueryTransport()) {
-        this.fallBackToQueryTransport()
-        return
-      }
-      if (![1000].includes(event.code)) {
-        this.attemptReconnect()
-        return
-      }
-      this._isConnecting = false
-      this.observer.complete()
-    }
-
-    this.webSocket.onerror = (error) => this.handleWebSocketError(error)
+  private rejectStrictHandshake() {
+    ++this.generation
+    this._isOpen = false
+    this._isConnecting = false
+    this.observer.error(new Error("Notification WebSocket handshake failed"))
+    this.webSocket.close()
   }
 
   private handleWebSocketError(error: Event) {
+    if (this.options.allowQueryFallback === false && !this.handshakeAccepted) {
+      this.rejectStrictHandshake()
+      return
+    }
     // A server without subprotocol support refuses the handshake, which
     // surfaces here BEFORE `onopen`. That is a probe result, not a fault, so
     // it must not terminate the observable — `onclose` performs the retry.
@@ -280,6 +318,12 @@ export class NotificationClient {
     }
     // ErrorEvent stringification can include the request URL and its query.
     this.logger.error("WebSocket encountered an error.")
+    // Error terminates the Subject; invalidate this socket before close can retry.
+    ++this.generation
+    if (this.reconnectTimer) clearTimeout(this.reconnectTimer)
+    this.reconnectTimer = undefined
+    this._isOpen = false
+    this._isConnecting = false
     this.observer.error(error)
     this.webSocket.close()
   }
@@ -294,9 +338,10 @@ export class NotificationClient {
    * everyone with log access — for a long-lived `fc_` key that is a full
    * tenant compromise sitting in a log index.
    */
-  private buildCredentialHandshake(
-    credential: NotificationCredential,
-  ): { query: URLSearchParams; protocols: string[] } {
+  private buildCredentialHandshake(credential: NotificationCredential): {
+    query: URLSearchParams
+    protocols: string[]
+  } {
     const query = new URLSearchParams()
     const protocols: string[] = []
 
@@ -330,7 +375,12 @@ export class NotificationClient {
    * failure is a real failure and goes through normal reconnect handling.
    */
   private shouldFallBackToQueryTransport(): boolean {
-    return this.authTransport === "subprotocol" && !this.transportSettled && !this._isOpen
+    return (
+      this.options.allowQueryFallback !== false &&
+      this.authTransport === "subprotocol" &&
+      !this.transportSettled &&
+      !this._isOpen
+    )
   }
 
   /**
@@ -440,8 +490,13 @@ export class NotificationClient {
         this.options.maxReconnects ? `/${this.options.maxReconnects}` : ""
       } in ${this.reconnectInterval} ms...`,
     )
-    setTimeout(() => {
-      this.connect()
+    const generation = this.generation
+    if (this.reconnectTimer) clearTimeout(this.reconnectTimer)
+    this.reconnectTimer = setTimeout(() => {
+      this.reconnectTimer = undefined
+      if (generation !== this.generation) return
+      this._isConnecting = false
+      void this.connect().catch(() => this.observer.error(new Error("Notification connection setup failed")))
     }, this.reconnectInterval)
 
     this.reconnectInterval = Math.min(MAX_RECONNECT_INTERVAL, this.reconnectInterval * 2)
@@ -451,9 +506,15 @@ export class NotificationClient {
    * Closes the WebSocket connection
    */
   disconnect() {
+    ++this.generation
+    if (this.reconnectTimer) clearTimeout(this.reconnectTimer)
+    this.reconnectTimer = undefined
+    this._isConnecting = false
+    this._isOpen = false
     if (this.webSocket) {
       this.webSocket.close(1000, "Disconnected by user")
     }
+    this.observer.complete()
   }
 
   /**
