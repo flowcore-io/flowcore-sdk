@@ -685,6 +685,15 @@ The SDK provides commands for ingesting events into Flowcore event types.
 
 > **Important**: Ingestion operations require API key authentication.
 
+Create an API-key client before running either ingestion command. The SDK sends the raw key in the `Authorization` header and keeps it out of the webhook URL. Load the key from a secret store; do not put it in a query string.
+
+```typescript
+const client = new FlowcoreClient({
+  apiKeyId: process.env.FLOWCORE_API_KEY_ID!,
+  apiKey: process.env.FLOWCORE_API_KEY!,
+})
+```
+
 #### Ingest a Single Event
 
 ```typescript

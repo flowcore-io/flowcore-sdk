@@ -8,6 +8,7 @@ interface MockedRequest {
   path: string
   headers: Record<string, string> | null
   searchParams: Record<string, string | string[]> | null
+  noSearchParams: boolean
   body: string | Record<string, unknown> | Array<unknown> | null
   status: number
   response: string | Record<string, unknown> | Array<unknown> | null
@@ -160,6 +161,10 @@ export class FetchMockBuilder {
         }
       }
 
+      if (mockedRequest.noSearchParams && Object.keys(searchParams).length > 0) {
+        return false
+      }
+
       if (mockedRequest.headers) {
         try {
           assertObjectMatch(mockedRequest.headers, headers)
@@ -213,6 +218,7 @@ class FetchMockBuilderPath {
   private path: string
   private headers: Record<string, string> | null = null
   private searchParams: Record<string, string | string[]> | null = null
+  private noSearchParams = false
   private body: string | Record<string, unknown> | Array<unknown> | null = null
   private status = 200
   private response: string | Record<string, unknown> | Array<unknown> | null = null
@@ -227,6 +233,11 @@ class FetchMockBuilderPath {
 
   public matchSearchParams(searchParams: Record<string, string | string[]>) {
     this.searchParams = searchParams
+    return this
+  }
+
+  public withoutSearchParams() {
+    this.noSearchParams = true
     return this
   }
 
@@ -261,6 +272,7 @@ class FetchMockBuilderPath {
       path: this.path,
       headers: this.headers,
       searchParams: this.searchParams,
+      noSearchParams: this.noSearchParams,
       body: this.body,
       status: this.status,
       response: this.response,
