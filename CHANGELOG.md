@@ -1,5 +1,19 @@
 # Changelog
 
+## [6.2.0](https://github.com/flowcore-io/flowcore-sdk/compare/v6.1.1...v6.2.0) (2026-11-05)
+
+
+### Features
+
+* support strict notification subprotocol authentication ([b25287a](https://github.com/flowcore-io/flowcore-sdk/commit/b25287aa417f6b4e84b19f8629a13bf8d2120892))
+* support strict notification subprotocol authentication ([b72d589](https://github.com/flowcore-io/flowcore-sdk/commit/b72d589d8aa0c739aa1c59166f682f9b584d5783))
+
+
+### Bug Fixes
+
+* cancel notifier setup and resume reconnect attempts ([0df057f](https://github.com/flowcore-io/flowcore-sdk/commit/0df057f3b9ee8df79783cc4d053c0e8f64ef8dfa))
+* stop reconnect after terminal notification errors ([4007cd6](https://github.com/flowcore-io/flowcore-sdk/commit/4007cd6cd08a84a61df7eaf8a2d6e8add4ec88b9))
+
 ## [6.1.1](https://github.com/flowcore-io/flowcore-sdk/compare/v6.1.0...v6.1.1) (2026-11-02)
 
 
