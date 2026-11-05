@@ -11,6 +11,7 @@ import {
   type TUnion,
   Type,
 } from "@sinclair/typebox"
+import { type PolicyFilter, PolicyFilterSchema } from "../policy-filters.ts"
 
 /**
  * The schema for a policy statement document
@@ -19,10 +20,12 @@ export const PolicyStatementSchema: TObject<{
   statementId: TOptional<TString>
   resource: TString
   action: TUnion<[TString, TArray<TString>]>
+  filters: TOptional<TArray<typeof PolicyFilterSchema>>
 }> = Type.Object({
   statementId: Type.Optional(Type.String()),
   resource: Type.String(),
   action: Type.Union([Type.String(), Type.Array(Type.String())]),
+  filters: Type.Optional(Type.Array(PolicyFilterSchema, { minItems: 1, maxItems: 10 })),
 })
 
 /**
@@ -80,6 +83,8 @@ export interface PolicyCreateInput {
     resource: string
     /** The actions for this statement */
     action: string | string[]
+    /** Optional plaintext event payload filters. */
+    filters?: PolicyFilter[]
   }>
   /** The description of the policy */
   description?: string

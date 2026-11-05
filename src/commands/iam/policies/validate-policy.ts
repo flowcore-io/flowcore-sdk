@@ -2,6 +2,7 @@
 import { Command } from "../../../common/command.ts"
 import { parseResponseHelper } from "../../../utils/parse-response-helper.ts"
 import { type Static, type TLiteral, type TObject, Type } from "@sinclair/typebox"
+import type { PolicyFilter } from "../policy-filters.ts"
 
 /**
  * The schema for a successful policy validation response.
@@ -43,6 +44,8 @@ export interface PolicyValidateInput {
     resource: string
     /** The actions for this statement */
     action: string | string[]
+    /** Optional plaintext event payload filters. */
+    filters?: PolicyFilter[]
   }>
   /** The optional principal role FRN (cross-tenant is intentionally permitted here) */
   principal?: string

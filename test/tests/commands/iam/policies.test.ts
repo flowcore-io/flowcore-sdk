@@ -405,6 +405,7 @@ describe("Policy commands", () => {
         .matchHeaders({
           "authorization": "Bearer BEARER_TOKEN",
           "content-type": "application/json",
+          "x-flowcore-policy-conditions": "1",
         })
         .respondWith(200, mockResponse)
 
@@ -439,6 +440,7 @@ describe("Policy commands", () => {
         .matchHeaders({
           "authorization": "Bearer BEARER_TOKEN",
           "content-type": "application/json",
+          "x-flowcore-policy-conditions": "1",
         })
         .respondWith(403, { error: "Insufficient permissions" })
 
